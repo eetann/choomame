@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Choomame",
+  "version": "1.0.0",
+  "content_scripts": [
+    {
+      "js": ["src/content/index.ts"],
+      "matches": ["https://*/*", "http://*/*"]
+    }
+  ]
+}
