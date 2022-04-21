@@ -1,7 +1,7 @@
 import "../index.css";
 import App from "./App";
 import React from "react";
-import ReactDOM from "react-dom/client";
+import * as ReactDOM from 'react-dom';
 
 const choomameRoot = document.createElement("div");
 choomameRoot.id = "choomameRoot";
@@ -12,10 +12,11 @@ choomameRoot.style.left = "0";
 
 document.body.appendChild(choomameRoot);
 
-ReactDOM.createRoot(choomameRoot).render(
+ReactDOM.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
+  choomameRoot
 );
 
 console.log("content script");
