@@ -10,23 +10,29 @@ function App() {
   const [boxY, setBoxY] = useState(height - boxHight - 20);
   const windowRef = useRef<Rnd>();
 
-  useEffect( () => {
+  useEffect(() => {
     setBoxX(width - boxWidth - 20);
     setBoxY(height - boxHight - 20);
     windowRef.current?.updatePosition({
       x: boxX,
       y: boxY,
     });
-  }, [width, height] )
+  }, [width, height]);
   return (
     <Rnd
-      ref={(c) => {if (c) windowRef.current = c}}
+      ref={(c) => {
+        if (c) windowRef.current = c;
+      }}
       className="bg-blue-200"
       default={{
         x: boxX,
         y: boxY,
         width: boxWidth,
         height: boxHight,
+      }}
+      onResize={(e, dir, ref, delta, pos) => {
+        setBoxWidth(parseInt(ref.style.width, 10));
+        setBoxHight(parseInt(ref.style.height, 10));
       }}
     >
       <div className="shadow-lg bg-red-100">hogehhhhhhhhhh</div>
