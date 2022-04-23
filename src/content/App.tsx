@@ -4,8 +4,8 @@ import { useWindowSize } from "react-use";
 
 function App() {
   const { width, height } = useWindowSize();
-  const [boxWidth, setBoxWidth] = useState(200);
-  const [boxHight, setBoxHight] = useState(40);
+  const [boxWidth, setBoxWidth] = useState(400);
+  const [boxHight, setBoxHight] = useState(100);
   const [boxX, setBoxX] = useState(width - boxWidth - 20);
   const [boxY, setBoxY] = useState(height - boxHight - 20);
   const windowRef = useRef<Rnd>();
@@ -28,7 +28,7 @@ function App() {
       ref={(c) => {
         if (c) windowRef.current = c;
       }}
-      className="bg-blue-200"
+      className="shadow-lg"
       default={{
         x: boxX,
         y: boxY,
@@ -44,7 +44,18 @@ function App() {
         setBoxY(data.y);
       }}
     >
-      <div className="shadow-lg bg-red-100">hogehhhhhhhhhh</div>
+      <p className="text-3xl">hogehhhhhhhhhh</p>
+      <progress className="progress w-56" value="40" max="100"></progress>
+      <div>
+        When controlling the flow of text, using the CSS property
+        <span className="inline">display: inline</span>
+        will cause the text inside the element to wrap normally. While using the
+        property <span className="inline-block">display: inline-block</span>
+        will wrap the element to prevent the text inside from extending beyond
+        its parent. Lastly, using the property{" "}
+        <span className="block">display: block</span>
+        will put the element on its own line and fill its parent.
+      </div>
     </Rnd>
   );
 }
