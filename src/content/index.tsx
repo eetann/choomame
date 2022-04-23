@@ -1,7 +1,7 @@
-import "../index.css";
 import App from "./App";
+import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
-import * as ReactDOM from "react-dom";
+import ReactDOM from "react-dom";
 
 const choomameRoot = document.createElement("div");
 choomameRoot.id = "choomameRoot";
@@ -15,7 +15,9 @@ document.body.appendChild(choomameRoot);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ChakraProvider resetCSS={false}>
+      <App />
+    </ChakraProvider>
   </React.StrictMode>,
   choomameRoot
 );
