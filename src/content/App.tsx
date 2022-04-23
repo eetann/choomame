@@ -11,13 +11,18 @@ function App() {
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
-    setBoxX(width - boxWidth - 20);
-    setBoxY(height - boxHight - 20);
+    if (width < boxX + boxWidth) {
+      setBoxX(width - boxWidth);
+    }
+    if (height < boxY + boxHight) {
+      setBoxY(height - boxHight);
+    }
     windowRef.current?.updatePosition({
       x: boxX,
       y: boxY,
     });
   }, [width, height]);
+
   return (
     <Rnd
       ref={(c) => {
@@ -30,9 +35,13 @@ function App() {
         width: boxWidth,
         height: boxHight,
       }}
-      onResize={(e, dir, ref, delta, pos) => {
+      onResizeStop={(_, __, ref) => {
         setBoxWidth(parseInt(ref.style.width, 10));
         setBoxHight(parseInt(ref.style.height, 10));
+      }}
+      onDragStop={(_, data) => {
+        setBoxX(data.x);
+        setBoxY(data.y);
       }}
     >
       <div className="shadow-lg bg-red-100">hogehhhhhhhhhh</div>
