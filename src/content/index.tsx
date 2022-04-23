@@ -1,10 +1,11 @@
 import "../index.css";
 import App from "./App";
 import React from "react";
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from "react-dom";
 
 const choomameRoot = document.createElement("div");
 choomameRoot.id = "choomameRoot";
+// choomameRoot.style.all = "unset";
 choomameRoot.style.zIndex = "999";
 choomameRoot.style.position = "fixed";
 choomameRoot.style.top = "0";
