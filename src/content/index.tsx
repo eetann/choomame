@@ -1,7 +1,8 @@
+import { store } from "../app/store";
 import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
-import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 
 const choomameRoot = document.createElement("div");
 choomameRoot.id = "choomameRoot";
@@ -14,11 +15,11 @@ choomameRoot.style.left = "0";
 document.body.appendChild(choomameRoot);
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <ChakraProvider resetCSS={false}>
       <App />
     </ChakraProvider>
-  </React.StrictMode>,
+  </Provider>,
   choomameRoot
 );
 
