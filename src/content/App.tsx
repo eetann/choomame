@@ -1,5 +1,6 @@
 import { RootState } from "../app/store";
 import { setParam } from "../features/param/paramSlice";
+import LinkTime from "./LinkTime";
 import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -62,11 +63,13 @@ const App: React.VFC = () => {
         setBoxX(data.x);
         setBoxY(data.y);
       }}
+      disableDragging={true}
     >
       <Box
-        boxShadow="base"
+        boxShadow="xs"
+        border="1px"
         rounded="md"
-        bg="green.50"
+        bg="white"
         w={boxWidth}
         h={boxHight}
       >
@@ -76,6 +79,7 @@ const App: React.VFC = () => {
           <Text>time {param.tbs}</Text>
           <Text>lr {param.lr}</Text>
           <Text>search target {param.tbm}</Text>
+          <LinkTime />
         </Box>
       </Box>
     </Rnd>

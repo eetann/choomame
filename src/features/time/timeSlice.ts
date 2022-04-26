@@ -43,11 +43,12 @@ export const timeSlice = createSlice({
   name: "time",
   initialState: timesAdapter.getInitialState(),
   reducers: {
-    timeAdded: timesAdapter.addOne,
+    timeAddOne: timesAdapter.addOne,
+    timeAddMany: timesAdapter.addMany,
     timeRemoved: timesAdapter.removeOne,
   },
 });
 
-export const { timeAdded, timeRemoved } = timeSlice.actions;
+export const { timeAddOne, timeAddMany, timeRemoved } = timeSlice.actions;
 
 export default timeSlice.reducer;
