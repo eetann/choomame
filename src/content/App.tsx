@@ -1,13 +1,13 @@
 import { RootState } from "../app/store";
-import { nowTime } from "../features/time/timeSlice";
+import { setParam } from "../features/param/paramSlice";
 import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
 import { useWindowSize } from "react-use";
 
-function App() {
-  const time = useSelector((state: RootState) => state.time.value);
+const App: React.VFC = () => {
+  const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch();
 
   const { width, height } = useWindowSize();
@@ -16,16 +16,17 @@ function App() {
   const [boxX, setBoxX] = useState(width - boxWidth - 20);
   const [boxY, setBoxY] = useState(height - boxHight - 20);
   const windowRef = useRef<Rnd>();
-  const nowURL = new URL(location.href);
-  const paramTbm = nowURL.searchParams.get("tbm") || "";
-  const paramQ = nowURL.searchParams.get("q") || "";
-  const paramLr = nowURL.searchParams.get("lr") || "";
-  const qLink =
-    nowURL.toString().replace(/\?.*$/, "") + "?q=" + encodeURIComponent(paramQ);
 
   useEffect(() => {
-    const paramTbs = nowURL.searchParams.get("tbs") || "";
-    dispatch(nowTime(paramTbs));
+    const nowURL = new URL(location.href);
+    const nowParam = {
+      url: nowURL.toString(),
+      q: nowURL.searchParams.get("q") || "",
+      tbs: nowURL.searchParams.get("tbs") || "",
+      lr: nowURL.searchParams.get("lr") || "",
+      tbm: nowURL.searchParams.get("tbm") || "",
+    };
+    dispatch(setParam(nowParam));
   }, []);
 
   useEffect(() => {
@@ -71,10 +72,13 @@ function App() {
       >
         <Box p="4">
           <Text fontSize="xl">dslaf;jasldfjasdl;fasdjlk</Text>
-          <Text>{time}</Text>
+          <Text>{param.q}</Text>
+          <Text>time {param.tbs}</Text>
+          <Text>lr {param.lr}</Text>
+          <Text>search target {param.tbm}</Text>
         </Box>
       </Box>
     </Rnd>
   );
-}
+};
 export default App;

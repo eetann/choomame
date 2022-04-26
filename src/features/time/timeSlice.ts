@@ -1,17 +1,53 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
-export const timeSlice = createSlice({
-  name: "time",
-  initialState: {
-    value: "",
-  },
-  reducers: {
-    nowTime: (state, action: PayloadAction<string>) => {
-      state.value = action.payload;
-    },
+// 便利そうなので createEntityAdapter 使ってみる
+
+type Time = {
+  timeId: string; // w1
+  unit: string; // a, y, m, w...
+  number: Number; // 1
+};
+
+const timeUnitOrder: { [index: string]: Number } = {
+  a: 0, // all
+  y: 1, // year
+  m: 2, // month
+  w: 3, // week
+  d: 4, // day
+  h: 5, // hour
+  n: 6, // minute
+};
+
+const timesAdapter = createEntityAdapter<Time>({
+  selectId: (time) => time.timeId,
+  sortComparer: (a, b) => {
+    const aUnit = timeUnitOrder[a.unit];
+    const bUnit = timeUnitOrder[b.unit];
+    if (aUnit < bUnit) {
+      // a, b
+      return -1;
+    } else if (aUnit > bUnit) {
+      // b, a
+      return 1;
+    }
+    if (a.number > b.number) {
+      // a, b
+      return -1;
+    }
+    // b, a
+    return 1;
   },
 });
 
-export const { nowTime } = timeSlice.actions;
+export const timeSlice = createSlice({
+  name: "time",
+  initialState: timesAdapter.getInitialState(),
+  reducers: {
+    timeAdded: timesAdapter.addOne,
+    timeRemoved: timesAdapter.removeOne,
+  },
+});
+
+export const { timeAdded, timeRemoved } = timeSlice.actions;
 
 export default timeSlice.reducer;
