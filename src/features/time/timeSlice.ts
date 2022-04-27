@@ -2,20 +2,20 @@ import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 // 便利そうなので createEntityAdapter 使ってみる
 
-type Time = {
+export type Time = {
   timeId: string; // w1
-  unit: string; // a, y, m, w...
+  unit: string; // all, year, month, ...
   number: Number; // 1
 };
 
 const timeUnitOrder: { [index: string]: Number } = {
-  a: 0, // all
-  y: 1, // year
-  m: 2, // month
-  w: 3, // week
-  d: 4, // day
-  h: 5, // hour
-  n: 6, // minute
+  all: 0, // all
+  year: 1, // year
+  month: 2, // month
+  week: 3, // week
+  day: 4, // day
+  hour: 5, // hour
+  minute: 6, // minute
 };
 
 const timesAdapter = createEntityAdapter<Time>({
