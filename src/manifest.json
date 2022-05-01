@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Choomame",
   "version": "1.0.0",
-  "action": { "default_popup": "index.html" },
+  "permissions": ["unlimitedStorage", "storage"],
+  "background": { "service_worker": "src/background/index.ts" },
   "content_scripts": [
     {
       "js": ["src/content/index.tsx"],
