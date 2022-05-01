@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "permissions": ["unlimitedStorage", "storage"],
   "background": { "service_worker": "src/background/index.ts" },
+  "options_page": "index.html",
   "content_scripts": [
     {
       "js": ["src/content/index.tsx"],
