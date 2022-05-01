@@ -9,7 +9,7 @@ import {
 export type Time = {
   timeId: string; // w1
   unit: string; // all, year, month, ...
-  number: Number; // 1
+  number: number; // 1
 };
 
 /**
@@ -19,13 +19,11 @@ export type Time = {
  *   y3: {timeId: "y3", unit: "year", number: 3},
  * }
  */
-type TimesBucket = {
-  [key: string]: Time;
-};
+type TimesBucket = Record<string, Time>;
 
 const timesBucket = getBucket<TimesBucket>("times");
 
-const timeUnitOrder: { [index: string]: Number } = {
+const timeUnitOrder: Record<string, number> = {
   all: 0, // all
   year: 1, // year
   month: 2, // month
@@ -108,19 +106,26 @@ export function timesOnInstalled() {
       unit: "week",
       number: 1,
     },
+    {
+      timeId: "d1",
+      unit: "day",
+      number: 1,
+    },
   ];
   timesBucket.set(convertTimesToBucket(initialTimesStorage));
 }
 
-export const getAllTimes = createAsyncThunk("times/getAllTimes", async () => {
-  const times = await timesBucket.get();
-  return convertBucketToTimes(times);
-});
+export const getAllTimes = createAsyncThunk<TimesBucket>(
+  "times/getAllTimes",
+  async () => {
+    return await timesBucket.get();
+  }
+);
 
 export const setAllEntityTimes = createAsyncThunk(
   "times/setAllEntityTimes",
-  async (times: Time[]) => {
-    timesBucket.set(convertTimesToBucket(times));
+  async (times: TimesBucket) => {
+    timesBucket.set(times);
   }
 );
 
