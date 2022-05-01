@@ -1,4 +1,4 @@
-import { RootState } from "../app/store";
+import { AppDispatch, RootState } from "../app/store";
 import { Param } from "../features/param/paramSlice";
 import { Time, selectAllTimes, getAllTimes } from "../features/time/timeSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
@@ -27,11 +27,11 @@ function get_link(param: Param, time: Time) {
 }
 
 const LinkTime: React.VFC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
   const times = useSelector(selectAllTimes);
 
-  useEffect( () => {
+  useEffect(() => {
     dispatch(getAllTimes());
   }, []);
 
