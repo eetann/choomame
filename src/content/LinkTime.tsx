@@ -1,6 +1,6 @@
-import { AppDispatch, RootState } from "../app/store";
+import type { AppDispatch, RootState } from "../app/store";
 import { Param } from "../features/param/paramSlice";
-import { Time, selectAllTimes, getAllTimes } from "../features/time/timeSlice";
+import { Time, selectAllTimes, setAllTimes } from "../features/time/timeSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,8 +32,8 @@ const LinkTime: React.VFC = () => {
   const times = useSelector(selectAllTimes);
 
   useEffect(() => {
-    dispatch(getAllTimes());
-  }, []);
+    dispatch(setAllTimes());
+  }, [dispatch]);
 
   return (
     <Box>
