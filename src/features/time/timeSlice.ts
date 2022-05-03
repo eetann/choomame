@@ -115,17 +115,26 @@ export function timesOnInstalled() {
   timesBucket.set(convertTimesToBucket(initialTimesStorage));
 }
 
-export const getAllTimes = createAsyncThunk<TimesBucket>(
-  "times/getAllTimes",
+export const setAllTimes = createAsyncThunk<TimesBucket>(
+  "times/setAllTimes",
   async () => {
     return await timesBucket.get();
   }
 );
 
-export const setAllEntityTimes = createAsyncThunk(
-  "times/setAllEntityTimes",
-  async (times: TimesBucket) => {
-    timesBucket.set(times);
+export const addOneTime = createAsyncThunk(
+  "times/addOneTime",
+  async (time: Time) => {
+    timesBucket.set({ [time.timeId]: time });
+    return time;
+  }
+);
+
+export const removeOneTime = createAsyncThunk(
+  "times/removeOneTime",
+  async (timeId: string) => {
+    timesBucket.remove(timeId);
+    return timeId;
   }
 );
 
@@ -157,27 +166,41 @@ const timesInitialEntityState = timesAdapter.getInitialState({
 export const timeSlice = createSlice({
   name: "time",
   initialState: timesInitialEntityState,
-  reducers: {
-    timeAddOne: timesAdapter.addOne,
-    timeAddMany: timesAdapter.addMany,
-    timeRemoved: timesAdapter.removeOne,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllTimes.pending, (state) => {
+      .addCase(setAllTimes.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getAllTimes.rejected, (state) => {
+      .addCase(setAllTimes.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(getAllTimes.fulfilled, (state, action) => {
+      .addCase(setAllTimes.fulfilled, (state, action) => {
         timesAdapter.setAll(state, action.payload);
+        state.status = "idle";
+      })
+      .addCase(addOneTime.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addOneTime.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(addOneTime.fulfilled, (state, action) => {
+        timesAdapter.addOne(state, action.payload);
+        state.status = "idle";
+      })
+      .addCase(removeOneTime.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeOneTime.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(removeOneTime.fulfilled, (state, action) => {
+        timesAdapter.removeOne(state, action.payload);
         state.status = "idle";
       });
   },
 });
-
-export const { timeAddOne, timeAddMany, timeRemoved } = timeSlice.actions;
 
 export const { selectAll: selectAllTimes } =
   timesAdapter.getSelectors<RootState>((state) => state.times);
