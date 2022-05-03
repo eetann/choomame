@@ -1,3 +1,4 @@
+import TabTimes from "./TabTimes";
 import {
   Heading,
   Tabs,
@@ -13,7 +14,7 @@ const App: React.VFC = () => {
   return (
     <Box className="App" m="4">
       <Heading my="4">Choomame options page</Heading>
-      <Tabs variant="enclosed">
+      <Tabs variant="enclosed" size="lg">
         <TabList>
           <Tab>Time</Tab>
           <Tab>Language</Tab>
@@ -21,7 +22,7 @@ const App: React.VFC = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <p>time</p>
+            <TabTimes />
           </TabPanel>
           <TabPanel>
             <p>language</p>
