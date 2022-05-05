@@ -1,13 +1,10 @@
 import type { AppDispatch } from "../../app/store";
-import {
-  setAllTimes,
-} from "./timesSlice";
-import {
-  Box,
-} from "@chakra-ui/react";
+import TimesForm from "./TimesForm";
+import TimesTable from "./TimesTable";
+import { setAllTimes } from "./timesSlice";
+import { Box } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import TimesTable from "./TimesTable";
 
 const TimesTab: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,6 +15,7 @@ const TimesTab: React.VFC = () => {
 
   return (
     <Box>
+      <TimesForm />
       <TimesTable />
     </Box>
   );
