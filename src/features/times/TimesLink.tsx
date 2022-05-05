@@ -1,11 +1,11 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
-import { Time, selectAllTimes, setAllTimes } from "./timesSlice";
+import { Time, selectTimes, setAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function get_name(unit: string, number: number): string {
+function get_name(unit: TimesUnit, number: number): string {
   if (unit === "all") {
     return "all";
   }
@@ -29,14 +29,14 @@ function get_link(param: Param, time: Time) {
 const TimesLink: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
-  const times = useSelector(selectAllTimes);
+  const times = useSelector(selectTimes.selectAll);
 
   useEffect(() => {
     dispatch(setAllTimes());
   }, [dispatch]);
 
   return (
-    <Box>
+    <Box overflowX="scroll">
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => (
           <Button
