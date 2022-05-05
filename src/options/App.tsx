@@ -1,4 +1,4 @@
-import TabTimes from "./TabTimes";
+import TimesTab from "../features/times/TimesTab";
 import {
   Heading,
   Tabs,
@@ -22,7 +22,7 @@ const App: React.VFC = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <TabTimes />
+            <TimesTab />
           </TabPanel>
           <TabPanel>
             <p>language</p>

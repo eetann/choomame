@@ -1,4 +1,4 @@
-import { timesOnInstalled } from "../features/time/timeSlice";
+import { timesOnInstalled } from "../features/times/timesSlice";
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason == "install") {

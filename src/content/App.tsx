@@ -1,6 +1,6 @@
 import { RootState } from "../app/store";
 import { setParam } from "../features/param/paramSlice";
-import LinkTime from "./LinkTime";
+import TimesLink from "../features/times/TimesLink";
 import { Box, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -74,12 +74,10 @@ const App: React.VFC = () => {
         h={boxHight}
       >
         <Box p="4">
-          <Text fontSize="xl">dslaf;jasldfjasdl;fasdjlk</Text>
           <Text>{param.q}</Text>
-          <Text>time {param.tbs}</Text>
           <Text>lr {param.lr}</Text>
           <Text>search target {param.tbm}</Text>
-          <LinkTime />
+          <TimesLink />
         </Box>
       </Box>
     </Rnd>

@@ -1,10 +1,10 @@
-import type { AppDispatch } from "../app/store";
+import type { AppDispatch } from "../../app/store";
 import {
   removeOneTime,
   selectAllTimes,
   setAllTimes,
   Time,
-} from "../features/time/timeSlice";
+} from "./timesSlice";
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -18,7 +18,7 @@ import {
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const TabTimes: React.VFC = () => {
+const TimesTab: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const times = useSelector(selectAllTimes);
 
@@ -57,4 +57,4 @@ const TabTimes: React.VFC = () => {
     </Box>
   );
 };
-export default TabTimes;
+export default TimesTab;

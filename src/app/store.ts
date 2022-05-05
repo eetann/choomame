@@ -1,5 +1,5 @@
 import paramReducer from "../features/param/paramSlice";
-import timesReducer from "../features/time/timeSlice";
+import timesReducer from "../features/times/timesSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({

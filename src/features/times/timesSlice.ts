@@ -48,7 +48,7 @@ const timeUnitOrder: Record<string, number> = {
  * }
  */
 function convertTimesToBucket(times: Time[]): TimesBucket {
-  let newObj: TimesBucket = {};
+  const newObj: TimesBucket = {};
   for (let i = 0, len = times.length; i < len; i++) {
     const time = times[i];
     newObj[time.timeId] = time;
@@ -70,7 +70,7 @@ function convertTimesToBucket(times: Time[]): TimesBucket {
  *   {timeId: "y3", unit: "year", number: 3},
  * ]
  */
-function convertBucketToTimes(times: TimesBucket): Time[] {
+export function convertBucketToTimes(times: TimesBucket): Time[] {
   return Object.entries(times).map(([_, val]) => val);
 }
 
@@ -163,8 +163,8 @@ const timesInitialEntityState = timesAdapter.getInitialState({
   status: "idle",
 });
 
-export const timeSlice = createSlice({
-  name: "time",
+export const timesSlice = createSlice({
+  name: "times",
   initialState: timesInitialEntityState,
   reducers: {},
   extraReducers: (builder) => {
@@ -205,4 +205,4 @@ export const timeSlice = createSlice({
 export const { selectAll: selectAllTimes } =
   timesAdapter.getSelectors<RootState>((state) => state.times);
 
-export default timeSlice.reducer;
+export default timesSlice.reducer;
