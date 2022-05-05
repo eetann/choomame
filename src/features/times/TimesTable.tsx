@@ -1,9 +1,5 @@
 import type { AppDispatch } from "../../app/store";
-import {
-  removeOneTime,
-  selectAllTimes,
-  Time,
-} from "./timesSlice";
+import { removeOneTime, selectTimes, Time } from "./timesSlice";
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   TableContainer,
@@ -18,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const TimesTable: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const times = useSelector(selectAllTimes);
+  const times = useSelector(selectTimes.selectAll);
 
   return (
     <TableContainer rounded="lg" boxShadow="xs" maxW="min-content">
@@ -38,7 +34,7 @@ const TimesTable: React.VFC = () => {
                     aria-label="Delete time"
                     icon={<DeleteIcon />}
                     onClick={() => dispatch(removeOneTime(time.timeId))}
-                    />
+                  />
                 </Td>
               </Tr>
             );
