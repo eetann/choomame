@@ -6,9 +6,18 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
+export type TimesUnit =
+  | "all"
+  | "year"
+  | "month"
+  | "week"
+  | "day"
+  | "hour"
+  | "minute";
+
 export type Time = {
   timeId: string; // w1
-  unit: string; // all, year, month, ...
+  unit: TimesUnit; // all, year, month, ...
   number: number; // 1
 };
 
@@ -23,7 +32,16 @@ type TimesBucket = Record<string, Time>;
 
 const timesBucket = getBucket<TimesBucket>("times");
 
-const timeUnitOrder: Record<string, number> = {
+export function getTimeId(unit: TimesUnit, number: number): string {
+  if (unit === "all") {
+    return "all";
+  } else if (unit === "minute") {
+    return "n" + number.toString();
+  }
+  return unit[0] + number.toString();
+}
+
+export const timeUnitOrder: Record<TimesUnit, number> = {
   all: 0, // all
   year: 1, // year
   month: 2, // month
@@ -124,7 +142,12 @@ export const setAllTimes = createAsyncThunk<TimesBucket>(
 
 export const addOneTime = createAsyncThunk(
   "times/addOneTime",
-  async (time: Time) => {
+  async (arg: { unit: TimesUnit; number: number }) => {
+    const time = {
+      timeId: getTimeId(arg.unit, arg.number),
+      unit: arg.unit,
+      number: arg.number,
+    };
     timesBucket.set({ [time.timeId]: time });
     return time;
   }
@@ -202,7 +225,8 @@ export const timesSlice = createSlice({
   },
 });
 
-export const { selectAll: selectAllTimes } =
-  timesAdapter.getSelectors<RootState>((state) => state.times);
+export const selectTimes = timesAdapter.getSelectors<RootState>(
+  (state) => state.times
+);
 
 export default timesSlice.reducer;
