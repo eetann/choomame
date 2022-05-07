@@ -1,15 +1,34 @@
-import { Box, Text } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { RootState } from "../app/store";
+import { setParam } from "../features/param/paramSlice";
+import TimesLink from "../features/times/TimesLink";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
 import { useWindowSize } from "react-use";
 
-function App() {
+const App: React.VFC = () => {
+  const param = useSelector((state: RootState) => state.param);
+  const dispatch = useDispatch();
+
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
   const [boxHight, setBoxHight] = useState(400);
   const [boxX, setBoxX] = useState(width - boxWidth - 20);
   const [boxY, setBoxY] = useState(height - boxHight - 20);
   const windowRef = useRef<Rnd>();
+
+  useEffect(() => {
+    const nowURL = new URL(location.href);
+    const nowParam = {
+      url: nowURL.toString(),
+      q: nowURL.searchParams.get("q") || "",
+      tbs: nowURL.searchParams.get("tbs") || "",
+      lr: nowURL.searchParams.get("lr") || "",
+      tbm: nowURL.searchParams.get("tbm") || "",
+    };
+    dispatch(setParam(nowParam));
+  }, []);
 
   useEffect(() => {
     if (width < boxX + boxWidth) {
@@ -44,19 +63,24 @@ function App() {
         setBoxX(data.x);
         setBoxY(data.y);
       }}
+      disableDragging={true}
     >
       <Box
-        boxShadow="base"
+        boxShadow="xs"
+        border="1px"
         rounded="md"
-        bg="green.50"
+        bg="white"
         w={boxWidth}
         h={boxHight}
       >
-        <Box p="4">
-          <Text fontSize="xl">dslaf;jasldfjasdl;fasdjlk</Text>
-        </Box>
+        <Stack p="4">
+          <Text>{param.q}</Text>
+          <Text>lr {param.lr}</Text>
+          <Text>search target {param.tbm}</Text>
+          <TimesLink />
+        </Stack>
       </Box>
     </Rnd>
   );
-}
+};
 export default App;
