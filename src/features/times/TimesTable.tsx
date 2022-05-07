@@ -17,7 +17,7 @@ const TimesTable: React.VFC = () => {
   const times = useSelector(selectTimes.selectAll);
 
   return (
-    <TableContainer rounded="lg" boxShadow="xs" maxW="min-content">
+    <TableContainer rounded="md" boxShadow="xs" maxW="min-content">
       <Table variant="simple">
         <Tbody>
           {times.reduce((prev_array: JSX.Element[], time: Time) => {
@@ -26,10 +26,10 @@ const TimesTable: React.VFC = () => {
             }
             prev_array.push(
               <Tr key={time.timeId}>
-                <Td fontSize="md">
+                <Td fontSize="md" py="1">
                   {time.number.toString() + " " + time.unit}
                 </Td>
-                <Td>
+                <Td py="1">
                   <IconButton
                     aria-label="Delete time"
                     icon={<DeleteIcon />}
