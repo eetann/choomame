@@ -1,4 +1,5 @@
 import type { AppDispatch } from "../../app/store";
+import { initTimes } from "./timesSlice";
 import { WarningTwoIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -47,7 +48,14 @@ const TimesReset: React.VFC = () => {
                 <Button ref={cancelRef} onClick={onClose}>
                   Not reset.
                 </Button>
-                <Button leftIcon={<WarningTwoIcon />} colorScheme="red">
+                <Button
+                  leftIcon={<WarningTwoIcon />}
+                  colorScheme="red"
+                  onClick={() => {
+                    dispatch(initTimes());
+                    onClose();
+                  }}
+                >
                   Yes, reset.
                 </Button>
               </HStack>

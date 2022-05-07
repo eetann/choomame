@@ -1,6 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
-import { Time, selectTimes, setAllTimes, TimesUnit } from "./timesSlice";
+import { Time, selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +32,7 @@ const TimesLink: React.VFC = () => {
   const times = useSelector(selectTimes.selectAll);
 
   useEffect(() => {
-    dispatch(setAllTimes());
+    dispatch(fetchAllTimes());
   }, [dispatch]);
 
   return (

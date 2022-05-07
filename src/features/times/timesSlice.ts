@@ -92,49 +92,16 @@ export function convertBucketToTimes(times: TimesBucket): Time[] {
   return Object.entries(times).map(([_, val]) => val);
 }
 
-export function timesOnInstalled() {
-  const initialTimesStorage: Time[] = [
-    {
-      timeId: "all",
-      unit: "all",
-      number: 0,
-    },
-    {
-      timeId: "y3",
-      unit: "year",
-      number: 3,
-    },
-    {
-      timeId: "y1",
-      unit: "year",
-      number: 1,
-    },
-    {
-      timeId: "m6",
-      unit: "month",
-      number: 6,
-    },
-    {
-      timeId: "m1",
-      unit: "month",
-      number: 1,
-    },
-    {
-      timeId: "w1",
-      unit: "week",
-      number: 1,
-    },
-    {
-      timeId: "d1",
-      unit: "day",
-      number: 1,
-    },
-  ];
-  timesBucket.set(convertTimesToBucket(initialTimesStorage));
-}
+export const initTimes = createAsyncThunk<TimesBucket>(
+  "times/initTimes",
+  async () => {
+    await timesBucket.clear();
+    return await timesBucket.set(convertTimesToBucket(initialTimesStorage));
+  }
+);
 
-export const setAllTimes = createAsyncThunk<TimesBucket>(
-  "times/setAllTimes",
+export const fetchAllTimes = createAsyncThunk<TimesBucket>(
+  "times/fetchAllTimes",
   async () => {
     return await timesBucket.get();
   }
@@ -181,6 +148,47 @@ const timesAdapter = createEntityAdapter<Time>({
     return 1;
   },
 });
+const initialTimesStorage: Time[] = [
+  {
+    timeId: "all",
+    unit: "all",
+    number: 0,
+  },
+  {
+    timeId: "y3",
+    unit: "year",
+    number: 3,
+  },
+  {
+    timeId: "y1",
+    unit: "year",
+    number: 1,
+  },
+  {
+    timeId: "m6",
+    unit: "month",
+    number: 6,
+  },
+  {
+    timeId: "m1",
+    unit: "month",
+    number: 1,
+  },
+  {
+    timeId: "w1",
+    unit: "week",
+    number: 1,
+  },
+  {
+    timeId: "d1",
+    unit: "day",
+    number: 1,
+  },
+];
+
+export function timesOnInstalled() {
+  timesBucket.set(convertTimesToBucket(initialTimesStorage));
+}
 
 const timesInitialEntityState = timesAdapter.getInitialState({
   status: "idle",
@@ -192,13 +200,23 @@ export const timesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(setAllTimes.pending, (state) => {
+      .addCase(initTimes.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(setAllTimes.rejected, (state) => {
+      .addCase(initTimes.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(setAllTimes.fulfilled, (state, action) => {
+      .addCase(initTimes.fulfilled, (state, action) => {
+        timesAdapter.setAll(state, action.payload);
+        state.status = "idle";
+      })
+      .addCase(fetchAllTimes.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllTimes.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(fetchAllTimes.fulfilled, (state, action) => {
         timesAdapter.setAll(state, action.payload);
         state.status = "idle";
       })
