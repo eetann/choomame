@@ -36,7 +36,26 @@ const TimesLink: React.VFC = () => {
   }, [dispatch]);
 
   return (
-    <Box overflowX="scroll">
+    <Box
+      overflowX="auto"
+      pb="2"
+      sx={{
+        "--scrollbarBG": "#CFD8DC",
+        "--thumbBG": "#90A4AE",
+        "&::-webkit-scrollbar": {
+          height: "8px",
+        },
+        "&::-webkit-scrollbar-track": {
+          height: "10px",
+          background: "var(--scrollbarBG)",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "var(--thumbBG)",
+          borderRadius: "12px",
+          border: "2px solid var(--scrollbarBG)",
+        },
+      }}
+    >
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => (
           <Button
