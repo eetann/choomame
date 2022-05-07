@@ -59,11 +59,18 @@ const TimesLink: React.VFC = () => {
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => (
           <Button
-            variant={time.timeId === param.tbs.slice(4) ? "solid" : "outline"}
+            colorScheme="teal"
+            variant="outline"
+            bgColor={
+              (time.timeId === "all" && param.tbs === "") ||
+              time.timeId === param.tbs.slice(4)
+                ? "purple.50"
+                : ""
+            }
             key={time.timeId}
             href={get_link(param, time)}
             as="a"
-            fontWeight="normal"
+            fontWeight="medium"
             px="2"
           >
             {get_name(time.unit, time.number)}
