@@ -1,7 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
 import { Time, selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
-import { CheckIcon } from "@chakra-ui/icons";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,7 +71,21 @@ const TimesLink: React.VFC = () => {
               fontWeight="medium"
               px="2"
             >
-              {selected ? <CheckIcon pr="1" /> : <></>}
+              {selected ? (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "purple",
+                    clipPath: "polygon(65% 0, 100% 35%, 100% 0)",
+                  }}
+                />
+              ) : (
+                <></>
+              )}
               {get_name(time.unit, time.number)}
             </Button>
           );
