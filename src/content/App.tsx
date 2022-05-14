@@ -1,4 +1,5 @@
 import { RootState } from "../app/store";
+import LanguagesLink from "../features/languages/LanguagesLink";
 import { setParam } from "../features/param/paramSlice";
 import TimesLink from "../features/times/TimesLink";
 import { Box, Stack, Text } from "@chakra-ui/react";
@@ -77,9 +78,9 @@ const App: React.VFC = () => {
       >
         <Stack p="4">
           <Text>{param.q}</Text>
-          <Text>lr {param.lr}</Text>
           <Text>search target {param.tbm}</Text>
           <TimesLink />
+          <LanguagesLink />
         </Stack>
       </Box>
     </Rnd>
