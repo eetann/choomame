@@ -15,7 +15,7 @@ function get_name(unit: TimesUnit, number: number): string {
 function get_link(param: Param, time: Time) {
   let link = param.qLink;
   if (time.timeId !== "Any") {
-    link += "&tbs=qdr:" + time.timeId;
+    link += "&tbs=" + "qdr:" + time.timeId;
   }
   if (param.tbm) {
     link += "&tbm=" + param.tbm;
