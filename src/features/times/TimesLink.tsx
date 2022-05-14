@@ -1,6 +1,7 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
 import { Time, selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
+import { CheckIcon } from "@chakra-ui/icons";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,25 +58,25 @@ const TimesLink: React.VFC = () => {
       }}
     >
       <ButtonGroup size="sm" isAttached>
-        {times.map((time) => (
-          <Button
-            colorScheme="teal"
-            variant="outline"
-            bgColor={
-              (time.timeId === "Any" && param.tbs === "") ||
-              time.timeId === param.tbs.slice(4)
-                ? "purple.50"
-                : ""
-            }
-            key={time.timeId}
-            href={get_link(param, time)}
-            as="a"
-            fontWeight="medium"
-            px="2"
-          >
-            {get_name(time.unit, time.number)}
-          </Button>
-        ))}
+        {times.map((time) => {
+          const selected =
+            (time.timeId === "Any" && param.tbs === "") ||
+            time.timeId === param.tbs.slice(4);
+          return (
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              key={time.timeId}
+              href={get_link(param, time)}
+              as="a"
+              fontWeight="medium"
+              px="2"
+            >
+              {selected ? <CheckIcon pr="1" /> : <></>}
+              {get_name(time.unit, time.number)}
+            </Button>
+          );
+        })}
       </ButtonGroup>
     </Box>
   );
