@@ -2,6 +2,7 @@ import { getBucket } from "@extend-chrome/storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const languagesTable = {
+  Any: "Any",
   lang_ar: "Arabic",
   lang_bg: "Bulgarian",
   lang_ca: "Catalan",
@@ -45,7 +46,7 @@ type LanguagesBucket = Record<"languages", Language[]>;
 const languagesBucket = getBucket<LanguagesBucket>("languages");
 
 const initialLanguagesStorage: LanguagesBucket = {
-  languages: ["lang_en", "lang_ja"],
+  languages: ["Any", "lang_en", "lang_ja"],
 };
 
 export function languagesOnInstalled() {
