@@ -21,7 +21,7 @@ const TimesTable: React.VFC = () => {
       <Table variant="simple">
         <Tbody>
           {times.reduce((prev_array: JSX.Element[], time: Time) => {
-            if (time.timeId === "all") {
+            if (time.timeId === "Any") {
               return prev_array;
             }
             prev_array.push(

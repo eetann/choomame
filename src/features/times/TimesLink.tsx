@@ -6,15 +6,15 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function get_name(unit: TimesUnit, number: number): string {
-  if (unit === "all") {
-    return "all";
+  if (unit === "Any") {
+    return "Any";
   }
   return number + " " + unit;
 }
 
 function get_link(param: Param, time: Time) {
   let link = param.qLink;
-  if (time.timeId != "all") {
+  if (time.timeId !== "Any") {
     link += "&tbs=qdr:" + time.timeId;
   }
   if (param.tbm) {
@@ -62,7 +62,7 @@ const TimesLink: React.VFC = () => {
             colorScheme="teal"
             variant="outline"
             bgColor={
-              (time.timeId === "all" && param.tbs === "") ||
+              (time.timeId === "Any" && param.tbs === "") ||
               time.timeId === param.tbs.slice(4)
                 ? "purple.50"
                 : ""

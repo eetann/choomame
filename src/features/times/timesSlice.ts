@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 
 export type TimesUnit =
-  | "all"
+  | "Any"
   | "year"
   | "month"
   | "week"
@@ -17,7 +17,7 @@ export type TimesUnit =
 
 export type Time = {
   timeId: string; // w1
-  unit: TimesUnit; // all, year, month, ...
+  unit: TimesUnit; // Any, year, month, ...
   number: number; // 1
 };
 
@@ -33,8 +33,8 @@ type TimesBucket = Record<string, Time>;
 const timesBucket = getBucket<TimesBucket>("times");
 
 export function getTimeId(unit: TimesUnit, number: number): string {
-  if (unit === "all") {
-    return "all";
+  if (unit === "Any") {
+    return "Any";
   } else if (unit === "minute") {
     return "n" + number.toString();
   }
@@ -42,7 +42,7 @@ export function getTimeId(unit: TimesUnit, number: number): string {
 }
 
 export const timeUnitOrder: Record<TimesUnit, number> = {
-  all: 0, // all
+  Any: 0, // Any
   year: 1, // year
   month: 2, // month
   week: 3, // week
@@ -150,8 +150,8 @@ const timesAdapter = createEntityAdapter<Time>({
 });
 const initialTimesStorage: Time[] = [
   {
-    timeId: "all",
-    unit: "all",
+    timeId: "Any",
+    unit: "Any",
     number: 0,
   },
   {

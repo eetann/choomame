@@ -56,7 +56,7 @@ const TimesTable: React.VFC = () => {
           >
             {Object.keys(timeUnitOrder).reduce(
               (prev_array: JSX.Element[], unit: string) => {
-                if (unit === "all") {
+                if (unit === "Any") {
                   return prev_array;
                 }
                 prev_array.push(
