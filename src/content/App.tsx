@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
 import { useWindowSize } from "react-use";
 
+const marginXY = 20;
+
 const App: React.VFC = () => {
   const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch();
@@ -14,8 +16,8 @@ const App: React.VFC = () => {
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
   const [boxHight, setBoxHight] = useState(400);
-  const [boxX, setBoxX] = useState(width - boxWidth - 20);
-  const [boxY, setBoxY] = useState(height - boxHight - 20);
+  const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
+  const [boxY, setBoxY] = useState(height - boxHight - marginXY);
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
@@ -28,20 +30,21 @@ const App: React.VFC = () => {
       tbm: nowURL.searchParams.get("tbm") || "",
     };
     dispatch(setParam(nowParam));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (width < boxX + boxWidth) {
-      setBoxX(width - boxWidth);
+    if (width < boxX + boxWidth + marginXY) {
+      setBoxX(width - boxWidth - marginXY);
     }
-    if (height < boxY + boxHight) {
-      setBoxY(height - boxHight);
+    if (height < boxY + boxHight + marginXY) {
+      setBoxY(height - boxHight - marginXY);
     }
     windowRef.current?.updatePosition({
       x: boxX,
       y: boxY,
     });
-  }, [width, height]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, height, boxX, boxY]);
 
   return (
     <Rnd
@@ -63,7 +66,6 @@ const App: React.VFC = () => {
         setBoxX(data.x);
         setBoxY(data.y);
       }}
-      disableDragging={true}
     >
       <Box
         boxShadow="xs"
