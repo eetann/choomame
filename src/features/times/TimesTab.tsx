@@ -15,7 +15,7 @@ const TimesTab: React.VFC = () => {
   }, [dispatch]);
 
   return (
-    <Stack>
+    <Stack spacing="10">
       <TimesForm />
       <TimesTable />
       <TimesReset />
