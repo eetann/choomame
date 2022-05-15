@@ -1,3 +1,4 @@
+import LanguagesTab from "../features/languages/LanguagesTab";
 import TimesTab from "../features/times/TimesTab";
 import {
   Text,
@@ -43,7 +44,7 @@ const App: React.VFC = () => {
             <TimesTab />
           </TabPanel>
           <TabPanel>
-            <p>language</p>
+            <LanguagesTab />
           </TabPanel>
           <TabPanel>
             <p>recipe</p>
