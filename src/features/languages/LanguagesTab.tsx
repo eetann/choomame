@@ -1,4 +1,5 @@
 import type { AppDispatch } from "../../app/store";
+import LanguagesForm from "./LanguagesForm";
 import LanguagesReset from "./LanguagesReset";
 import LanguagesTable from "./LanguagesTable";
 import { fetchLanguages } from "./languagesSlice";
@@ -15,6 +16,7 @@ const TimesTab: React.VFC = () => {
 
   return (
     <Stack spacing="10">
+      <LanguagesForm />
       <LanguagesTable />
       <LanguagesReset />
     </Stack>
