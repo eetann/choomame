@@ -1,7 +1,7 @@
 import { getBucket } from "@extend-chrome/storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const languagesTable = {
+export const languagesKeyValue = {
   Any: "Any",
   lang_ar: "Arabic",
   lang_bg: "Bulgarian",
@@ -40,7 +40,7 @@ export const languagesTable = {
   lang_tr: "Turkish",
 };
 
-export type Language = keyof typeof languagesTable;
+export type Language = keyof typeof languagesKeyValue;
 type LanguagesBucket = Record<"languages", Language[]>;
 
 const languagesBucket = getBucket<LanguagesBucket>("languages");

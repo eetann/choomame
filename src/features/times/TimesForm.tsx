@@ -24,7 +24,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const TimesTable: React.VFC = () => {
+const TimesForm: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [unit, setUnit] = useState<TimesUnit>("year");
   const [timesNumber, setTimesNumber] = useState<number>(0);
@@ -83,4 +83,4 @@ const TimesTable: React.VFC = () => {
     </FormControl>
   );
 };
-export default TimesTable;
+export default TimesForm;

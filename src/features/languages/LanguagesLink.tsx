@@ -1,6 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
-import { Language, fetchLanguages, languagesTable } from "./languagesSlice";
+import { Language, fetchLanguages, languagesKeyValue } from "./languagesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,7 +80,7 @@ const LanguagesLink: React.VFC = () => {
               ) : (
                 <></>
               )}
-              {languagesTable[language]}
+              {languagesKeyValue[language]}
             </Button>
           );
         })}

@@ -1,5 +1,9 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import { removeOneLanguage, Language, languagesTable } from "./languagesSlice";
+import {
+  removeOneLanguage,
+  Language,
+  languagesKeyValue,
+} from "./languagesSlice";
 import {
   TableContainer,
   Table,
@@ -29,7 +33,7 @@ const LanguagesTable: React.VFC = () => {
             prev_array.push(
               <Tr key={language}>
                 <Td fontSize="md" py="1">
-                  {languagesTable[language]}
+                  {languagesKeyValue[language]}
                 </Td>
                 <Td py="2">
                   <IconButton
