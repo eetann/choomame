@@ -8,7 +8,6 @@ import {
 } from "./timesSlice";
 import { AddIcon } from "@chakra-ui/icons";
 import {
-  Box,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -34,56 +33,54 @@ const TimesTable: React.VFC = () => {
   const isError = timesEntities[getTimeId(unit, timesNumber)] !== undefined;
 
   return (
-    <Box>
-      <FormControl isInvalid={isError}>
-        <FormLabel htmlFor="timeNumber">Time</FormLabel>
-        <ButtonGroup>
-          <NumberInput
-            value={timesNumber}
-            min={1}
-            max={100}
-            onChange={(_, valueAsNumber) => setTimesNumber(valueAsNumber)}
-          >
-            <NumberInputField id="timeNumber" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Select
-            value={unit}
-            onChange={(e) => setUnit(e.target.value as TimesUnit)}
-          >
-            {Object.keys(timeUnitOrder).reduce(
-              (prev_array: JSX.Element[], unit: string) => {
-                if (unit === "Any") {
-                  return prev_array;
-                }
-                prev_array.push(
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                );
+    <FormControl isInvalid={isError}>
+      <FormLabel htmlFor="timeNumber">Add Time</FormLabel>
+      <ButtonGroup>
+        <NumberInput
+          value={timesNumber}
+          min={1}
+          max={100}
+          onChange={(_, valueAsNumber) => setTimesNumber(valueAsNumber)}
+        >
+          <NumberInputField id="timeNumber" />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+        <Select
+          value={unit}
+          onChange={(e) => setUnit(e.target.value as TimesUnit)}
+        >
+          {Object.keys(timeUnitOrder).reduce(
+            (prev_array: JSX.Element[], unit: string) => {
+              if (unit === "Any") {
                 return prev_array;
-              },
-              []
-            )}
-          </Select>
-          <IconButton
-            aria-label="Add time"
-            icon={<AddIcon />}
-            onClick={() => {
-              dispatch(addOneTime({ unit, number: timesNumber }));
-              setTimesNumber(0);
-              setUnit("year");
-            }}
-            isDisabled={timesNumber <= 0 || isError}
-          />
-        </ButtonGroup>
-        <FormHelperText>Write number and select unit.</FormHelperText>
-        <FormErrorMessage>This Time is already resisterd.</FormErrorMessage>
-      </FormControl>
-    </Box>
+              }
+              prev_array.push(
+                <option key={unit} value={unit}>
+                  {unit}
+                </option>
+              );
+              return prev_array;
+            },
+            []
+          )}
+        </Select>
+        <IconButton
+          aria-label="Add time"
+          icon={<AddIcon />}
+          onClick={() => {
+            dispatch(addOneTime({ unit, number: timesNumber }));
+            setTimesNumber(0);
+            setUnit("year");
+          }}
+          isDisabled={timesNumber <= 0 || isError}
+        />
+      </ButtonGroup>
+      <FormHelperText>Write number and select unit.</FormHelperText>
+      <FormErrorMessage>This Time is already resisterd.</FormErrorMessage>
+    </FormControl>
   );
 };
 export default TimesTable;
