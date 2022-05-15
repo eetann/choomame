@@ -1,6 +1,6 @@
 import TimesTab from "../features/times/TimesTab";
 import {
-  Heading,
+  Text,
   Tabs,
   TabList,
   TabPanels,
@@ -13,8 +13,10 @@ import React from "react";
 const App: React.VFC = () => {
   return (
     <Box className="App" m="4">
-      <Heading my="4">Choomame options page</Heading>
-      <Tabs variant="enclosed" size="lg">
+      <Text fontSize="lg" my="2">
+        Choomame
+      </Text>
+      <Tabs size="lg">
         <TabList>
           <Tab>Time</Tab>
           <Tab>Language</Tab>
