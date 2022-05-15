@@ -7,8 +7,14 @@ import {
   Tab,
   TabPanel,
   Box,
+  Icon,
 } from "@chakra-ui/react";
 import React from "react";
+import {
+  HiOutlineBan,
+  HiOutlineClock,
+  HiOutlineTranslate,
+} from "react-icons/hi";
 
 const App: React.VFC = () => {
   return (
@@ -18,9 +24,19 @@ const App: React.VFC = () => {
       </Text>
       <Tabs size="lg">
         <TabList>
-          <Tab>Time</Tab>
-          <Tab>Language</Tab>
-          <Tab>Recipe</Tab>
+          <Tab>
+            <Icon as={HiOutlineClock} mr="1" />
+            Time
+          </Tab>
+          <Tab>
+            <Icon as={HiOutlineTranslate} mr="1" />
+            Language
+          </Tab>
+
+          <Tab isDisabled>
+            <Icon as={HiOutlineBan} mr="1" />
+            Recipe
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
