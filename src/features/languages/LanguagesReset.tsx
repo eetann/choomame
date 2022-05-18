@@ -1,5 +1,5 @@
 import type { AppDispatch } from "../../app/store";
-import { initTimes } from "./timesSlice";
+import { initLanguages } from "./languagesSlice";
 import { Icon } from "@chakra-ui/icons";
 import {
   Box,
@@ -18,7 +18,7 @@ import React, { useRef } from "react";
 import { HiExclamation } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 
-const TimesReset: React.VFC = () => {
+const LanguagesReset: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -39,9 +39,11 @@ const TimesReset: React.VFC = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="3xl">Reset Time?</AlertDialogHeader>
+            <AlertDialogHeader fontSize="3xl">
+              Reset Languages?
+            </AlertDialogHeader>
             <AlertDialogBody fontSize="lg">
-              If you reset Time, the Time you added will disappear.
+              If you reset Languages, the Languages you added will disappear.
               <br />
               Do you really want to reset?
               <Center my="5" rounded="xl" backgroundColor="black">
@@ -57,7 +59,7 @@ const TimesReset: React.VFC = () => {
                   leftIcon={<HiExclamation fontSize="24" />}
                   colorScheme="red"
                   onClick={() => {
-                    dispatch(initTimes());
+                    dispatch(initLanguages());
                     onClose();
                   }}
                 >
@@ -71,4 +73,4 @@ const TimesReset: React.VFC = () => {
     </Box>
   );
 };
-export default TimesReset;
+export default LanguagesReset;

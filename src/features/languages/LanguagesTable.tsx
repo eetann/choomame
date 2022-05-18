@@ -1,5 +1,9 @@
-import type { AppDispatch } from "../../app/store";
-import { removeOneTime, selectTimes, Time } from "./timesSlice";
+import type { AppDispatch, RootState } from "../../app/store";
+import {
+  removeOneLanguage,
+  Language,
+  languagesKeyValue,
+} from "./languagesSlice";
 import {
   TableContainer,
   Table,
@@ -12,29 +16,31 @@ import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 
-const TimesTable: React.VFC = () => {
+const LanguagesTable: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const times = useSelector(selectTimes.selectAll);
+  const languages = useSelector(
+    (state: RootState) => state.languages.languages
+  );
 
   return (
     <TableContainer rounded="md" boxShadow="xs" maxW="min-content">
       <Table variant="simple">
         <Tbody>
-          {times.reduce((prev_array: JSX.Element[], time: Time) => {
-            if (time.timeId === "Any") {
+          {languages.reduce((prev_array: JSX.Element[], language: Language) => {
+            if (language === "Any") {
               return prev_array;
             }
             prev_array.push(
-              <Tr key={time.timeId}>
+              <Tr key={language}>
                 <Td fontSize="md" py="1">
-                  {time.number.toString() + " " + time.unit}
+                  {languagesKeyValue[language]}
                 </Td>
                 <Td py="2">
                   <IconButton
                     fontSize="24"
-                    aria-label="Delete time"
+                    aria-label="Delete language"
                     icon={<HiOutlineTrash />}
-                    onClick={() => dispatch(removeOneTime(time.timeId))}
+                    onClick={() => dispatch(removeOneLanguage(language))}
                   />
                 </Td>
               </Tr>
@@ -46,4 +52,4 @@ const TimesTable: React.VFC = () => {
     </TableContainer>
   );
 };
-export default TimesTable;
+export default LanguagesTable;

@@ -1,38 +1,33 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { Param } from "../param/paramSlice";
-import { Time, selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
+import { Language, fetchLanguages, languagesKeyValue } from "./languagesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function get_name(unit: TimesUnit, number: number): string {
-  if (unit === "Any") {
-    return "Any";
-  }
-  return number + " " + unit;
-}
-
-function get_link(param: Param, time: Time) {
+function get_link(param: Param, language: Language) {
   let link = param.qLink;
-  if (time.timeId !== "Any") {
-    link += "&tbs=" + "qdr:" + time.timeId;
+  if (param.tbs) {
+    link += "&tbs=" + param.tbs;
+  }
+  if (language !== "Any") {
+    link += "&lr=" + language;
   }
   if (param.tbm) {
     link += "&tbm=" + param.tbm;
   }
-  if (param.lr) {
-    link += "&lr=" + param.lr;
-  }
   return link;
 }
 
-const TimesLink: React.VFC = () => {
+const LanguagesLink: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
-  const times = useSelector(selectTimes.selectAll);
+  const languages = useSelector(
+    (state: RootState) => state.languages.languages
+  );
 
   useEffect(() => {
-    dispatch(fetchAllTimes());
+    dispatch(fetchLanguages());
   }, [dispatch]);
 
   return (
@@ -57,16 +52,15 @@ const TimesLink: React.VFC = () => {
       }}
     >
       <ButtonGroup size="sm" isAttached>
-        {times.map((time) => {
+        {languages.map((language) => {
           const selected =
-            (time.timeId === "Any" && param.tbs === "") ||
-            time.timeId === param.tbs.slice(4);
+            (language === "Any" && param.lr === "") || language === param.lr;
           return (
             <Button
               colorScheme="teal"
               variant="outline"
-              key={time.timeId}
-              href={get_link(param, time)}
+              key={language}
+              href={get_link(param, language)}
               as="a"
               fontWeight="medium"
               px="2"
@@ -86,7 +80,7 @@ const TimesLink: React.VFC = () => {
               ) : (
                 <></>
               )}
-              {get_name(time.unit, time.number)}
+              {languagesKeyValue[language]}
             </Button>
           );
         })}
@@ -94,4 +88,4 @@ const TimesLink: React.VFC = () => {
     </Box>
   );
 };
-export default TimesLink;
+export default LanguagesLink;
