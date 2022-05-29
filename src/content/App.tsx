@@ -22,15 +22,7 @@ const App: React.VFC = () => {
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
-    const nowURL = new URL(location.href);
-    const nowParam = {
-      url: nowURL.toString(),
-      q: nowURL.searchParams.get("q") || "",
-      tbs: nowURL.searchParams.get("tbs") || "",
-      lr: nowURL.searchParams.get("lr") || "",
-      tbm: nowURL.searchParams.get("tbm") || "",
-    };
-    dispatch(setParam(nowParam));
+    dispatch(setParam());
   }, [dispatch]);
 
   useEffect(() => {

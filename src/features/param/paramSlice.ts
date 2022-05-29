@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export type Param = {
   url: string;
@@ -6,32 +6,19 @@ export type Param = {
   tbs: string; // time
   lr: string; // language
   tbm: string; // search target
-  qLink?: string; // encoded URL
-};
-
-const initialState: Param = {
-  url: "https://www.google.com/search?q=kerry",
-  q: "kerry",
-  tbs: "",
-  lr: "",
-  tbm: "",
-  qLink: "https://www.google.com/search?q=kerry",
 };
 
 export const paramSlice = createSlice({
   name: "param",
-  initialState,
+  initialState: {} as Param,
   reducers: {
-    setParam: (state, action: PayloadAction<Param>) => {
-      state.url = action.payload.url;
-      state.q = action.payload.q;
-      state.tbs = action.payload.tbs;
-      state.lr = action.payload.lr;
-      state.tbm = action.payload.tbm;
-      state.qLink =
-        action.payload.url.replace(/\?.*$/, "") +
-        "?q=" +
-        encodeURIComponent(action.payload.q);
+    setParam: (state) => {
+      const url = new URL(location.href);
+      state.url = url.toString();
+      state.q = url.searchParams.get("q") || "";
+      state.tbs = url.searchParams.get("tbs") || "";
+      state.lr = url.searchParams.get("lr") || "";
+      state.tbm = url.searchParams.get("tbm") || "";
     },
   },
 });

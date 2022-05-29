@@ -1,14 +1,39 @@
+import { Language } from "../features/languages/languagesSlice";
 import { Param } from "../features/param/paramSlice";
-export function getLink(param: Param) {
-  let link = param.qLink;
-  if (param.tbs) {
-    link += "&tbs=" + param.tbs;
+import { Time } from "../features/times/timesSlice";
+
+export function getLink(
+  param: Param,
+  time?: Time,
+  language?: Language
+): string {
+  const url = new URL(param.url);
+  const new_param = new URLSearchParams();
+  new_param.set("q", param.q);
+  if (typeof time !== "undefined") {
+    if (time.timeId !== "Any") {
+      new_param.set("tbs", "qdr:" + time.timeId);
+    }
+    // time.timeId === "Any" empty
+  } else if (param.tbs) {
+    new_param.set("tbs", param.tbs);
   }
-  if (param.lr) {
-    link += "&lr=" + param.lr;
+  // else empty
+
+  if (typeof language !== "undefined") {
+    new_param.set("lr", language);
+  } else if (param.lr) {
+    new_param.set("lr", param.lr);
   }
+  // else empty
+
   if (param.tbm) {
-    link += "&tbm=" + param.tbm;
+    new_param.set("tbm", param.tbm);
   }
-  return link;
+  // else empty
+
+  url.search = new_param.toString();
+  // TODO: `&tbs=qdr%3A` を `&tbs=qdr:`に置き換ればオリジナルのURLと一致するため、
+  // visitedがブレない
+  return url.toString();
 }

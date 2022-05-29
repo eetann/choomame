@@ -10,7 +10,6 @@ describe("generate link", () => {
       tbs: "",
       lr: "",
       tbm: "",
-      qLink: "https://www.google.com/search?q=kerry",
     };
     expect(getLink(param)).toBe("https://www.google.com/search?q=kerry");
   });
@@ -22,10 +21,9 @@ describe("generate link", () => {
       tbs: "qdr:y1",
       lr: "lang_ja",
       tbm: "",
-      qLink: "https://www.google.com/search?q=kerry",
     };
     expect(getLink(param)).toBe(
-      "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja"
+      "https://www.google.com/search?q=kerry&tbs=qdr%3Ay1&lr=lang_ja"
     );
   });
 
@@ -36,10 +34,9 @@ describe("generate link", () => {
       tbs: "qdr:y1",
       lr: "lang_ja",
       tbm: "isch",
-      qLink: "https://www.google.com/search?q=kerry",
     };
     expect(getLink(param)).toBe(
-      "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja&tbm=isch"
+      "https://www.google.com/search?q=kerry&tbs=qdr%3Ay1&lr=lang_ja&tbm=isch"
     );
   });
 });
