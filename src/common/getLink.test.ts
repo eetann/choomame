@@ -79,332 +79,59 @@ describe("escape", () => {
       },
       expected: "https://www.google.com/search?q=kerry+eurodyne",
     },
-    {
-      title: "query includes !",
-      // sometimes searches from the address bar do not escape to %21
-      param: {
-        url: "https://www.google.com/search?q=kerry%21eurodyne",
-        q: "kerry!eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%21eurodyne",
-    },
-    {
-      title: 'query includes "',
-      // sometimes searches from the address bar do not escape to %22
-      param: {
-        url: "https://www.google.com/search?q=kerry%22eurodyne",
-        q: 'kerry"eurodyne',
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%22eurodyne",
-    },
-    {
-      title: "query includes #",
-      param: {
-        url: "https://www.google.com/search?q=kerry%23eurodyne",
-        q: "kerry#eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%23eurodyne",
-    },
-    {
-      title: "query includes $",
-      param: {
-        url: "https://www.google.com/search?q=kerry%24eurodyne",
-        q: "kerry$eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%24eurodyne",
-    },
-    {
-      title: "query includes %",
-      param: {
-        url: "https://www.google.com/search?q=kerry%25eurodyne",
-        q: "kerry%eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%25eurodyne",
-    },
-    {
-      title: "query includes &",
-      param: {
-        url: "https://www.google.com/search?q=kerry%26eurodyne",
-        q: "kerry&eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%26eurodyne",
-    },
-    {
-      title: "query includes '",
-      param: {
-        url: "https://www.google.com/search?q=kerry%27eurodyne",
-        q: "kerry'eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%27eurodyne",
-    },
-    {
-      title: "query includes (",
-      // sometimes searches from the address bar do not escape to %28
-      param: {
-        url: "https://www.google.com/search?q=kerry%28eurodyne",
-        q: "kerry(eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%28eurodyne",
-    },
-    {
-      title: "query includes )",
-      // sometimes searches from the address bar do not escape to %29
-      param: {
-        url: "https://www.google.com/search?q=kerry%29eurodyne",
-        q: "kerry)eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%29eurodyne",
-    },
-    {
-      title: "query includes *",
-      param: {
-        url: "https://www.google.com/search?q=kerry*eurodyne",
-        q: "kerry*eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry*eurodyne",
-    },
-    {
-      title: "query includes +",
-      param: {
-        url: "https://www.google.com/search?q=kerry%2Beurodyne",
-        q: "kerry+eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%2Beurodyne",
-    },
-    {
-      title: "query includes ,",
-      param: {
-        url: "https://www.google.com/search?q=kerry%2Ceurodyne",
-        q: "kerry,eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%2Ceurodyne",
-    },
-    {
-      title: "query includes /",
-      param: {
-        url: "https://www.google.com/search?q=kerry%2Feurodyne",
-        q: "kerry/eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%2Feurodyne",
-    },
-    {
-      title: "query includes :",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Aeurodyne",
-        q: "kerry:eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Aeurodyne",
-    },
-    {
-      title: "query includes ;",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Beurodyne",
-        q: "kerry;eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Beurodyne",
-    },
-    {
-      title: "query includes <",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Ceurodyne",
-        q: "kerry<eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Ceurodyne",
-    },
-    {
-      title: "query includes =",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Deurodyne",
-        q: "kerry=eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Deurodyne",
-    },
-    {
-      title: "query includes >",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Eeurodyne",
-        q: "kerry>eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Eeurodyne",
-    },
-    {
-      title: "query includes ?",
-      param: {
-        url: "https://www.google.com/search?q=kerry%3Feurodyne",
-        q: "kerry?eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%3Feurodyne",
-    },
-    {
-      title: "query includes @",
-      param: {
-        url: "https://www.google.com/search?q=kerry%40eurodyne",
-        q: "kerry@eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%40eurodyne",
-    },
-    {
-      title: "query includes [",
-      param: {
-        url: "https://www.google.com/search?q=kerry%5Beurodyne",
-        q: "kerry[eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%5Beurodyne",
-    },
-    {
-      title: "query includes ]",
-      param: {
-        url: "https://www.google.com/search?q=kerry%5Deurodyne",
-        q: "kerry]eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%5Deurodyne",
-    },
-    {
-      title: "query includes ^",
-      param: {
-        url: "https://www.google.com/search?q=kerry%5Eeurodyne",
-        q: "kerry^eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%5Eeurodyne",
-    },
-    {
-      title: "query includes _",
-      // %5F
-      param: {
-        url: "https://www.google.com/search?q=kerry_eurodyne",
-        q: "kerry_eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry_eurodyne",
-    },
-    {
-      title: "query includes `",
-      param: {
-        url: "https://www.google.com/search?q=kerry%60eurodyne",
-        q: "kerry`eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%60eurodyne",
-    },
-    {
-      title: "query includes {",
-      param: {
-        url: "https://www.google.com/search?q=kerry%7Beurodyne",
-        q: "kerry{eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%7Beurodyne",
-    },
-    {
-      title: "query includes |",
-      param: {
-        url: "https://www.google.com/search?q=kerry%7Ceurodyne",
-        q: "kerry|eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%7Ceurodyne",
-    },
-    {
-      title: "query includes }",
-      param: {
-        url: "https://www.google.com/search?q=kerry%7Deurodyne",
-        q: "kerry}eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%7Deurodyne",
-    },
-    {
-      title: "query includes ~",
-      // sometimes searches from the address bar do not escape to %7E
-      param: {
-        url: "https://www.google.com/search?q=kerry%7Eeurodyne",
-        q: "kerry~eurodyne",
-        tbs: "",
-        lr: "",
-        tbm: "",
-      },
-      expected: "https://www.google.com/search?q=kerry%7Eeurodyne",
-    },
   ])("%s", ({ param, expected }) => {
+    expect(param.q).toBe(new URL(param.url).searchParams.get("q"));
+    expect(getLink(param)).toBe(expected);
+  });
+
+  // {
+  //   title: 'query includes "',
+  //   param: {
+  //     url: "https://www.google.com/search?q=kerry%22eurodyne",
+  //     q: 'kerry"eurodyne',
+  //     tbs: "",
+  //     lr: "",
+  //     tbm: "",
+  //   },
+  //   expected: "https://www.google.com/search?q=kerry%22eurodyne",
+  // },
+  test.each([
+    ["!", "%21"],
+    ['"', "%22"], // sometimes searches from the address bar do not escape to %22
+    ["#", "%23"],
+    ["$", "%24"],
+    ["%", "%25"],
+    ["&", "%26"],
+    ["'", "%27"],
+    ["(", "%28"], // sometimes searches from the address bar do not escape to %28
+    [")", "%29"], // sometimes searches from the address bar do not escape to %29
+    ["*", "*"],
+    ["+", "%2B"],
+    [",", "%2C"],
+    ["/", "%2F"],
+    [":", "%3A"],
+    [";", "%3B"],
+    ["<", "%3C"],
+    ["=", "%3D"],
+    [">", "%3E"],
+    ["?", "%3F"],
+    ["@", "%40"],
+    ["[", "%5B"],
+    ["]", "%5D"],
+    ["^", "%5E"],
+    ["_", "_"],
+    ["`", "%60"],
+    ["{", "%7B"],
+    ["~", "%7E"], // sometimes searches from the address bar do not escape to %7E
+  ])("query includes %s", (str, esc) => {
+    const expected = "https://www.google.com/search?q=kerry" + esc + "eurodyne";
+    const param: Param = {
+      url: `https://www.google.com/search?q=kerry${esc}eurodyne`,
+      q: `kerry${str}eurodyne`,
+      tbs: "",
+      lr: "",
+      tbm: "",
+    };
     expect(param.q).toBe(new URL(param.url).searchParams.get("q"));
     expect(getLink(param)).toBe(expected);
   });
