@@ -33,7 +33,6 @@ export function getLink(
   // else empty
 
   url.search = new_param.toString();
-  // TODO: `&tbs=qdr%3A` を `&tbs=qdr:`に置き換ればオリジナルのURLと一致するため、
-  // visitedがブレない
-  return url.toString();
+  // Match URL generated when usin the original Google search UI
+  return url.toString().replace("&tbs=qdr%3A", "&tbs=qdr:");
 }

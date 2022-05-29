@@ -23,7 +23,7 @@ describe("generate link", () => {
       tbm: "",
     };
     expect(getLink(param)).toBe(
-      "https://www.google.com/search?q=kerry&tbs=qdr%3Ay1&lr=lang_ja"
+      "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja"
     );
   });
 
@@ -36,7 +36,20 @@ describe("generate link", () => {
       tbm: "isch",
     };
     expect(getLink(param)).toBe(
-      "https://www.google.com/search?q=kerry&tbs=qdr%3Ay1&lr=lang_ja&tbm=isch"
+      "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja&tbm=isch"
+    );
+  });
+
+  test("escape query for tbs", () => {
+    const param: Param = {
+      url: "https://www.google.com/search?q=%26tbs%3Dqdr%253A",
+      q: "&tbs=qdr%3A",
+      tbs: "",
+      lr: "",
+      tbm: "",
+    };
+    expect(getLink(param)).toBe(
+      "https://www.google.com/search?q=%26tbs%3Dqdr%253A"
     );
   });
 });
