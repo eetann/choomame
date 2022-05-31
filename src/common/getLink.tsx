@@ -21,7 +21,10 @@ export function getLink(
   // else empty
 
   if (typeof language !== "undefined") {
-    new_param.set("lr", language);
+    if (language !== "Any") {
+      new_param.set("lr", language);
+    }
+    // language === "Any" empty
   } else if (param.lr) {
     new_param.set("lr", param.lr);
   }
