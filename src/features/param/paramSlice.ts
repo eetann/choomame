@@ -8,7 +8,15 @@ export type Param = {
   tbm: string; // search target
 };
 
-export function getParam() {}
+export function generateParam(url: URL): Param {
+  return {
+    url: url.toString(),
+    q: url.searchParams.get("q") || "",
+    tbs: url.searchParams.get("tbs") || "",
+    lr: url.searchParams.get("lr") || "",
+    tbm: url.searchParams.get("tbm") || "",
+  };
+}
 
 export const paramSlice = createSlice({
   name: "param",
@@ -17,11 +25,8 @@ export const paramSlice = createSlice({
     setParam: {
       reducer(state, action: PayloadAction<URL>) {
         const url = action.payload;
-        state.url = url.toString();
-        state.q = url.searchParams.get("q") || "";
-        state.tbs = url.searchParams.get("tbs") || "";
-        state.lr = url.searchParams.get("lr") || "";
-        state.tbm = url.searchParams.get("tbm") || "";
+        const param = generateParam(url);
+        return { ...state, ...param };
       },
       prepare() {
         return {
