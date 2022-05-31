@@ -2,7 +2,7 @@ import { Param } from "../features/param/paramSlice";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";
 
-describe("generate link", () => {
+describe("generate link from Param", () => {
   test.each([
     {
       title: "only query",
