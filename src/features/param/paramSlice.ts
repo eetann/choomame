@@ -6,32 +6,33 @@ export type Param = {
   tbs: string; // time
   lr: string; // language
   tbm: string; // search target
-  qLink?: string; // encoded URL
 };
 
-const initialState: Param = {
-  url: "https://www.google.com/search?q=kerry",
-  q: "kerry",
-  tbs: "",
-  lr: "",
-  tbm: "",
-  qLink: "https://www.google.com/search?q=kerry",
-};
+export function generateParam(url: URL): Param {
+  return {
+    url: url.toString(),
+    q: url.searchParams.get("q") || "",
+    tbs: url.searchParams.get("tbs") || "",
+    lr: url.searchParams.get("lr") || "",
+    tbm: url.searchParams.get("tbm") || "",
+  };
+}
 
 export const paramSlice = createSlice({
   name: "param",
-  initialState,
+  initialState: {} as Param,
   reducers: {
-    setParam: (state, action: PayloadAction<Param>) => {
-      state.url = action.payload.url;
-      state.q = action.payload.q;
-      state.tbs = action.payload.tbs;
-      state.lr = action.payload.lr;
-      state.tbm = action.payload.tbm;
-      state.qLink =
-        action.payload.url.replace(/\?.*$/, "") +
-        "?q=" +
-        encodeURIComponent(action.payload.q);
+    setParam: {
+      reducer(state, action: PayloadAction<URL>) {
+        const url = action.payload;
+        const param = generateParam(url);
+        return { ...state, ...param };
+      },
+      prepare() {
+        return {
+          payload: new URL(location.href),
+        };
+      },
     },
   },
 });

@@ -1,23 +1,9 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import { Param } from "../param/paramSlice";
-import { Language, fetchLanguages, languagesKeyValue } from "./languagesSlice";
+import { getLink } from "../../common/getLink";
+import { fetchLanguages, languagesKeyValue } from "./languagesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-function get_link(param: Param, language: Language) {
-  let link = param.qLink;
-  if (param.tbs) {
-    link += "&tbs=" + param.tbs;
-  }
-  if (language !== "Any") {
-    link += "&lr=" + language;
-  }
-  if (param.tbm) {
-    link += "&tbm=" + param.tbm;
-  }
-  return link;
-}
 
 const LanguagesLink: React.VFC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -60,7 +46,7 @@ const LanguagesLink: React.VFC = () => {
               colorScheme="teal"
               variant="outline"
               key={language}
-              href={get_link(param, language)}
+              href={getLink(param, undefined, language)}
               as="a"
               fontWeight="medium"
               px="2"
