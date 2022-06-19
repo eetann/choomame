@@ -67,8 +67,8 @@ const App: React.VFC = () => {
         boxShadow="base"
         border="1px"
         borderColor="gray.300"
+        bgGradient="linear-gradient(135deg, rgba(195, 236, 82, 0.95) 0%, rgba(11, 162, 157, 0.95) 100%);"
         rounded="md"
-        bg="white"
         w={boxWidth}
         h={boxHight}
         overflow="auto"
@@ -80,6 +80,8 @@ const App: React.VFC = () => {
           rounded="md"
           cursor="auto"
           boxShadow="base"
+          backgroundColor="whiteAlpha.500"
+          backdropBlur="2xl"
         >
           <Text>{param.q}</Text>
           <Text>search target {param.tbm}</Text>
