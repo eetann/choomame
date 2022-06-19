@@ -59,16 +59,28 @@ const App: React.VFC = () => {
         setBoxX(data.x);
         setBoxY(data.y);
       }}
+      cancel=".no-drag-area"
+      minWidth="300px"
+      minHeight="230px"
     >
       <Box
-        boxShadow="xs"
+        boxShadow="base"
         border="1px"
+        borderColor="gray.300"
         rounded="md"
         bg="white"
         w={boxWidth}
         h={boxHight}
+        overflow="auto"
       >
-        <Stack p="4">
+        <Stack
+          className="no-drag-area"
+          m="4"
+          p="2"
+          rounded="md"
+          cursor="auto"
+          boxShadow="base"
+        >
           <Text>{param.q}</Text>
           <Text>search target {param.tbm}</Text>
           <TimesLink />
