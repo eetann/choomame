@@ -49,29 +49,18 @@ const TimesLink: React.VFC = () => {
             time.timeId === param.tbs.slice(4);
           return (
             <Button
-              colorScheme="teal"
               variant="outline"
               key={time.timeId}
               href={getLink(param, time)}
               as="a"
               fontWeight="medium"
               px="2"
+              backgroundColor={selected ? "gray.100" : "white"}
+              color={selected ? "purple" : "teal"}
+              _visited={{
+                color: "purple",
+              }}
             >
-              {selected ? (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "purple",
-                    clipPath: "polygon(65% 0, 100% 35%, 100% 0)",
-                  }}
-                />
-              ) : (
-                <></>
-              )}
               {get_name(time.unit, time.number)}
             </Button>
           );

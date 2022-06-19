@@ -43,29 +43,18 @@ const LanguagesLink: React.VFC = () => {
             (language === "Any" && param.lr === "") || language === param.lr;
           return (
             <Button
-              colorScheme="teal"
               variant="outline"
               key={language}
               href={getLink(param, undefined, language)}
               as="a"
               fontWeight="medium"
               px="2"
+              backgroundColor={selected ? "gray.100" : "white"}
+              color={selected ? "purple" : "teal"}
+              _visited={{
+                color: "purple",
+              }}
             >
-              {selected ? (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "purple",
-                    clipPath: "polygon(65% 0, 100% 35%, 100% 0)",
-                  }}
-                />
-              ) : (
-                <></>
-              )}
               {languagesKeyValue[language]}
             </Button>
           );
