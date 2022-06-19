@@ -60,6 +60,8 @@ const App: React.VFC = () => {
         setBoxY(data.y);
       }}
       cancel=".no-drag-area"
+      minWidth="500px"
+      minHeight="230px"
     >
       <Box
         boxShadow="base"
