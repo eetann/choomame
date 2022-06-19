@@ -82,12 +82,6 @@ const App: React.VFC = () => {
           boxShadow="base"
         >
           <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
-          <Text>{param.q}</Text>
           <Text>search target {param.tbm}</Text>
           <TimesLink />
           <LanguagesLink />
