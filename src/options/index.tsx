@@ -1,14 +1,17 @@
 import { store } from "../app/store";
 import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 
-ReactDOM.render(
+const choomameRoot = document.getElementById("root");
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(choomameRoot!);
+root.render(
   <Provider store={store}>
     <ChakraProvider>
       <App />
     </ChakraProvider>
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );
