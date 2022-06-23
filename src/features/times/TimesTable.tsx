@@ -12,7 +12,7 @@ import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 
-const TimesTable: React.VFC = () => {
+const TimesTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const times = useSelector(selectTimes.selectAll);
 

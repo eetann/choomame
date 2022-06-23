@@ -24,7 +24,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const TimesForm: React.VFC = () => {
+const TimesForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [unit, setUnit] = useState<TimesUnit>("year");
   const [timesNumber, setTimesNumber] = useState<number>(0);

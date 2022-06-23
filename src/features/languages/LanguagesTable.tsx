@@ -16,7 +16,7 @@ import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 
-const LanguagesTable: React.VFC = () => {
+const LanguagesTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const languages = useSelector(
     (state: RootState) => state.languages.languages
