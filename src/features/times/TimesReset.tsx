@@ -18,7 +18,7 @@ import React, { useRef } from "react";
 import { HiExclamation } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 
-const TimesReset: React.VFC = () => {
+const TimesReset: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);

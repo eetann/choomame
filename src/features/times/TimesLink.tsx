@@ -12,7 +12,7 @@ function get_name(unit: TimesUnit, number: number): string {
   return number + " " + unit;
 }
 
-const TimesLink: React.VFC = () => {
+const TimesLink: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
   const times = useSelector(selectTimes.selectAll);

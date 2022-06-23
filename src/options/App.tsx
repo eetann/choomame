@@ -17,7 +17,7 @@ import {
   HiOutlineTranslate,
 } from "react-icons/hi";
 
-const App: React.VFC = () => {
+const App: React.FC = () => {
   return (
     <Box className="App" m="4">
       <Text fontSize="lg" my="2">

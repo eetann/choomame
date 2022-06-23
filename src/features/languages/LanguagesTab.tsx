@@ -7,7 +7,7 @@ import { Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const TimesTab: React.VFC = () => {
+const TimesTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

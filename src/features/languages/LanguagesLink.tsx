@@ -5,7 +5,7 @@ import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const LanguagesLink: React.VFC = () => {
+const LanguagesLink: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
   const languages = useSelector(
