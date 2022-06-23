@@ -10,14 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.2.1",
     "@chakra-ui/icons": "^2.0.2",
+    "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@extend-chrome/storage": "^1.5.0",
     "@reduxjs/toolkit": "^1.8.2",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/chrome": "^0.0.190",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint": "^8.18.0",
@@ -38,6 +37,7 @@
     "react-use": "^17.4.0"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.190",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
