@@ -1,14 +1,14 @@
+import { Language } from "../features/languages/languagesSlice";
 import { generateParam } from "../features/param/paramSlice";
+import { Time } from "../features/times/timesSlice";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";
-import { Time } from "../features/times/timesSlice";
-import { Language } from "../features/languages/languagesSlice";
 
 type TestCase = {
   time?: Time;
   language?: Language;
   expected: string;
-}
+};
 
 describe("generate link from URL", () => {
   const timeAny: Time = {
@@ -20,12 +20,12 @@ describe("generate link from URL", () => {
     timeId: "y3",
     unit: "year",
     number: 3,
-  }
+  };
   const timeM1: Time = {
     timeId: "m1",
     unit: "month",
     number: 1,
-  }
+  };
 
   test("test 1", () => {
     let url = "https://www.google.com/search?q=kerry";
@@ -75,13 +75,13 @@ describe("generate link from URL", () => {
         language: undefined,
         expected: "https://www.google.com/search?q=kerry",
       },
-    ]
+    ];
     for (const testCase of testCases) {
       const param = generateParam(new URL(url));
       url = getLink(param, testCase.time, testCase.language);
       expect(url).toEqual(testCase.expected);
     }
-  })
+  });
 
   test("test 2", () => {
     let url = "https://www.google.com/search?q=kerry";
@@ -131,11 +131,11 @@ describe("generate link from URL", () => {
         language: "Any",
         expected: "https://www.google.com/search?q=kerry",
       },
-    ]
+    ];
     for (const testCase of testCases) {
       const param = generateParam(new URL(url));
       url = getLink(param, testCase.time, testCase.language);
       expect(url).toEqual(testCase.expected);
     }
-  })
-})
+  });
+});
