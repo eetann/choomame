@@ -6,11 +6,11 @@ import { Box, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
-import { useWindowSize } from "react-use";
+import useWindowSize from "react-use/lib/useWindowSize";
 
 const marginXY = 20;
 
-const App: React.VFC = () => {
+const App: React.FC = () => {
   const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch();
 

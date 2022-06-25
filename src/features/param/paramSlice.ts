@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export type Param = {
   url: string;
@@ -22,17 +22,10 @@ export const paramSlice = createSlice({
   name: "param",
   initialState: {} as Param,
   reducers: {
-    setParam: {
-      reducer(state, action: PayloadAction<URL>) {
-        const url = action.payload;
-        const param = generateParam(url);
-        return { ...state, ...param };
-      },
-      prepare() {
-        return {
-          payload: new URL(location.href),
-        };
-      },
+    setParam(state) {
+      const url = new URL(location.href);
+      const param = generateParam(url);
+      return { ...state, ...param };
     },
   },
 });

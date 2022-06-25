@@ -13,7 +13,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const LanguagesForm: React.VFC = () => {
+const LanguagesForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [languageKey, setLanguageKey] = useState<Language | "">("");
   const languages = useSelector(
