@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./public/icons/icon-128x128.png" height="120">
+</p>
+
 # choomame
 Browser Extension that add amazing information to search results.
 
