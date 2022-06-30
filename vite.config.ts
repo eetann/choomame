@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { chromeExtension } from "rollup-plugin-chrome-extension";
+import { crx } from "@crxjs/vite-plugin";
 import manifest from './src/manifest.json'
 
 export default defineConfig({
-  plugins: [react(), chromeExtension({ manifest })],
+  plugins: [react(), crx({ manifest })],
 });
