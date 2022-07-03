@@ -35,9 +35,9 @@ const LanguagesTable: React.FC = () => {
                 <Td fontSize="md" py="1">
                   {languagesKeyValue[language]}
                 </Td>
-                <Td py="2">
+                <Td py="1" pr="1">
                   <IconButton
-                    fontSize="24"
+                    fontSize="20"
                     aria-label="Delete language"
                     icon={<HiOutlineTrash />}
                     onClick={() => dispatch(removeOneLanguage(language))}
