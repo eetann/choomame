@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "js": ["src/content/index.tsx"],
-      "matches": ["https://www.google.com/*"]
+      "matches": ["https://www.google.com/search*"]
     }
   ]
 }
