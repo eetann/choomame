@@ -24,7 +24,6 @@ const TimesLink: React.FC = () => {
   return (
     <Box
       overflowX="auto"
-      pb="2"
       sx={{
         "--scrollbarBG": "#CFD8DC",
         "--thumbBG": "#90A4AE",

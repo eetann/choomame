@@ -84,8 +84,6 @@ const App: React.FC = () => {
           backgroundColor="whiteAlpha.700"
           backdropBlur="2xl"
         >
-          <Text>{param.q}</Text>
-          <Text>search target {param.tbm}</Text>
           <TimesLink />
           <LanguagesLink />
         </Stack>

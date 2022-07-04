@@ -7,4 +7,7 @@
 # Choomame
 Browser Extension that add amazing information to search results.
 
+This extension is the sccessor to Amazing Searcher([Chrome Web Store](https://chrome.google.com/webstore/detail/amazing-searcher/poheekmlppakdboaalpmhfpbmnefeokj), 
+[GitHub](https://github.com/eetann/amazing-searcher))
+
 [Here is the Roadmap.](https://github.com/eetann/choomame/projects/1)
