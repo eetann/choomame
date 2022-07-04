@@ -1,17 +1,18 @@
-import { RootState } from "../app/store";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { setParam } from "../features/param/paramSlice";
 import TimesLink from "../features/times/TimesLink";
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 const marginXY = 20;
+const minWidth = 300;
+const minHeight = 230;
 
 const App: React.FC = () => {
-  const param = useSelector((state: RootState) => state.param);
+  // const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch();
 
   const { width, height } = useWindowSize();
@@ -60,14 +61,13 @@ const App: React.FC = () => {
         setBoxY(data.y);
       }}
       cancel=".no-drag-area"
-      minWidth="300px"
-      minHeight="230px"
+      minWidth={`${minWidth}px`}
+      minHeight={`${minHeight}px`}
     >
       <Box
         boxShadow="base"
         border="1px"
-        borderColor="gray.300"
-        bgGradient="linear-gradient(135deg, rgba(195, 236, 82, 0.95) 0%, rgba(11, 162, 157, 0.95) 100%);"
+        bgColor="rgba(195, 236, 82, 0.95)"
         rounded="md"
         w={boxWidth}
         h={boxHight}
@@ -80,11 +80,9 @@ const App: React.FC = () => {
           rounded="md"
           cursor="auto"
           boxShadow="base"
-          backgroundColor="whiteAlpha.500"
+          backgroundColor="whiteAlpha.700"
           backdropBlur="2xl"
         >
-          <Text>{param.q}</Text>
-          <Text>search target {param.tbm}</Text>
           <TimesLink />
           <LanguagesLink />
         </Stack>

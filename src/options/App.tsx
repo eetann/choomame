@@ -9,6 +9,8 @@ import {
   TabPanel,
   Box,
   Icon,
+  Image,
+  HStack,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -20,10 +22,13 @@ import {
 const App: React.FC = () => {
   return (
     <Box className="App" m="4">
-      <Text fontSize="lg" my="2">
-        Choomame
-      </Text>
-      <Tabs size="lg">
+      <HStack>
+        <Image boxSize="36px" src="/icons/icon-32x32.png" />
+        <Text fontSize="lg" my="2">
+          Choomame
+        </Text>
+      </HStack>
+      <Tabs colorScheme="teal">
         <TabList>
           <Tab>
             <Icon as={HiOutlineClock} mr="1" />

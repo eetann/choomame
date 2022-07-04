@@ -19,7 +19,6 @@ const LanguagesLink: React.FC = () => {
   return (
     <Box
       overflowX="auto"
-      pb="2"
       sx={{
         "--scrollbarBG": "#CFD8DC",
         "--thumbBG": "#90A4AE",
@@ -49,13 +48,13 @@ const LanguagesLink: React.FC = () => {
               fontWeight="medium"
               px="2"
               variant="ghost"
-              backgroundColor={selected ? "blackAlpha.100" : "whiteAlpha.700"}
+              backgroundColor={selected ? "blackAlpha.50" : "whiteAlpha.700"}
               color={selected ? "purple" : "teal"}
               _visited={{
                 color: "purple",
               }}
               _hover={{
-                backgroundColor: "blackAlpha.100",
+                backgroundColor: "blackAlpha.50",
               }}
             >
               {languagesKeyValue[language]}
