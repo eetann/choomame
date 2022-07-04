@@ -1,10 +1,9 @@
-import { RootState } from "../app/store";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { setParam } from "../features/param/paramSlice";
 import TimesLink from "../features/times/TimesLink";
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
@@ -13,7 +12,7 @@ const minWidth = 300;
 const minHeight = 230;
 
 const App: React.FC = () => {
-  const param = useSelector((state: RootState) => state.param);
+  // const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch();
 
   const { width, height } = useWindowSize();
