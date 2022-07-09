@@ -67,6 +67,7 @@ const App: React.FC = () => {
       <Box
         boxShadow="base"
         border="1px"
+        borderColor="gray.300"
         bgColor="rgba(195, 236, 82, 0.95)"
         rounded="md"
         w={boxWidth}
