@@ -2,14 +2,20 @@ import { Param } from "../features/param/paramSlice";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";
 
+type TestCase = {
+  title: string;
+  param: Param;
+  expected: string;
+};
+
 describe("generate link from Param", () => {
-  test.each([
+  test.each<TestCase>([
     {
       title: "only query",
       param: {
         url: "https://www.google.com/search?q=kerry",
         q: "kerry",
-        tbs: "",
+        tbs: {},
         lr: "",
         tbm: "",
       },
@@ -20,7 +26,7 @@ describe("generate link from Param", () => {
       param: {
         url: "https://www.google.com/search?q=kerry",
         q: "kerry",
-        tbs: "qdr:y1",
+        tbs: { qdr: "y1" },
         lr: "lang_ja",
         tbm: "",
       },
@@ -31,7 +37,7 @@ describe("generate link from Param", () => {
       param: {
         url: "https://www.google.com/search?q=kerry",
         q: "kerry",
-        tbs: "qdr:y1",
+        tbs: { qdr: "y1" },
         lr: "lang_ja",
         tbm: "isch",
       },
@@ -45,13 +51,13 @@ describe("generate link from Param", () => {
 });
 
 describe("escape", () => {
-  test.each([
+  test.each<TestCase>([
     {
       title: "escape query for tbs",
       param: {
         url: "https://www.google.com/search?q=%26tbs%3Dqdr%253A",
         q: "&tbs=qdr%3A",
-        tbs: "",
+        tbs: {},
         lr: "",
         tbm: "",
       },
@@ -62,7 +68,7 @@ describe("escape", () => {
       param: {
         url: "https://www.google.com/search?q=kerry+eurodyne",
         q: "kerry eurodyne",
-        tbs: "",
+        tbs: {},
         lr: "",
         tbm: "",
       },
@@ -73,7 +79,7 @@ describe("escape", () => {
       param: {
         url: "https://www.google.com/search?q=kerry%20eurodyne",
         q: "kerry eurodyne",
-        tbs: "",
+        tbs: {},
         lr: "",
         tbm: "",
       },
