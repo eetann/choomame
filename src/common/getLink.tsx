@@ -1,5 +1,5 @@
 import { Language } from "../features/languages/languagesSlice";
-import { Param } from "../features/param/paramSlice";
+import { joinTbs, Param } from "../features/param/paramSlice";
 import { Time } from "../features/times/timesSlice";
 
 export function getLink(
@@ -15,8 +15,8 @@ export function getLink(
       new_param.set("tbs", "qdr:" + time.timeId);
     }
     // time.timeId === "Any" empty
-  } else if (param.tbs) {
-    new_param.set("tbs", param.tbs);
+  } else if (Object.keys(param.tbs).length !== 0) {
+    new_param.set("tbs", joinTbs(param.tbs));
   }
   // else empty
 

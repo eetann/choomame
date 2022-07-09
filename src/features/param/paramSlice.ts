@@ -29,6 +29,12 @@ export function parseTbs(searchParam: SearchParam): ParamTbs {
   return keyValueMap;
 }
 
+export function joinTbs(paramTbs: ParamTbs): string {
+  return Object.entries(paramTbs)
+    .map((keyValue) => keyValue.join(":"))
+    .join(",");
+}
+
 export function generateParam(url: URL): Param {
   return {
     url: url.toString(),

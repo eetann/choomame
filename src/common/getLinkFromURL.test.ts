@@ -1,6 +1,7 @@
 import { Language } from "../features/languages/languagesSlice";
 import {
   generateParam,
+  joinTbs,
   ParamTbs,
   parseTbs,
   SearchParam,
@@ -58,17 +59,40 @@ describe("parse tbs for Google search", () => {
       expected: { qdr: "y3" },
     },
     {
-      title: "valid stirng",
-      searchParam: "qdr:y3",
-      expected: { qdr: "y3" },
-    },
-    {
       title: "valid stirngs",
       searchParam: "qdr:y3,hoge:foo",
       expected: { qdr: "y3", hoge: "foo" },
     },
   ])("%s", ({ searchParam, expected }) => {
     expect(parseTbs(searchParam)).toEqual(expected);
+  });
+});
+
+type TestCaseJoinTbs = {
+  title: string;
+  tbs: ParamTbs;
+  expected: SearchParam;
+};
+
+describe("join tbs for Google search", () => {
+  test.each<TestCaseJoinTbs>([
+    {
+      title: "empty string",
+      tbs: {},
+      expected: "",
+    },
+    {
+      title: "valid stirng",
+      tbs: { qdr: "y3" },
+      expected: "qdr:y3",
+    },
+    {
+      title: "valid stirngs",
+      tbs: { qdr: "y3", hoge: "foo" },
+      expected: "qdr:y3,hoge:foo",
+    },
+  ])("%s", ({ tbs, expected }) => {
+    expect(joinTbs(tbs)).toBe(expected);
   });
 });
 
