@@ -24,6 +24,9 @@ export function getLink(
       }
       newTbs.qdr = newQdr;
     }
+    delete newTbs.cdr;
+    delete newTbs.cd_min;
+    delete newTbs.cd_max;
   }
   if (Object.keys(newTbs).length !== 0) {
     new_param.set("tbs", joinTbs(newTbs));
