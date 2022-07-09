@@ -43,9 +43,21 @@ const TimesLink: React.FC = () => {
     >
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => {
-          const selected =
-            (time.timeId === "Any" && param.tbs === "") ||
-            time.timeId === param.tbs.slice(4);
+          let selected = false;
+          if ("qdr" in param.tbs) {
+            if (time.timeId === param.tbs.qdr) {
+              selected = true;
+            } else if (
+              time.number === 1 &&
+              time.timeId.charAt(0) === param.tbs.qdr
+            ) {
+              selected = true;
+            }
+          } else {
+            if (time.timeId === "Any") {
+              selected = true;
+            }
+          }
           return (
             <Button
               key={time.timeId}
