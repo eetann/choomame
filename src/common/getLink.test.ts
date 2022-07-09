@@ -134,7 +134,7 @@ describe("escape", () => {
     const param: Param = {
       url: `https://www.google.com/search?q=kerry${esc}eurodyne`,
       q: `kerry${str}eurodyne`,
-      tbs: "",
+      tbs: {},
       lr: "",
       tbm: "",
     };
