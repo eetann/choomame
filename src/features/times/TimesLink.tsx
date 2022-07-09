@@ -2,7 +2,7 @@ import type { AppDispatch, RootState } from "../../app/store";
 import { getLink } from "../../common/getLink";
 import { selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function get_name(unit: TimesUnit, number: number): string {
@@ -16,10 +16,21 @@ const TimesLink: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
   const times = useSelector(selectTimes.selectAll);
+  const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     dispatch(fetchAllTimes());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (typeof param.tbs !== "undefined") {
+      if ("qdr" in param.tbs) {
+        setSelectedId(param.tbs.qdr);
+      } else if (!("cdr" in param.tbs)) {
+        setSelectedId("Any");
+      }
+    }
+  }, [param.tbs]);
 
   return (
     <Box
@@ -44,19 +55,13 @@ const TimesLink: React.FC = () => {
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => {
           let selected = false;
-          if ("qdr" in param.tbs) {
-            if (time.timeId === param.tbs.qdr) {
-              selected = true;
-            } else if (
-              time.number === 1 &&
-              time.timeId.charAt(0) === param.tbs.qdr
-            ) {
-              selected = true;
-            }
-          } else {
-            if (time.timeId === "Any") {
-              selected = true;
-            }
+          if (time.timeId === selectedId) {
+            selected = true;
+          } else if (
+            time.number === 1 &&
+            time.timeId.charAt(0) === selectedId
+          ) {
+            selected = true;
           }
           return (
             <Button
