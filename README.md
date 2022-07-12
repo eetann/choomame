@@ -5,9 +5,26 @@
 </p>
 
 # Choomame
-Browser Extension that add amazing information to search results.
+Choomame (チューマメ) is a browser extension that add amazing information to search results.
 
-This extension is the sccessor to Amazing Searcher([Chrome Web Store](https://chrome.google.com/webstore/detail/amazing-searcher/poheekmlppakdboaalpmhfpbmnefeokj), 
+**You can install at [Chrome Web Store](https://chrome.google.com/webstore/detail/choomame-alpha/lecnbgonlcmmpkpnngbofggjiccbnokn)!**
+
+This extension is an improved versioin of my previous extension Amazing Searcher([Chrome Web Store](https://chrome.google.com/webstore/detail/amazing-searcher/poheekmlppakdboaalpmhfpbmnefeokj), 
+
 [GitHub](https://github.com/eetann/amazing-searcher))
 
+![Content Script](./docs/assets/content-script-1280x800.png)
+
+Choomame adds the following link to the Google search results.
+
+* `Time`: restrict results to a specific time period
+  * example: 3 years, 1 month, 1 week ...
+* `Language`: restrict results to a specific language
+  * example: English, Japanese, Spanish ...
+
+`Time` and `Language` can be freely customized on the option page.
+
+![Option Page](./docs/assets/option-1280x800.png)
+
+---
 [Here is the Roadmap.](https://github.com/eetann/choomame/projects/1)

@@ -17,7 +17,7 @@ const App: React.FC = () => {
 
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
-  const [boxHight, setBoxHight] = useState(400);
+  const [boxHight, setBoxHight] = useState(230);
   const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
   const [boxY, setBoxY] = useState(height - boxHight - marginXY);
   const windowRef = useRef<Rnd>();
