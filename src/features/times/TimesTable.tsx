@@ -29,9 +29,9 @@ const TimesTable: React.FC = () => {
                 <Td fontSize="md" py="1">
                   {time.number.toString() + " " + time.unit}
                 </Td>
-                <Td py="2">
+                <Td py="1" pr="1">
                   <IconButton
-                    fontSize="24"
+                    fontSize="20"
                     aria-label="Delete time"
                     icon={<HiOutlineTrash />}
                     onClick={() => dispatch(removeOneTime(time.timeId))}

@@ -2,7 +2,7 @@ import type { AppDispatch, RootState } from "../../app/store";
 import { getLink } from "../../common/getLink";
 import { selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function get_name(unit: TimesUnit, number: number): string {
@@ -16,15 +16,25 @@ const TimesLink: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const param = useSelector((state: RootState) => state.param);
   const times = useSelector(selectTimes.selectAll);
+  const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     dispatch(fetchAllTimes());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (typeof param.tbs !== "undefined") {
+      if ("qdr" in param.tbs) {
+        setSelectedId(param.tbs.qdr);
+      } else if (!("cdr" in param.tbs)) {
+        setSelectedId("Any");
+      }
+    }
+  }, [param.tbs]);
+
   return (
     <Box
       overflowX="auto"
-      pb="2"
       sx={{
         "--scrollbarBG": "#CFD8DC",
         "--thumbBG": "#90A4AE",
@@ -44,9 +54,15 @@ const TimesLink: React.FC = () => {
     >
       <ButtonGroup size="sm" isAttached>
         {times.map((time) => {
-          const selected =
-            (time.timeId === "Any" && param.tbs === "") ||
-            time.timeId === param.tbs.slice(4);
+          let selected = false;
+          if (time.timeId === selectedId) {
+            selected = true;
+          } else if (
+            time.number === 1 &&
+            time.timeId.charAt(0) === selectedId
+          ) {
+            selected = true;
+          }
           return (
             <Button
               key={time.timeId}
@@ -55,13 +71,13 @@ const TimesLink: React.FC = () => {
               fontWeight="medium"
               px="2"
               variant="ghost"
-              backgroundColor={selected ? "blackAlpha.100" : "whiteAlpha.700"}
+              backgroundColor={selected ? "blackAlpha.50" : "whiteAlpha.700"}
               color={selected ? "purple" : "teal"}
               _visited={{
                 color: "purple",
               }}
               _hover={{
-                backgroundColor: "blackAlpha.100",
+                backgroundColor: "blackAlpha.50",
               }}
             >
               {get_name(time.unit, time.number)}
