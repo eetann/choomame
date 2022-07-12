@@ -7,6 +7,8 @@
 # Choomame
 Choomame (チューマメ) is a browser extension that add amazing information to search results.
 
+**You can install at [Chrome Web Store](https://chrome.google.com/webstore/detail/choomame-alpha/lecnbgonlcmmpkpnngbofggjiccbnokn)!**
+
 This extension is an improved versioin of my previous extension Amazing Searcher([Chrome Web Store](https://chrome.google.com/webstore/detail/amazing-searcher/poheekmlppakdboaalpmhfpbmnefeokj), 
 
 [GitHub](https://github.com/eetann/amazing-searcher))
