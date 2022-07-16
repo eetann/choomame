@@ -3,7 +3,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 export default defineManifest({
   manifest_version: 3,
   name: "Choomame (Alpha)",
-  version: "1.0.0",
+  version: "1.0.1",
   permissions: ["unlimitedStorage", "storage"],
   background: { service_worker: "src/background/index.ts" },
   icons: {
