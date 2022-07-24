@@ -1,7 +1,7 @@
 name: Release
 on: workflow_dispatch
 jobs:
-  Version:
+  Release:
     outputs:
       created: ${{ steps.daily-version.outputs.created }}
       version: ${{ steps.daily-version.outputs.version }}
@@ -15,7 +15,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-      - uses: fregante/daily-version-action@v1
+      - uses: fregante/daily-version-action@v2
         name: Create tag if necessary
         id: daily-version
       - if: ${{ steps.daily-version.outputs.created != 'yes' }}
