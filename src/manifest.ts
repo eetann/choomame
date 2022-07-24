@@ -22,5 +22,9 @@ export default defineManifest({
       js: ["src/content/index.tsx"],
       matches: ["https://www.google.co.jp/search*"],
     },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.co.th/search*"],
+    },
   ],
 });
