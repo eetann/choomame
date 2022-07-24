@@ -6,7 +6,8 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "dev": "vite",
-    "build": "tsc && vite build && node deploy.js",
+    "zip": "echo 'use chrome-webstore-upload-cli in GitHub Actions'",
+    "build": "tsc && vite build",
     "lint": "eslint src && prettier --check src",
     "preview": "vite preview"
   },
