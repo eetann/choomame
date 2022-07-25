@@ -1,10 +1,16 @@
 name: Release
-on: workflow_dispatch
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 jobs:
   Release:
     outputs:
       created: ${{ steps.daily-version.outputs.created }}
       version: ${{ steps.daily-version.outputs.version }}
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
