@@ -7,9 +7,6 @@ on:
       - main
 jobs:
   Release:
-    outputs:
-      created: ${{ steps.daily-version.outputs.created }}
-      version: ${{ steps.daily-version.outputs.version }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -25,8 +22,6 @@ jobs:
         # TODO: 最新版ではタグがないときのエラー処理がまた抜けてるので一旦コミットで指定
         name: Create tag if necessary
         id: daily-version
-      - if: ${{ steps.daily-version.outputs.created != 'yes' }}
-        run: exit 1
       - run: npm run build
       - name: Update manifest.json
         run: |

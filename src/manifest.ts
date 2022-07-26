@@ -30,5 +30,9 @@ export default defineManifest({
       js: ["src/content/index.tsx"],
       matches: ["https://www.google.es/search*"],
     },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.fi/search*"],
+    },
   ],
 });
