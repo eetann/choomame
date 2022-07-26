@@ -1,4 +1,5 @@
-[![test and lint](https://github.com/eetann/choomame/actions/workflows/github-actions.yaml/badge.svg)](https://github.com/eetann/choomame/actions/workflows/github-actions.yaml)
+[![test and lint](https://github.com/eetann/choomame/actions/workflows/test.yaml/badge.svg)](https://github.com/eetann/choomame/actions/workflows/test.yaml)
+[![Release](https://github.com/eetann/choomame/actions/workflows/release.yaml/badge.svg?branch=main)](https://github.com/eetann/choomame/actions/workflows/release.yaml)
 
 <p align="center">
   <img src="./public/icons/icon-128x128.png" height="120">
