@@ -36,7 +36,7 @@ Chrome Extensions for quick information at hand
 ## Description of the product
 **260 characters max**
 
-Choomame iadds the following link to the Google search results.
+Choomame adds the following link to the Google search results.
 Time: restrict results to a specific time period(3 years, 1 month, ...)
 Language: restrict results to a specific language(English, Japanese, ...)
 These can be freely customized on the option page.
