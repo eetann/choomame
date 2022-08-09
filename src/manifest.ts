@@ -35,5 +35,9 @@ export default defineManifest({
       js: ["src/content/index.tsx"],
       matches: ["https://www.google.fi/search*"],
     },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.co.in/search*"],
+    },
   ],
 });
