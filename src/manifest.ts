@@ -3,6 +3,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 export default defineManifest({
   manifest_version: 3,
   name: "Choomame (Alpha)",
+  description: "quick information at hand",
   version: "1.0.1",
   permissions: ["unlimitedStorage", "storage"],
   background: { service_worker: "src/background/index.ts" },
@@ -33,6 +34,10 @@ export default defineManifest({
     {
       js: ["src/content/index.tsx"],
       matches: ["https://www.google.fi/search*"],
+    },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.co.in/search*"],
     },
   ],
 });
