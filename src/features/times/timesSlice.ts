@@ -22,7 +22,7 @@ export type Time = {
 };
 
 /**
- * formant to save chrome.storage.local
+ * format to save chrome.storage.local
  * {
  *   w1: {timeId: "w1", unit: "week", number: 1},
  *   y3: {timeId: "y3", unit: "year", number: 3},
