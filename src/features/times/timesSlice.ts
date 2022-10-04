@@ -186,8 +186,11 @@ const initialTimesStorage: Time[] = [
   },
 ];
 
-export function timesOnInstalled() {
-  timesBucket.set(convertTimesToBucket(initialTimesStorage));
+export async function timesOnInstalled() {
+  const bucket = await timesBucket.get();
+  if (Object.keys(bucket).length === 0) {
+    timesBucket.set(convertTimesToBucket(initialTimesStorage));
+  }
 }
 
 const timesInitialEntityState = timesAdapter.getInitialState({
