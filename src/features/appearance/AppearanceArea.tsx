@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const AppearanceArea: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const appearance = useSelector((state: RootState) => state.appearance);
+  const appearance = useSelector((state: RootState) => state.appearance.bucket);
 
   useEffect(() => {
     dispatch(fetchAllAppearance());
@@ -22,7 +22,7 @@ const AppearanceArea: React.FC = () => {
         <FormLabel htmlFor="appearanceLocation">Location</FormLabel>
         <Select
           id="appearanceLocation"
-          value={appearance.appearance.location}
+          value={appearance.location}
           onChange={(e) => {
             dispatch(updateLocation(e.target.value as LocationType));
           }}

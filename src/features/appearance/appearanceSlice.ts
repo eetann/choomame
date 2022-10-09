@@ -44,7 +44,7 @@ export const updateLocation = createAsyncThunk(
 );
 
 const initialState = {
-  appearance: initialAppearanceStorage,
+  bucket: initialAppearanceStorage,
   status: "idle",
 };
 
@@ -61,7 +61,7 @@ export const appearanceSlice = createSlice({
         state.status = "failed";
       })
       .addCase(initAppearance.fulfilled, (state, action) => {
-        state.appearance = action.payload;
+        state.bucket = action.payload;
         state.status = "idle";
       })
       .addCase(fetchAllAppearance.pending, (state) => {
@@ -71,7 +71,7 @@ export const appearanceSlice = createSlice({
         state.status = "failed";
       })
       .addCase(fetchAllAppearance.fulfilled, (state, action) => {
-        state.appearance = action.payload;
+        state.bucket = action.payload;
         state.status = "idle";
       })
       .addCase(updateLocation.pending, (state) => {
@@ -81,7 +81,7 @@ export const appearanceSlice = createSlice({
         state.status = "failed";
       })
       .addCase(updateLocation.fulfilled, (state, action) => {
-        state.appearance.location = action.payload;
+        state.bucket.location = action.payload;
         state.status = "idle";
       });
   },

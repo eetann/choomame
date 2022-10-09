@@ -1,9 +1,11 @@
+import { AppDispatch, RootState } from "../app/store";
+import { fetchAllAppearance } from "../features/appearance/appearanceSlice";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { setParam } from "../features/param/paramSlice";
 import TimesLink from "../features/times/TimesLink";
 import { Box, Stack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
@@ -13,7 +15,8 @@ const minHeight = 230;
 
 const App: React.FC = () => {
   // const param = useSelector((state: RootState) => state.param);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const appearance = useSelector((state: RootState) => state.appearance.bucket);
 
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
@@ -24,7 +27,16 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(setParam());
+    dispatch(fetchAllAppearance());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(`useEffect: appearance ${JSON.stringify(appearance)}`);
+    if (appearance.location === "top-right") {
+      console.log("top-right");
+      setBoxY(100);
+    }
+  }, [appearance]);
 
   useEffect(() => {
     if (width < boxX + boxWidth + marginXY) {
@@ -74,6 +86,7 @@ const App: React.FC = () => {
         h={boxHight}
         overflow="auto"
       >
+        {JSON.stringify(appearance)}
         <Stack
           className="no-drag-area"
           m="4"
