@@ -1,7 +1,7 @@
+import appearanceReducer from "../features/appearance/appearanceSlice";
 import languagesReducer from "../features/languages/languagesSlice";
 import paramReducer from "../features/param/paramSlice";
 import timesReducer from "../features/times/timesSlice";
-import appearanceReducer from "../features/appearance/appearanceSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({

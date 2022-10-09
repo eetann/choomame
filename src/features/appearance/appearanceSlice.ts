@@ -1,8 +1,10 @@
 import { getBucket } from "@extend-chrome/storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+export type LocationType = "top-right" | "bottom-right";
+
 export type AppearanceBucket = {
-  location: "top-right" | "bottom-right";
+  location: LocationType;
 };
 
 const appearanceBucket = getBucket<AppearanceBucket>("appearance");
@@ -30,6 +32,14 @@ export const fetchAllAppearance = createAsyncThunk<AppearanceBucket>(
   "appearance/fetchAllAppearance",
   async () => {
     return await appearanceBucket.get();
+  }
+);
+
+export const updateLocation = createAsyncThunk(
+  "appearance/updateLocation",
+  async (arg: LocationType) => {
+    appearanceBucket.set({ location: arg });
+    return arg;
   }
 );
 
@@ -62,6 +72,16 @@ export const appearanceSlice = createSlice({
       })
       .addCase(fetchAllAppearance.fulfilled, (state, action) => {
         state.appearance = action.payload;
+        state.status = "idle";
+      })
+      .addCase(updateLocation.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateLocation.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(updateLocation.fulfilled, (state, action) => {
+        state.appearance.location = action.payload;
         state.status = "idle";
       });
   },
