@@ -4,7 +4,7 @@ import {
   LocationType,
   updateLocation,
 } from "./appearanceSlice";
-import { Box, Select, VStack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Select, VStack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,9 +18,10 @@ const AppearanceArea: React.FC = () => {
 
   return (
     <VStack align="start">
-      <Box>
+      <FormControl>
+        <FormLabel htmlFor="appearanceLocation">Location</FormLabel>
         <Select
-          placeholder="Select location"
+          id="appearanceLocation"
           value={appearance.appearance.location}
           onChange={(e) => {
             dispatch(updateLocation(e.target.value as LocationType));
@@ -29,7 +30,7 @@ const AppearanceArea: React.FC = () => {
           <option value="top-right">Top right</option>
           <option value="bottom-right">Bottom right</option>
         </Select>
-      </Box>
+      </FormControl>
     </VStack>
   );
 };
