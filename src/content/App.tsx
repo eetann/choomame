@@ -4,6 +4,7 @@ import LanguagesLink from "../features/languages/LanguagesLink";
 import { setParam } from "../features/param/paramSlice";
 import TimesLink from "../features/times/TimesLink";
 import { Box, Stack } from "@chakra-ui/react";
+import { createSelector } from "@reduxjs/toolkit";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Rnd } from "react-rnd";
@@ -13,30 +14,35 @@ const marginXY = 20;
 const minWidth = 300;
 const minHeight = 230;
 
+const appearanceState = (state: RootState) => state.appearance;
+const bucketSelector = createSelector(
+  [appearanceState],
+  (appearance) => appearance.bucket
+);
+const getY = createSelector([bucketSelector], (bucket) => {
+  if (bucket.location === "top-right") {
+    return 100;
+  }
+  return 400;
+});
+
 const App: React.FC = () => {
   // const param = useSelector((state: RootState) => state.param);
   const dispatch = useDispatch<AppDispatch>();
-  const appearance = useSelector((state: RootState) => state.appearance.bucket);
+  const appearance = useSelector((state: RootState) => getY(state));
 
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
   const [boxHight, setBoxHight] = useState(230);
   const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
-  const [boxY, setBoxY] = useState(height - boxHight - marginXY);
+  // const [boxY, setBoxY] = useState(height - boxHight - marginXY);
+  const [boxY, setBoxY] = useState(appearance);
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
     dispatch(setParam());
     dispatch(fetchAllAppearance());
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log(`useEffect: appearance ${JSON.stringify(appearance)}`);
-    if (appearance.location === "top-right") {
-      console.log("top-right");
-      setBoxY(100);
-    }
-  }, [appearance]);
 
   useEffect(() => {
     if (width < boxX + boxWidth + marginXY) {
