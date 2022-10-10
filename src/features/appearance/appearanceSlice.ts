@@ -7,7 +7,7 @@ export type AppearanceBucket = {
   location: LocationType;
 };
 
-const appearanceBucket = getBucket<AppearanceBucket>("appearance");
+export const appearanceBucket = getBucket<AppearanceBucket>("appearance");
 
 const initialAppearanceStorage: AppearanceBucket = {
   location: "top-right",

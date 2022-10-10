@@ -1,9 +1,6 @@
-import { AppDispatch, RootState } from "../app/store";
-import { fetchAllAppearance } from "../features/appearance/appearanceSlice";
+import { appearanceBucket } from "../features/appearance/appearanceSlice";
 import { Box, Stack } from "@chakra-ui/react";
-import { createSelector } from "@reduxjs/toolkit";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
@@ -11,37 +8,28 @@ const marginXY = 20;
 const minWidth = 300;
 const minHeight = 230;
 
-const appearanceState = (state: RootState) => state.appearance;
-const bucketSelector = createSelector(
-  [appearanceState],
-  (appearance) => appearance.bucket
-);
-const getY = createSelector([bucketSelector], (bucket) => {
-  if (bucket.location === "top-right") {
-    return 150;
-  }
-  return 400;
-});
-
 type Props = {
   children: React.ReactNode;
 };
 
 const RndView: React.FC<Props> = ({ children }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const appearance = useSelector((state: RootState) => getY(state));
-
   const { width, height } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
   const [boxHight, setBoxHight] = useState(230);
   const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
-  // const [boxY, setBoxY] = useState(height - boxHight - marginXY);
-  const [boxY, setBoxY] = useState(appearance);
+  const [boxY, setBoxY] = useState(height - boxHight - marginXY);
+  const [visible, setVisible] = useState(false);
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
-    dispatch(fetchAllAppearance());
-  }, [dispatch]);
+    (async () => {
+      const bucket = await appearanceBucket.get();
+      if (bucket.location === "top-right") {
+        setBoxY(150);
+      }
+      setVisible(true);
+    })();
+  }, []);
 
   useEffect(() => {
     if (width < boxX + boxWidth + marginXY) {
@@ -80,6 +68,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       cancel=".no-drag-area"
       minWidth={`${minWidth}px`}
       minHeight={`${minHeight}px`}
+      // disableDragging={!visible}
     >
       <Box
         boxShadow="base"
@@ -90,8 +79,8 @@ const RndView: React.FC<Props> = ({ children }) => {
         w={boxWidth}
         h={boxHight}
         overflow="auto"
+        visibility={visible ? "visible" : "hidden"}
       >
-        {JSON.stringify(appearance)}
         <Stack
           className="no-drag-area"
           m="4"
