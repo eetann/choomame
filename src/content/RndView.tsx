@@ -1,5 +1,6 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
-import { Box, Stack } from "@chakra-ui/react";
+import ToolBar from "./ToolBar";
+import { Box, Flex, Spacer, Stack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -70,7 +71,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       minHeight={`${minHeight}px`}
       // disableDragging={!visible}
     >
-      <Box
+      <Flex
         boxShadow="base"
         border="1px"
         borderColor="gray.300"
@@ -80,6 +81,8 @@ const RndView: React.FC<Props> = ({ children }) => {
         h={boxHight}
         overflow="auto"
         visibility={visible ? "visible" : "hidden"}
+        flexDirection="column"
+        justify="space-between"
       >
         <Stack
           className="no-drag-area"
@@ -93,7 +96,8 @@ const RndView: React.FC<Props> = ({ children }) => {
         >
           {children}
         </Stack>
-      </Box>
+        <ToolBar />
+      </Flex>
     </Rnd>
   );
 };
