@@ -1,6 +1,6 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
 import ToolBar from "./ToolBar";
-import { Box, Flex, Spacer, Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
