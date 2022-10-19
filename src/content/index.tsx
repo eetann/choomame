@@ -8,7 +8,13 @@ delete theme.styles.global;
 
 const choomameRoot = document.createElement("div");
 choomameRoot.id = "choomameRoot";
-choomameRoot.style.zIndex = "999";
+// <body>
+//   - search bar 128
+//     - candidates 989 (do not matter)
+//   - main
+//     - toolbar 126
+//   - choomame 127
+choomameRoot.style.zIndex = "127";
 choomameRoot.style.position = "fixed";
 choomameRoot.style.top = "0";
 choomameRoot.style.left = "0";

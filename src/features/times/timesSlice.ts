@@ -22,7 +22,7 @@ export type Time = {
 };
 
 /**
- * formant to save chrome.storage.local
+ * format to save chrome.storage.local
  * {
  *   w1: {timeId: "w1", unit: "week", number: 1},
  *   y3: {timeId: "y3", unit: "year", number: 3},
@@ -186,8 +186,11 @@ const initialTimesStorage: Time[] = [
   },
 ];
 
-export function timesOnInstalled() {
-  timesBucket.set(convertTimesToBucket(initialTimesStorage));
+export async function timesOnInstalled() {
+  const bucket = await timesBucket.get();
+  if (Object.keys(bucket).length === 0) {
+    timesBucket.set(convertTimesToBucket(initialTimesStorage));
+  }
 }
 
 const timesInitialEntityState = timesAdapter.getInitialState({
