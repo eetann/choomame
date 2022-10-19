@@ -49,8 +49,11 @@ const initialLanguagesStorage: LanguagesBucket = {
   languages: ["Any", "lang_en", "lang_ja"],
 };
 
-export function languagesOnInstalled() {
-  languagesBucket.set(initialLanguagesStorage);
+export async function languagesOnInstalled() {
+  const bucket = await languagesBucket.get();
+  if (Object.keys(bucket).length === 0) {
+    languagesBucket.set(initialLanguagesStorage);
+  }
 }
 
 export const initLanguages = createAsyncThunk<Language[]>(

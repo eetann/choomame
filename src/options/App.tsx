@@ -1,3 +1,4 @@
+import AppearanceArea from "../features/appearance/AppearanceArea";
 import LanguagesTab from "../features/languages/LanguagesTab";
 import TimesTab from "../features/times/TimesTab";
 import {
@@ -7,10 +8,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Box,
   Icon,
   Image,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -21,13 +22,14 @@ import {
 
 const App: React.FC = () => {
   return (
-    <Box className="App" m="4">
+    <VStack className="App" m="4" align="start" spacing="8">
       <HStack>
         <Image boxSize="36px" src="/icons/icon-32x32.png" />
         <Text fontSize="lg" my="2">
           Choomame
         </Text>
       </HStack>
+      <AppearanceArea />
       <Tabs colorScheme="teal">
         <TabList>
           <Tab>
@@ -56,7 +58,7 @@ const App: React.FC = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Box>
+    </VStack>
   );
 };
 
