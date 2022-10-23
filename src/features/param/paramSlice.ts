@@ -1,5 +1,3 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 export type ParamTbs = Record<string, string>;
 
 export type Param = {
@@ -45,18 +43,15 @@ export function generateParam(url: URL): Param {
   };
 }
 
-export const paramSlice = createSlice({
-  name: "param",
-  initialState: {} as Param,
-  reducers: {
-    setParam(state) {
-      const url = new URL(location.href);
-      const param = generateParam(url);
-      return { ...state, ...param };
-    },
-  },
-});
+export const initialParam: Param = {
+  url: "",
+  q: "",
+  tbs: {},
+  lr: "",
+  tbm: "",
+};
 
-export const { setParam } = paramSlice.actions;
-
-export default paramSlice.reducer;
+export function getParam(): Param {
+  const url = new URL(location.href);
+  return generateParam(url);
+}

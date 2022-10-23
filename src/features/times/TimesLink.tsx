@@ -1,5 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import { getLink } from "../../common/getLink";
+import { Param } from "../param/paramSlice";
 import { selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -12,9 +13,12 @@ function get_name(unit: TimesUnit, number: number): string {
   return number + " " + unit;
 }
 
-const TimesLink: React.FC = () => {
+type Props = {
+  param: Param;
+};
+
+const TimesLink: React.FC<Props> = ({ param }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const param = useSelector((state: RootState) => state.param);
   const times = useSelector(selectTimes.selectAll);
   const [selectedId, setSelectedId] = useState("");
 
