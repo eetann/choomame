@@ -1,20 +1,22 @@
-import type { AppDispatch, RootState } from "../../app/store";
 import { getLink } from "../../common/getLink";
-import { fetchLanguages, languagesKeyValue } from "./languagesSlice";
+import { Param } from "../param/paramSlice";
+import { fetchLanguages, Language, languagesKeyValue } from "./languagesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 
-const LanguagesLink: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const param = useSelector((state: RootState) => state.param);
-  const languages = useSelector(
-    (state: RootState) => state.languages.languages
-  );
+type Props = {
+  param: Param;
+};
+
+const LanguagesLink: React.FC<Props> = ({ param }) => {
+  const [languages, setLanguages] = useState<Language[]>([]);
 
   useEffect(() => {
-    dispatch(fetchLanguages());
-  }, [dispatch]);
+    (async () => {
+      const langs = await fetchLanguages();
+      setLanguages(langs);
+    })();
+  }, []);
 
   return (
     <Box
