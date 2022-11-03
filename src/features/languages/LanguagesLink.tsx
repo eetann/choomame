@@ -1,5 +1,5 @@
 import { getLink } from "../../common/getLink";
-import { Param } from "../param/paramSlice";
+import { Param } from "../param/param";
 import { getLanguages, Language, languagesKeyValue } from "./languages";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";

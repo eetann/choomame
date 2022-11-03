@@ -1,5 +1,5 @@
 import LanguagesLink from "../features/languages/LanguagesLink";
-import { getParam, initialParam, Param } from "../features/param/paramSlice";
+import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
 import React, { useEffect, useState } from "react";

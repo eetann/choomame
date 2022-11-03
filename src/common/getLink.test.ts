@@ -1,4 +1,4 @@
-import { Param } from "../features/param/paramSlice";
+import { Param } from "../features/param/param";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";
 

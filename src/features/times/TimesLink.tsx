@@ -1,6 +1,6 @@
-import type { AppDispatch, RootState } from "../../app/store";
+import type { AppDispatch } from "../../app/store";
 import { getLink } from "../../common/getLink";
-import { Param } from "../param/paramSlice";
+import { Param } from "../param/param";
 import { selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
