@@ -1,10 +1,8 @@
-import type { AppDispatch } from "../../app/store";
 import { getLink } from "../../common/getLink";
 import { Param } from "../param/param";
-import { selectTimes, fetchAllTimes, TimesUnit } from "./timesSlice";
+import { getTimes, TimesBucket, TimesUnit } from "./times";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 function get_name(unit: TimesUnit, number: number): string {
   if (unit === "Any") {
@@ -18,13 +16,15 @@ type Props = {
 };
 
 const TimesLink: React.FC<Props> = ({ param }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const times = useSelector(selectTimes.selectAll);
+  const [times, setTimes] = useState<TimesBucket>({});
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
-    dispatch(fetchAllTimes());
-  }, [dispatch]);
+    (async () => {
+      const ts = await getTimes();
+      setTimes(ts);
+    })();
+  }, []);
 
   useEffect(() => {
     if (typeof param.tbs !== "undefined") {
@@ -57,7 +57,7 @@ const TimesLink: React.FC<Props> = ({ param }) => {
       }}
     >
       <ButtonGroup size="sm" isAttached>
-        {times.map((time) => {
+        {Object.values(times).map((time) => {
           let selected = false;
           if (time.timeId === selectedId) {
             selected = true;
