@@ -1,8 +1,6 @@
-import { store } from "../app/store";
 import App from "./App";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
 
 delete theme.styles.global;
 
@@ -23,9 +21,7 @@ document.body.appendChild(choomameRoot);
 
 const root = createRoot(choomameRoot);
 root.render(
-  <Provider store={store}>
-    <ChakraProvider resetCSS={false} theme={theme}>
-      <App />
-    </ChakraProvider>
-  </Provider>
+  <ChakraProvider resetCSS={false} theme={theme}>
+    <App />
+  </ChakraProvider>
 );
