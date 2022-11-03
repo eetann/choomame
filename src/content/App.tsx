@@ -1,22 +1,20 @@
-import { AppDispatch } from "../app/store";
 import LanguagesLink from "../features/languages/LanguagesLink";
-import { setParam } from "../features/param/paramSlice";
+import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const [param, setParam] = useState<Param>(initialParam);
 
   useEffect(() => {
-    dispatch(setParam());
-  }, [dispatch]);
+    setParam(getParam());
+  }, []);
 
   return (
     <RndView>
-      <TimesLink />
-      <LanguagesLink />
+      <TimesLink param={param} />
+      <LanguagesLink param={param} />
     </RndView>
   );
 };

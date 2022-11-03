@@ -5,7 +5,7 @@ import {
   ParamTbs,
   parseTbs,
   SearchParam,
-} from "../features/param/paramSlice";
+} from "../features/param/param";
 import { Time } from "../features/times/timesSlice";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";

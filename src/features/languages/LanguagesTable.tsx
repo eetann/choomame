@@ -1,9 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import {
-  removeOneLanguage,
-  Language,
-  languagesKeyValue,
-} from "./languagesSlice";
+import { Language, languagesKeyValue } from "./languages";
+import { removeOneLanguage } from "./languagesSlice";
 import {
   TableContainer,
   Table,
