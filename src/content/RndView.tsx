@@ -6,9 +6,11 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
+const defaultBoxWidth = 500;
+const defaultBoxHight = 200;
 const marginXY = 20;
-const minBoxWidth = 300;
-const minBoxHeight = 230;
+const minBoxWidth = 100;
+const minBoxHeight = 150;
 const toggleWindowWidth = 800;
 
 type Props = {
@@ -17,8 +19,8 @@ type Props = {
 
 const RndView: React.FC<Props> = ({ children }) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const [boxWidth, setBoxWidth] = useState(500);
-  const [boxHight, setBoxHight] = useState(230);
+  const [boxWidth, setBoxWidth] = useState(defaultBoxWidth);
+  const [boxHight, setBoxHight] = useState(defaultBoxHight);
   const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
   const [boxY, setBoxY] = useState(windowHeight - boxHight - marginXY);
   const [visible, setVisible] = useState(false);
@@ -39,9 +41,17 @@ const RndView: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     if (windowWidth < toggleWindowWidth) {
       setMinimum(true);
+      setBoxWidth(minBoxWidth);
+      setBoxHight(minBoxHeight);
     } else {
       setMinimum(false);
+      setBoxWidth(defaultBoxWidth);
+      setBoxHight(defaultBoxHight);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowWidth]);
+
+  useEffect(() => {
     if (windowWidth < boxX + boxWidth + marginXY) {
       setBoxX(windowWidth - boxWidth - marginXY);
     }
@@ -49,6 +59,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       x: boxX,
       y: boxY,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowWidth, boxX]);
 
   useEffect(() => {
@@ -59,6 +70,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       x: boxX,
       y: boxY,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowHeight, boxY]);
 
   return (
@@ -67,9 +79,11 @@ const RndView: React.FC<Props> = ({ children }) => {
         if (c) windowRef.current = c;
       }}
       bounds="window"
-      default={{
+      position={{
         x: boxX,
         y: boxY,
+      }}
+      size={{
         width: boxWidth,
         height: boxHight,
       }}

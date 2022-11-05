@@ -17,9 +17,15 @@ const App: React.FC = () => {
   return (
     <MinimumContext.Provider value={{ minimum, setMinimum }}>
       <RndView>
-        <TimesLink param={param} />
-        <LanguagesLink param={param} />
-        <ToolBar />
+        {minimum ? (
+          <ToolBar />
+        ) : (
+          <>
+            <TimesLink param={param} />
+            <LanguagesLink param={param} />
+            <ToolBar />
+          </>
+        )}
       </RndView>
     </MinimumContext.Provider>
   );
