@@ -1,25 +1,29 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
-import ToolBar from "./ToolBar";
+import DragMoveIcon from "./DragMoveIcon";
 import { Flex, Stack } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
+import { MinimumContext } from "./minimumContext";
 
 const marginXY = 20;
-const minWidth = 300;
-const minHeight = 230;
+const minBoxWidth = 300;
+const minBoxHeight = 230;
+const toggleWindowWidth = 800;
 
 type Props = {
   children: React.ReactNode;
 };
 
 const RndView: React.FC<Props> = ({ children }) => {
-  const { width, height } = useWindowSize();
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(500);
   const [boxHight, setBoxHight] = useState(230);
-  const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
-  const [boxY, setBoxY] = useState(height - boxHight - marginXY);
+  const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
+  const [boxY, setBoxY] = useState(windowHeight - boxHight - marginXY);
   const [visible, setVisible] = useState(false);
+  const { minimum, setMinimum } = useContext(MinimumContext);
+
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
@@ -33,18 +37,29 @@ const RndView: React.FC<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (width < boxX + boxWidth + marginXY) {
-      setBoxX(width - boxWidth - marginXY);
+    if (windowWidth < toggleWindowWidth) {
+      setMinimum(true);
+    } else {
+      setMinimum(false);
     }
-    if (height < boxY + boxHight + marginXY) {
-      setBoxY(height - boxHight - marginXY);
+    if (windowWidth < boxX + boxWidth + marginXY) {
+      setBoxX(windowWidth - boxWidth - marginXY);
     }
     windowRef.current?.updatePosition({
       x: boxX,
       y: boxY,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width, height, boxX, boxY]);
+  }, [windowWidth, boxX]);
+
+  useEffect(() => {
+    if (windowHeight < boxY + boxHight + marginXY) {
+      setBoxY(windowHeight - boxHight - marginXY);
+    }
+    windowRef.current?.updatePosition({
+      x: boxX,
+      y: boxY,
+    });
+  }, [windowHeight, boxY]);
 
   return (
     <Rnd
@@ -67,8 +82,8 @@ const RndView: React.FC<Props> = ({ children }) => {
         setBoxY(data.y);
       }}
       cancel=".no-drag-area"
-      minWidth={`${minWidth}px`}
-      minHeight={`${minHeight}px`}
+      minWidth={`${minBoxWidth}px`}
+      minHeight={`${minBoxHeight}px`}
       // disableDragging={!visible}
     >
       <Flex
@@ -96,7 +111,7 @@ const RndView: React.FC<Props> = ({ children }) => {
         >
           {children}
         </Stack>
-        <ToolBar />
+        <DragMoveIcon />
       </Flex>
     </Rnd>
   );
