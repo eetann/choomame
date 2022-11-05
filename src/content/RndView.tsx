@@ -43,6 +43,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       setMinimum(true);
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
+      setBoxX(windowWidth - boxWidth - marginXY);
     } else {
       setMinimum(false);
       setBoxWidth(defaultBoxWidth);
