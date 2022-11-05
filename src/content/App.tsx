@@ -2,9 +2,9 @@ import LanguagesLink from "../features/languages/LanguagesLink";
 import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
-import ToolBar  from "./ToolBar";
+import ToolBar from "./ToolBar";
+import { MinimumContext } from "./ToolBar";
 import React, { useEffect, useState } from "react";
-import { MinimumContext } from "./minimumContext";
 
 const App: React.FC = () => {
   const [param, setParam] = useState<Param>(initialParam);

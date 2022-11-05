@@ -1,7 +1,21 @@
 import { Flex, HStack, Icon, Tooltip } from "@chakra-ui/react";
 import React, { useContext } from "react";
+import { createContext } from "react";
 import { CgArrowsExpandRight, CgCompressRight } from "react-icons/cg";
-import { MinimumContext } from "./minimumContext";
+
+export type MinimumContextType = {
+  minimum: boolean;
+  setMinimum: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const defaultMinimumContext: MinimumContextType = {
+  minimum: false,
+  setMinimum: () => false,
+};
+
+export const MinimumContext = createContext<MinimumContextType>(
+  defaultMinimumContext
+);
 
 const ToolBar: React.FC = () => {
   const { minimum } = useContext(MinimumContext);

@@ -1,10 +1,10 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
 import DragMoveIcon from "./DragMoveIcon";
+import { MinimumContext } from "./ToolBar";
 import { Flex, Stack } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
-import { MinimumContext } from "./minimumContext";
 
 const marginXY = 20;
 const minBoxWidth = 300;
