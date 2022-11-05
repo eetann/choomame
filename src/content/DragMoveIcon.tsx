@@ -7,7 +7,7 @@ const DragMoveIcon: React.FC = () => {
     <Flex justify="end" mx="4" mb="2">
       <Tooltip label="Move and resize by dragging">
         <span>
-          <Icon color="white" as={RiDragMove2Fill} w="6" h="6" />
+          <Icon color="teal" as={RiDragMove2Fill} w="5" h="5" />
         </span>
       </Tooltip>
     </Flex>

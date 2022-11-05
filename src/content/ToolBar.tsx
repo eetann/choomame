@@ -1,4 +1,4 @@
-import { Flex, HStack, Icon, Tooltip } from "@chakra-ui/react";
+import { Flex, HStack, IconButton, Tooltip } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { createContext } from "react";
 import { CgArrowsExpandRight, CgCompressRight } from "react-icons/cg";
@@ -26,13 +26,35 @@ const ToolBar: React.FC = () => {
         {minimum ? (
           <Tooltip label="Show Choomame">
             <span>
-              <Icon color="gray" as={CgArrowsExpandRight} w="5" h="5" />
+              <IconButton
+                aria-label="Show Choomame"
+                icon={<CgArrowsExpandRight />}
+                size="sm"
+                variant="outline"
+                backgroundColor="whiteAlpha.700"
+                cursor="pointer"
+                color="teal"
+                _hover={{
+                  backgroundColor: "blackAlpha.50",
+                }}
+              />
             </span>
           </Tooltip>
         ) : (
           <Tooltip label="Hide Choomame">
             <span>
-              <Icon color="gray" as={CgCompressRight} w="5" h="5" />
+              <IconButton
+                aria-label="Hide Choomame"
+                icon={<CgCompressRight />}
+                size="sm"
+                variant="outline"
+                backgroundColor="whiteAlpha.700"
+                cursor="pointer"
+                color="teal"
+                _hover={{
+                  backgroundColor: "blackAlpha.50",
+                }}
+              />
             </span>
           </Tooltip>
         )}

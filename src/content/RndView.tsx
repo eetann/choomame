@@ -24,7 +24,7 @@ const RndView: React.FC<Props> = ({ children }) => {
   const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
   const [boxY, setBoxY] = useState(windowHeight - boxHight - marginXY);
   const [visible, setVisible] = useState(false);
-  const { minimum, setMinimum } = useContext(MinimumContext);
+  const { setMinimum } = useContext(MinimumContext);
 
   const windowRef = useRef<Rnd>();
 
