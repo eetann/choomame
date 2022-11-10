@@ -18,7 +18,7 @@ export const MinimumContext = createContext<MinimumContextType>(
 );
 
 const ToolBar: React.FC = () => {
-  const { minimum } = useContext(MinimumContext);
+  const { minimum, setMinimum } = useContext(MinimumContext);
 
   return (
     <Flex justify="end" mx="4" mb="2">
@@ -37,6 +37,7 @@ const ToolBar: React.FC = () => {
                 _hover={{
                   backgroundColor: "blackAlpha.50",
                 }}
+                onClick={() => setMinimum(false)}
               />
             </span>
           </Tooltip>
@@ -54,6 +55,7 @@ const ToolBar: React.FC = () => {
                 _hover={{
                   backgroundColor: "blackAlpha.50",
                 }}
+                onClick={() => setMinimum(true)}
               />
             </span>
           </Tooltip>

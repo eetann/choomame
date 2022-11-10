@@ -24,11 +24,12 @@ const RndView: React.FC<Props> = ({ children }) => {
   const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
   const [boxY, setBoxY] = useState(windowHeight - boxHight - marginXY);
   const [visible, setVisible] = useState(false);
-  const { setMinimum } = useContext(MinimumContext);
+  const { minimum, setMinimum } = useContext(MinimumContext);
 
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
+    // レンダリング初回のみ。locationがtop-rightの時のみboxYを150に変更。locatioin関係なく表示
     (async () => {
       const bucket = await appearanceBucket.get();
       if (bucket.location === "top-right") {
@@ -39,37 +40,68 @@ const RndView: React.FC<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // ウィンドウ幅が変わった時、toggleWindowWidthよりも小さいなら最小化、大きいなら最大化
     if (windowWidth < toggleWindowWidth) {
       setMinimum(true);
-      setBoxWidth(minBoxWidth);
-      setBoxHight(minBoxHeight);
-      setBoxX(windowWidth - boxWidth - marginXY);
     } else {
       setMinimum(false);
-      setBoxWidth(defaultBoxWidth);
-      setBoxHight(defaultBoxHight);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowWidth]);
 
   useEffect(() => {
+    // 最小化された時、boxのサイズを変更する。boxのX座標は右寄せに変更する
+    // もとに戻る時、boxサイズをデフォルトとboxのX座標を変更する
+    if (minimum) {
+      setBoxWidth(minBoxWidth);
+      setBoxHight(minBoxHeight);
+    } else {
+      setBoxWidth(defaultBoxWidth);
+      setBoxHight(defaultBoxHight);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minimum]);
+
+  useEffect(() => {
+    // ウィンドウ幅よりもbox+marginの幅が大きい時、box幅とX座標を変更する
+    // 最小幅よりも小さいなら、box幅は最小幅に、Xを0にする
+    if (windowWidth < boxWidth + marginXY) {
+      if (windowWidth - marginXY <= minBoxWidth) {
+        setBoxWidth(minBoxWidth);
+        setBoxX(0);
+      } else {
+        setBoxWidth(windowWidth - marginXY);
+        setBoxX(windowWidth - minBoxWidth - marginXY);
+      }
+    }
+  }, [windowWidth, boxWidth]);
+
+  useEffect(() => {
+    let newBoxX = boxX;
     if (windowWidth < boxX + boxWidth + marginXY) {
-      setBoxX(windowWidth - boxWidth - marginXY);
+      newBoxX = windowWidth - boxWidth - marginXY;
+      console.log(`windowWidth: ${windowWidth}`);
+      console.log(`boxWidth: ${boxWidth}`);
+      console.log(`marginXY: ${marginXY}`);
+      console.log(`newBoxX: ${newBoxX}`);
+      setBoxX(newBoxX);
     }
     windowRef.current?.updatePosition({
-      x: boxX,
+      x: newBoxX,
       y: boxY,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowWidth, boxX]);
 
   useEffect(() => {
+    let newBoxY = boxY;
     if (windowHeight < boxY + boxHight + marginXY) {
-      setBoxY(windowHeight - boxHight - marginXY);
+      newBoxY = windowHeight - boxHight - marginXY;
+      setBoxY(newBoxY);
     }
     windowRef.current?.updatePosition({
       x: boxX,
-      y: boxY,
+      y: newBoxY,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowHeight, boxY]);
@@ -99,6 +131,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       cancel=".no-drag-area"
       minWidth={`${minBoxWidth}px`}
       minHeight={`${minBoxHeight}px`}
+      enableResizing={!minimum}
       // disableDragging={!visible}
     >
       <Flex
