@@ -6,6 +6,7 @@ export type Param = {
   tbs: ParamTbs; // time
   lr: string; // language
   tbm: string; // search target
+  sidesearch: boolean;
 };
 
 export type SearchParam = string | null;
@@ -40,6 +41,7 @@ export function generateParam(url: URL): Param {
     tbs: parseTbs(url.searchParams.get("tbs")),
     lr: url.searchParams.get("lr") || "",
     tbm: url.searchParams.get("tbm") || "",
+    sidesearch: url.searchParams.get("sidesearch") === "1",
   };
 }
 
@@ -49,6 +51,7 @@ export const initialParam: Param = {
   tbs: {},
   lr: "",
   tbm: "",
+  sidesearch: false,
 };
 
 export function getParam(): Param {

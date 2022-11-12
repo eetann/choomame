@@ -1,50 +1,119 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
-import ToolBar from "./ToolBar";
+import DragMoveIcon from "./DragMoveIcon";
+import { MinimumContext } from "./ToolBar";
 import { Flex, Stack } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
+const defaultBoxWidth = 500;
+const defaultBoxHight = 200;
 const marginXY = 20;
-const minWidth = 300;
-const minHeight = 230;
+const minBoxWidth = 85;
+const minBoxHeight = 115;
+const toggleWindowWidth = 800;
 
 type Props = {
   children: React.ReactNode;
+  isBottomRight: boolean;
 };
 
-const RndView: React.FC<Props> = ({ children }) => {
-  const { width, height } = useWindowSize();
-  const [boxWidth, setBoxWidth] = useState(500);
-  const [boxHight, setBoxHight] = useState(230);
-  const [boxX, setBoxX] = useState(width - boxWidth - marginXY);
-  const [boxY, setBoxY] = useState(height - boxHight - marginXY);
+const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const [boxWidth, setBoxWidth] = useState(defaultBoxWidth);
+  const [boxHeight, setBoxHight] = useState(defaultBoxHight);
+  const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
+  const [boxY, setBoxY] = useState(windowHeight - boxHeight - marginXY);
   const [visible, setVisible] = useState(false);
+  const { minimum, setMinimum } = useContext(MinimumContext);
+  const [bottomRight, setBottomRight] = useState(false);
+
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
+    // locationがtop-rightの時、boxのX座標を150に変更。bottom-rightのときはフラグをtrue
+    // locatioin判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
-      if (bucket.location === "top-right") {
+      if (!isBottomRight && bucket.location === "top-right") {
         setBoxY(150);
+      } else {
+        setBottomRight(true);
       }
       setVisible(true);
     })();
-  }, []);
+  }, [isBottomRight]);
 
   useEffect(() => {
-    if (width < boxX + boxWidth + marginXY) {
-      setBoxX(width - boxWidth - marginXY);
+    // ウィンドウ幅が変わった時、toggleWindowWidthよりも小さいなら最小化、大きいなら最大化
+    if (windowWidth < toggleWindowWidth) {
+      setMinimum(true);
+    } else {
+      setMinimum(false);
     }
-    if (height < boxY + boxHight + marginXY) {
-      setBoxY(height - boxHight - marginXY);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowWidth]);
+
+  useEffect(() => {
+    // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
+    // Y座標はbottomRightなら下寄せ
+    if (minimum) {
+      setBoxWidth(minBoxWidth);
+      setBoxHight(minBoxHeight);
+      setBoxX(windowWidth - minBoxWidth - marginXY);
+      if (bottomRight) {
+        setBoxY(windowHeight - minBoxHeight - marginXY);
+      }
+    } else {
+      setBoxWidth(defaultBoxWidth);
+      setBoxHight(defaultBoxHight);
+      setBoxX(windowWidth - defaultBoxWidth - marginXY);
+      if (bottomRight) {
+        setBoxY(windowHeight - defaultBoxHight - marginXY);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minimum, bottomRight]);
+
+  useEffect(() => {
+    // ウィンドウ幅よりもbox+marginの幅が大きい時、box幅とX座標を変更する
+    // 最小幅よりも小さいなら、box幅は最小幅に、Xを0にする
+    if (windowWidth < boxWidth + marginXY) {
+      if (windowWidth - marginXY <= minBoxWidth) {
+        setBoxWidth(minBoxWidth);
+        setBoxX(0);
+      } else {
+        setBoxWidth(windowWidth - marginXY);
+        setBoxX(windowWidth - minBoxWidth - marginXY);
+      }
+    }
+  }, [windowWidth, boxWidth]);
+
+  useEffect(() => {
+    let newBoxX = boxX;
+    if (windowWidth < boxX + boxWidth + marginXY) {
+      newBoxX = windowWidth - boxWidth - marginXY;
+      setBoxX(newBoxX);
     }
     windowRef.current?.updatePosition({
-      x: boxX,
+      x: newBoxX,
       y: boxY,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width, height, boxX, boxY]);
+  }, [windowWidth, boxX]);
+
+  useEffect(() => {
+    let newBoxY = boxY;
+    if (windowHeight < boxY + boxHeight + marginXY) {
+      newBoxY = windowHeight - boxHeight - marginXY;
+      setBoxY(newBoxY);
+    }
+    windowRef.current?.updatePosition({
+      x: boxX,
+      y: newBoxY,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowHeight, boxY]);
 
   return (
     <Rnd
@@ -52,11 +121,13 @@ const RndView: React.FC<Props> = ({ children }) => {
         if (c) windowRef.current = c;
       }}
       bounds="window"
-      default={{
+      position={{
         x: boxX,
         y: boxY,
+      }}
+      size={{
         width: boxWidth,
-        height: boxHight,
+        height: boxHeight,
       }}
       onResize={(_, __, ref) => {
         setBoxWidth(parseInt(ref.style.width, 10));
@@ -67,8 +138,9 @@ const RndView: React.FC<Props> = ({ children }) => {
         setBoxY(data.y);
       }}
       cancel=".no-drag-area"
-      minWidth={`${minWidth}px`}
-      minHeight={`${minHeight}px`}
+      minWidth={`${minBoxWidth}px`}
+      minHeight={`${minBoxHeight}px`}
+      enableResizing={!minimum}
       // disableDragging={!visible}
     >
       <Flex
@@ -78,7 +150,7 @@ const RndView: React.FC<Props> = ({ children }) => {
         bgColor="rgba(195, 236, 82, 0.95)"
         rounded="md"
         w={boxWidth}
-        h={boxHight}
+        h={boxHeight}
         overflow="auto"
         visibility={visible ? "visible" : "hidden"}
         flexDirection="column"
@@ -86,7 +158,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       >
         <Stack
           className="no-drag-area"
-          m="4"
+          m="2"
           p="2"
           rounded="md"
           cursor="auto"
@@ -96,7 +168,7 @@ const RndView: React.FC<Props> = ({ children }) => {
         >
           {children}
         </Stack>
-        <ToolBar />
+        <DragMoveIcon />
       </Flex>
     </Rnd>
   );

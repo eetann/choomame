@@ -1,6 +1,6 @@
-import { Language } from "../features/languages/languagesSlice";
+import { Language } from "../features/languages/languages";
 import { joinTbs, Param, ParamTbs } from "../features/param/param";
-import { Time } from "../features/times/timesSlice";
+import { Time } from "../features/times/times";
 
 export function getLink(
   param: Param,

@@ -18,6 +18,7 @@ describe("generate link from Param", () => {
         tbs: {},
         lr: "",
         tbm: "",
+        sidesearch: false,
       },
       expected: "https://www.google.com/search?q=kerry",
     },
@@ -29,6 +30,7 @@ describe("generate link from Param", () => {
         tbs: { qdr: "y1" },
         lr: "lang_ja",
         tbm: "",
+        sidesearch: false,
       },
       expected: "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja",
     },
@@ -40,6 +42,7 @@ describe("generate link from Param", () => {
         tbs: { qdr: "y1" },
         lr: "lang_ja",
         tbm: "isch",
+        sidesearch: false,
       },
       expected:
         "https://www.google.com/search?q=kerry&tbs=qdr:y1&lr=lang_ja&tbm=isch",
@@ -60,6 +63,7 @@ describe("escape", () => {
         tbs: {},
         lr: "",
         tbm: "",
+        sidesearch: false,
       },
       expected: "https://www.google.com/search?q=%26tbs%3Dqdr%253A",
     },
@@ -71,6 +75,7 @@ describe("escape", () => {
         tbs: {},
         lr: "",
         tbm: "",
+        sidesearch: false,
       },
       expected: "https://www.google.com/search?q=kerry+eurodyne",
     },
@@ -82,6 +87,7 @@ describe("escape", () => {
         tbs: {},
         lr: "",
         tbm: "",
+        sidesearch: false,
       },
       expected: "https://www.google.com/search?q=kerry+eurodyne",
     },
@@ -137,6 +143,7 @@ describe("escape", () => {
       tbs: {},
       lr: "",
       tbm: "",
+      sidesearch: false,
     };
     expect(param.q).toBe(new URL(param.url).searchParams.get("q"));
     expect(getLink(param)).toBe(expected);
