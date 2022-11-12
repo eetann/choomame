@@ -9,7 +9,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 const defaultBoxWidth = 500;
 const defaultBoxHight = 200;
 const marginXY = 20;
-const minBoxWidth = 100;
+const minBoxWidth = 85;
 const minBoxHeight = 115;
 const toggleWindowWidth = 800;
 
@@ -53,10 +53,12 @@ const RndView: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
     if (minimum) {
+      console.log("minimum");
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
       setBoxX(windowWidth - minBoxWidth - marginXY);
     } else {
+      console.log("not minimum");
       setBoxWidth(defaultBoxWidth);
       setBoxHight(defaultBoxHight);
       setBoxX(windowWidth - defaultBoxWidth - marginXY);
@@ -147,7 +149,7 @@ const RndView: React.FC<Props> = ({ children }) => {
       >
         <Stack
           className="no-drag-area"
-          m="4"
+          m="2"
           p="2"
           rounded="md"
           cursor="auto"
