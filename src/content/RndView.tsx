@@ -31,7 +31,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
-    // locationがtop-rightの時のみboxのX座標を150に変更
+    // locationがtop-rightの時、boxのX座標を150に変更。bottom-rightのときはフラグをtrue
     // locatioin判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
@@ -56,6 +56,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
 
   useEffect(() => {
     // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
+    // Y座標はbottomRightなら下寄せ
     if (minimum) {
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
