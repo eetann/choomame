@@ -29,7 +29,8 @@ const RndView: React.FC<Props> = ({ children }) => {
   const windowRef = useRef<Rnd>();
 
   useEffect(() => {
-    // レンダリング初回のみ。locationがtop-rightの時のみboxYを150に変更。locatioin関係なく表示
+    // locationがtop-rightの時のみboxのX座標を150に変更
+    // locatioin判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
       if (bucket.location === "top-right") {
@@ -50,14 +51,15 @@ const RndView: React.FC<Props> = ({ children }) => {
   }, [windowWidth]);
 
   useEffect(() => {
-    // 最小化された時、boxのサイズを変更する。boxのX座標は右寄せに変更する
-    // もとに戻る時、boxサイズをデフォルトとboxのX座標を変更する
+    // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
     if (minimum) {
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
+      setBoxX(windowWidth - minBoxWidth - marginXY);
     } else {
       setBoxWidth(defaultBoxWidth);
       setBoxHight(defaultBoxHight);
+      setBoxX(windowWidth - defaultBoxWidth - marginXY);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minimum]);
@@ -80,10 +82,6 @@ const RndView: React.FC<Props> = ({ children }) => {
     let newBoxX = boxX;
     if (windowWidth < boxX + boxWidth + marginXY) {
       newBoxX = windowWidth - boxWidth - marginXY;
-      console.log(`windowWidth: ${windowWidth}`);
-      console.log(`boxWidth: ${boxWidth}`);
-      console.log(`marginXY: ${marginXY}`);
-      console.log(`newBoxX: ${newBoxX}`);
       setBoxX(newBoxX);
     }
     windowRef.current?.updatePosition({
