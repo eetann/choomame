@@ -1,5 +1,3 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 export type ParamTbs = Record<string, string>;
 
 export type Param = {
@@ -8,6 +6,7 @@ export type Param = {
   tbs: ParamTbs; // time
   lr: string; // language
   tbm: string; // search target
+  sidesearch: boolean;
 };
 
 export type SearchParam = string | null;
@@ -42,21 +41,20 @@ export function generateParam(url: URL): Param {
     tbs: parseTbs(url.searchParams.get("tbs")),
     lr: url.searchParams.get("lr") || "",
     tbm: url.searchParams.get("tbm") || "",
+    sidesearch: url.searchParams.get("sidesearch") === "1",
   };
 }
 
-export const paramSlice = createSlice({
-  name: "param",
-  initialState: {} as Param,
-  reducers: {
-    setParam(state) {
-      const url = new URL(location.href);
-      const param = generateParam(url);
-      return { ...state, ...param };
-    },
-  },
-});
+export const initialParam: Param = {
+  url: "",
+  q: "",
+  tbs: {},
+  lr: "",
+  tbm: "",
+  sidesearch: false,
+};
 
-export const { setParam } = paramSlice.actions;
-
-export default paramSlice.reducer;
+export function getParam(): Param {
+  const url = new URL(location.href);
+  return generateParam(url);
+}

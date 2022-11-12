@@ -1,11 +1,6 @@
 import type { AppDispatch } from "../../app/store";
-import {
-  addOneTime,
-  getTimeId,
-  selectTimes,
-  TimesUnit,
-  timeUnitOrder,
-} from "./timesSlice";
+import { getTimeId, TimesUnit, timeUnitOrder } from "./times";
+import { addOneTime, selectTimes } from "./timesSlice";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   FormControl,
