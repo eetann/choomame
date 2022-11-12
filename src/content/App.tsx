@@ -10,19 +10,21 @@ import React, { useEffect, useState } from "react";
 const App: React.FC = () => {
   const [param, setParam] = useState<Param>(initialParam);
   const [minimum, setMinimum] = useState(false);
+  const _param = getParam();
+  const isBottomRight: boolean = _param.tbm === "isch" || _param.sidesearch;
 
   useEffect(() => {
-    const param = getParam();
-    setParam(param);
-    // 画像検索時は最小化する
-    if (param.tbm === "isch") {
+    setParam(_param);
+    // 画像検索かサイド検索時は最小化する
+    if (isBottomRight) {
       setMinimum(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <MinimumContext.Provider value={{ minimum, setMinimum }}>
-      <RndView>
+      <RndView isBottomRight={isBottomRight}>
         {minimum ? (
           <Center>
             <ToolBar />

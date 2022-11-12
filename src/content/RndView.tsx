@@ -15,9 +15,10 @@ const toggleWindowWidth = 800;
 
 type Props = {
   children: React.ReactNode;
+  isBottomRight: boolean;
 };
 
-const RndView: React.FC<Props> = ({ children }) => {
+const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(defaultBoxWidth);
   const [boxHight, setBoxHight] = useState(defaultBoxHight);
@@ -33,12 +34,12 @@ const RndView: React.FC<Props> = ({ children }) => {
     // locatioin判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
-      if (bucket.location === "top-right") {
+      if (!isBottomRight && bucket.location === "top-right") {
         setBoxY(150);
       }
       setVisible(true);
     })();
-  }, []);
+  }, [isBottomRight]);
 
   useEffect(() => {
     // ウィンドウ幅が変わった時、toggleWindowWidthよりも小さいなら最小化、大きいなら最大化
@@ -53,12 +54,10 @@ const RndView: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
     if (minimum) {
-      console.log("minimum");
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
       setBoxX(windowWidth - minBoxWidth - marginXY);
     } else {
-      console.log("not minimum");
       setBoxWidth(defaultBoxWidth);
       setBoxHight(defaultBoxHight);
       setBoxX(windowWidth - defaultBoxWidth - marginXY);
