@@ -21,11 +21,12 @@ type Props = {
 const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(defaultBoxWidth);
-  const [boxHight, setBoxHight] = useState(defaultBoxHight);
+  const [boxHeight, setBoxHight] = useState(defaultBoxHight);
   const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
-  const [boxY, setBoxY] = useState(windowHeight - boxHight - marginXY);
+  const [boxY, setBoxY] = useState(windowHeight - boxHeight - marginXY);
   const [visible, setVisible] = useState(false);
   const { minimum, setMinimum } = useContext(MinimumContext);
+  const [bottomRight, setBottomRight] = useState(false);
 
   const windowRef = useRef<Rnd>();
 
@@ -36,6 +37,8 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
       const bucket = await appearanceBucket.get();
       if (!isBottomRight && bucket.location === "top-right") {
         setBoxY(150);
+      } else {
+        setBottomRight(true);
       }
       setVisible(true);
     })();
@@ -57,13 +60,19 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
       setBoxX(windowWidth - minBoxWidth - marginXY);
+      if (bottomRight) {
+        setBoxY(windowHeight - minBoxHeight - marginXY);
+      }
     } else {
       setBoxWidth(defaultBoxWidth);
       setBoxHight(defaultBoxHight);
       setBoxX(windowWidth - defaultBoxWidth - marginXY);
+      if (bottomRight) {
+        setBoxY(windowHeight - defaultBoxHight - marginXY);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [minimum]);
+  }, [minimum, bottomRight]);
 
   useEffect(() => {
     // ウィンドウ幅よりもbox+marginの幅が大きい時、box幅とX座標を変更する
@@ -94,8 +103,8 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
 
   useEffect(() => {
     let newBoxY = boxY;
-    if (windowHeight < boxY + boxHight + marginXY) {
-      newBoxY = windowHeight - boxHight - marginXY;
+    if (windowHeight < boxY + boxHeight + marginXY) {
+      newBoxY = windowHeight - boxHeight - marginXY;
       setBoxY(newBoxY);
     }
     windowRef.current?.updatePosition({
@@ -117,7 +126,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
       }}
       size={{
         width: boxWidth,
-        height: boxHight,
+        height: boxHeight,
       }}
       onResize={(_, __, ref) => {
         setBoxWidth(parseInt(ref.style.width, 10));
@@ -140,7 +149,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         bgColor="rgba(195, 236, 82, 0.95)"
         rounded="md"
         w={boxWidth}
-        h={boxHight}
+        h={boxHeight}
         overflow="auto"
         visibility={visible ? "visible" : "hidden"}
         flexDirection="column"
