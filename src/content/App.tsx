@@ -11,7 +11,12 @@ const App: React.FC = () => {
   const [minimum, setMinimum] = useState(false);
 
   useEffect(() => {
-    setParam(getParam());
+    const param = getParam();
+    setParam(param);
+    // 画像検索時は最小化する
+    if (param.tbm === "isch") {
+      setMinimum(true);
+    }
   }, []);
 
   return (
