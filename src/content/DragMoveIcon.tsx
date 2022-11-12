@@ -6,7 +6,7 @@ import { RiDragMove2Fill } from "react-icons/ri";
 const DragMoveIcon: React.FC = () => {
   const { minimum } = useContext(MinimumContext);
   return (
-    <Flex justify="end" mx="4" mb="2">
+    <Flex justify={minimum ? "center" : "end"} mx="4" mb="2">
       <Tooltip
         label={minimum ? "Move by dragging" : "Move and resize by dragging"}
       >

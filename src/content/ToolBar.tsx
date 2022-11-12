@@ -21,7 +21,7 @@ const ToolBar: React.FC = () => {
   const { minimum, setMinimum } = useContext(MinimumContext);
 
   return (
-    <Flex justify="end" mx="4" mb="2">
+    <Flex justify="end" mx="4">
       <HStack spacing="3">
         {minimum ? (
           <Tooltip label="Show Choomame">

@@ -4,6 +4,7 @@ import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
 import ToolBar from "./ToolBar";
 import { MinimumContext } from "./ToolBar";
+import { Center } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
@@ -23,7 +24,9 @@ const App: React.FC = () => {
     <MinimumContext.Provider value={{ minimum, setMinimum }}>
       <RndView>
         {minimum ? (
-          <ToolBar />
+          <Center>
+            <ToolBar />
+          </Center>
         ) : (
           <>
             <TimesLink param={param} />

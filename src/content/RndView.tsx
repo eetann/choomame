@@ -10,7 +10,7 @@ const defaultBoxWidth = 500;
 const defaultBoxHight = 200;
 const marginXY = 20;
 const minBoxWidth = 100;
-const minBoxHeight = 150;
+const minBoxHeight = 115;
 const toggleWindowWidth = 800;
 
 type Props = {
