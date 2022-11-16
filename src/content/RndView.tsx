@@ -2,7 +2,13 @@ import { appearanceBucket } from "../features/appearance/appearanceSlice";
 import DragMoveIcon from "./DragMoveIcon";
 import { MinimumContext } from "./ToolBar";
 import { Flex, Stack } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
@@ -24,9 +30,9 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   const [boxHeight, setBoxHight] = useState(defaultBoxHight);
   const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
   const [boxY, setBoxY] = useState(windowHeight - boxHeight - marginXY);
-  const [visible, setVisible] = useState(false);
+  const [visible, dispatchVisible] = useReducer(() => true, false);
   const { minimum, setMinimum } = useContext(MinimumContext);
-  const [bottomRight, setBottomRight] = useState(false);
+  const [bottomRight, dispatchBottomRight] = useReducer(() => true, false);
 
   const windowRef = useRef<Rnd>();
 
@@ -38,9 +44,9 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
       if (!isBottomRight && bucket.location === "top-right") {
         setBoxY(150);
       } else {
-        setBottomRight(true);
+        dispatchBottomRight();
       }
-      setVisible(true);
+      dispatchVisible();
     })();
   }, [isBottomRight]);
 
