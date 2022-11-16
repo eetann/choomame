@@ -28,8 +28,10 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const [boxWidth, setBoxWidth] = useState(defaultBoxWidth);
   const [boxHeight, setBoxHight] = useState(defaultBoxHight);
-  const [boxX, setBoxX] = useState(windowWidth - boxWidth - marginXY);
-  const [boxY, setBoxY] = useState(windowHeight - boxHeight - marginXY);
+  const [boxPosition, setBoxPosition] = useState({
+    x: windowWidth - boxWidth - marginXY,
+    y: windowHeight - boxHeight - marginXY,
+  });
   const [visible, dispatchVisible] = useReducer(() => true, false);
   const { minimum, setMinimum } = useContext(MinimumContext);
   const [bottomRight, dispatchBottomRight] = useReducer(() => true, false);
@@ -42,12 +44,13 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
     (async () => {
       const bucket = await appearanceBucket.get();
       if (!isBottomRight && bucket.location === "top-right") {
-        setBoxY(150);
+        setBoxPosition({ ...boxPosition, y: 150 });
       } else {
         dispatchBottomRight();
       }
       dispatchVisible();
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBottomRight]);
 
   useEffect(() => {
@@ -63,21 +66,24 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
   useEffect(() => {
     // 最小化されたりもとに戻る時、boxのサイズを変更し、X座標は右寄せに変更する
     // Y座標はbottomRightなら下寄せ
+    let boxX = boxPosition.x;
+    let boxY = boxPosition.y;
     if (minimum) {
       setBoxWidth(minBoxWidth);
       setBoxHight(minBoxHeight);
-      setBoxX(windowWidth - minBoxWidth - marginXY);
+      boxX = windowWidth - minBoxWidth - marginXY;
       if (bottomRight) {
-        setBoxY(windowHeight - minBoxHeight - marginXY);
+        boxY = windowHeight - minBoxHeight - marginXY;
       }
     } else {
       setBoxWidth(defaultBoxWidth);
       setBoxHight(defaultBoxHight);
-      setBoxX(windowWidth - defaultBoxWidth - marginXY);
+      boxX = windowWidth - defaultBoxWidth - marginXY;
       if (bottomRight) {
-        setBoxY(windowHeight - defaultBoxHight - marginXY);
+        boxY = windowHeight - defaultBoxHight - marginXY;
       }
     }
+    setBoxPosition({ x: boxX, y: boxY });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minimum, bottomRight]);
 
@@ -87,39 +93,34 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
     if (windowWidth < boxWidth + marginXY) {
       if (windowWidth - marginXY <= minBoxWidth) {
         setBoxWidth(minBoxWidth);
-        setBoxX(0);
+        setBoxPosition({ ...boxPosition, x: 0 });
       } else {
         setBoxWidth(windowWidth - marginXY);
-        setBoxX(windowWidth - minBoxWidth - marginXY);
+        setBoxPosition({
+          ...boxPosition,
+          x: windowWidth - minBoxWidth - marginXY,
+        });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowWidth, boxWidth]);
 
   useEffect(() => {
-    let newBoxX = boxX;
-    if (windowWidth < boxX + boxWidth + marginXY) {
-      newBoxX = windowWidth - boxWidth - marginXY;
-      setBoxX(newBoxX);
+    let boxX = boxPosition.x;
+    let boxY = boxPosition.y;
+    if (windowWidth < boxPosition.x + boxWidth + marginXY) {
+      boxX = windowWidth - boxWidth - marginXY;
     }
+    if (windowHeight < boxPosition.y + boxHeight + marginXY) {
+      boxY = windowHeight - boxHeight - marginXY;
+    }
+    setBoxPosition({ x: boxX, y: boxY });
     windowRef.current?.updatePosition({
-      x: newBoxX,
+      x: boxX,
       y: boxY,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [windowWidth, boxX]);
-
-  useEffect(() => {
-    let newBoxY = boxY;
-    if (windowHeight < boxY + boxHeight + marginXY) {
-      newBoxY = windowHeight - boxHeight - marginXY;
-      setBoxY(newBoxY);
-    }
-    windowRef.current?.updatePosition({
-      x: boxX,
-      y: newBoxY,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [windowHeight, boxY]);
+  }, [windowWidth, windowHeight, boxPosition.x, boxPosition.y]);
 
   return (
     <Rnd
@@ -128,8 +129,8 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
       }}
       bounds="window"
       position={{
-        x: boxX,
-        y: boxY,
+        x: boxPosition.x,
+        y: boxPosition.y,
       }}
       size={{
         width: boxWidth,
@@ -140,8 +141,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         setBoxHight(parseInt(ref.style.height, 10));
       }}
       onDragStop={(_, data) => {
-        setBoxX(data.x);
-        setBoxY(data.y);
+        setBoxPosition({ x: data.x, y: data.y });
       }}
       cancel=".no-drag-area"
       minWidth={`${minBoxWidth}px`}
