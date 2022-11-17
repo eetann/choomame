@@ -139,9 +139,9 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         width: boxState.width,
         height: boxState.height,
       }}
-      onResize={(_, __, ref) => {
+      onResize={(_, __, ref, ___, position) => {
         setBoxState({
-          ...boxState,
+          ...position,
           width: parseInt(ref.style.width, 10),
           height: parseInt(ref.style.height, 10),
         });
