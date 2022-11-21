@@ -25,7 +25,8 @@
     "react-icons": "^4.4.0",
     "react-redux": "^8.0.2",
     "react-rnd": "^10.3.7",
-    "react-use": "^17.4.0"
+    "react-use": "^17.4.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.12",
