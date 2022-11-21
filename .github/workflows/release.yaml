@@ -18,8 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-      - uses: fregante/daily-version-action@a1fc2b591c0bee1c12274b8dffaddea11c079082
-        # TODO: 最新版ではタグがないときのエラー処理がまた抜けてるので一旦コミットで指定
+      - uses: fregante/daily-version-action
         name: Create tag if necessary
         id: daily-version
       - run: npm run build
