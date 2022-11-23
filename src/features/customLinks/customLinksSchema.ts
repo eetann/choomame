@@ -1,8 +1,19 @@
 import { z } from "zod";
 
+function messageStringMinMax(variable: string, min: number, max: number) {
+  return z
+    .string()
+    .refine((value: string) => min <= value.length && value.length <= max, {
+      message: `${variable} must be between ${min} and ${max} characters.`,
+    });
+}
+
 export const customLinkSchema = z.object({
-  kind: z.string().min(1).max(50),
-  url: z.string().url().max(200),
+  kind: messageStringMinMax("kind", 1, 50),
+  url: z
+    .string()
+    .url({ message: "URL is invalid." })
+    .max(200, { message: "URL should not exceed 200 characters." }),
   enable: z.boolean(),
 });
 

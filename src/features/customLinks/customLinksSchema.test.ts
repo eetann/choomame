@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 type TestCase = {
   title: string;
   customLink: CustomLink;
+  expected?: string;
 };
 
 describe("validation check", () => {
@@ -44,6 +45,7 @@ describe("validation check", () => {
         url: "https://www.google.com/search",
         enable: false,
       },
+      expected: "kind must be between 1 and 50 characters.",
     },
     {
       title: "`kind` is more than 50 characters(51 characters)",
@@ -52,22 +54,7 @@ describe("validation check", () => {
         url: "https://www.google.com/search",
         enable: false,
       },
-    },
-    {
-      title: "`url` is more than 200 characters(201 characters)",
-      customLink: {
-        kind: "Document",
-        url: "https://www.google.com/search?q=baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        enable: false,
-      },
-    },
-    {
-      title: "`url` is empty",
-      customLink: {
-        kind: "Document",
-        url: "",
-        enable: false,
-      },
+      expected: "kind must be between 1 and 50 characters.",
     },
     {
       title: "`url` is not a valid URL format",
@@ -76,8 +63,27 @@ describe("validation check", () => {
         url: "Kerry",
         enable: false,
       },
+      expected: "URL is invalid.",
     },
-  ])("[exception] %s", ({ customLink }) => {
-    expect(() => customLinkSchema.parse(customLink)).toThrow();
+    {
+      title: "`url` is empty",
+      customLink: {
+        kind: "Document",
+        url: "",
+        enable: false,
+      },
+      expected: "URL is invalid.",
+    },
+    {
+      title: "`url` is more than 200 characters(201 characters)",
+      customLink: {
+        kind: "Document",
+        url: "https://www.google.com/search?q=baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        enable: false,
+      },
+      expected: "URL should not exceed 200 characters.",
+    },
+  ])("[exception] %s", ({ customLink, expected }) => {
+    expect(() => customLinkSchema.parse(customLink)).toThrowError(expected);
   });
 });
