@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "dev": "vite",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "dev": "vite",
     "zip": "echo 'use chrome-webstore-upload-cli in GitHub Actions'",
     "build": "tsc && vite build",
     "lint": "eslint src && prettier --check src",
