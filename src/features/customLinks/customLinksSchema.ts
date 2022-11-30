@@ -21,13 +21,16 @@ export type CustomLink = z.infer<typeof customLinkSchema>;
 
 export const customLinkListIdSchema = z
   .string()
-  .min(1)
-  .max(50)
-  .regex(/[A-Za-z0-9_]/);
+  .min(1, { message: "list_id must be between 1 and 50 characters." })
+  .max(50, { message: "list_id must be between 1 and 50 characters." })
+  .regex(/^[A-Za-z0-9_-]*$/, {
+    message:
+      "Only A to Z, a to z, 0 to 9, hyphens and underscores are allowed.",
+  });
 
 export const customLinkItemSchema = z.object({
   list_id: customLinkListIdSchema,
-  target: z.string().min(1).max(50),
+  target: messageStringMinMax("target", 1, 50),
   hit: z.string().refine(
     (value: string) => {
       try {
@@ -38,11 +41,13 @@ export const customLinkItemSchema = z.object({
       return true;
     },
     (value: string) => ({
-      message: `${value} is not not a valid regular expression`,
+      message: `'${value}' is not a valid regular expression`,
     })
   ),
   links: z.array(customLinkSchema),
 });
+
+export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
 
 export const customLinkItemsSchema = z.record(customLinkItemSchema);
 
