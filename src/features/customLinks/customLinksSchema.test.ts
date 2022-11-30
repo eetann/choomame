@@ -1,7 +1,9 @@
 import {
   CustomLink,
   CustomLinkItem,
+  CustomLinkItems,
   customLinkItemSchema,
+  customLinkItemsSchema,
   customLinkListIdSchema,
   customLinkSchema,
 } from "./customLinksSchema";
@@ -108,10 +110,6 @@ describe("customLinkListIdSchema test", () => {
       title: "`customLinkListId` is 50 characters",
       customLinkListId: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     },
-    {
-      title: "In `customLinkListId`, we can use numbers and underscore",
-      customLinkListId: "0123456789_-",
-    },
   ])("[normal] %s", ({ customLinkListId }) => {
     expect(() =>
       customLinkListIdSchema.parse(customLinkListId)
@@ -128,12 +126,6 @@ describe("customLinkListIdSchema test", () => {
       customLinkListId: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       expected: "list_id must be between 1 and 50 characters.",
     },
-    {
-      title: "`customLinkListId` has invalid characer",
-      customLinkListId: "0123456789_-^",
-      expected:
-        "Only A to Z, a to z, 0 to 9, hyphens and underscores are allowed.",
-    },
   ])("[exception] %s", ({ customLinkListId, expected }) => {
     expect(() => customLinkListIdSchema.parse(customLinkListId)).toThrowError(
       expected
@@ -141,7 +133,7 @@ describe("customLinkListIdSchema test", () => {
   });
 });
 
-describe("CustomLinkItems test", () => {
+describe("customLinkItem test", () => {
   type TestCase = {
     title: string;
     customLinkItem: CustomLinkItem;
@@ -216,6 +208,64 @@ describe("CustomLinkItems test", () => {
     },
   ])("[normal] %s", ({ customLinkItem, expected }) => {
     expect(() => customLinkItemSchema.parse(customLinkItem)).toThrowError(
+      expected
+    );
+  });
+});
+
+describe("customLinkItems test", () => {
+  type TestCase = {
+    title: string;
+    customLinkItems: CustomLinkItems;
+    expected?: string;
+  };
+  const customLinkItem: CustomLinkItem = {
+    list_id: "a",
+    target: "a",
+    hit: "javascript|js",
+    links: [
+      {
+        kind: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        url: "https://www.google.com/search",
+        enable: false,
+      },
+    ],
+  };
+  test.each<TestCase>([
+    {
+      title: "`target` is 1 character",
+      customLinkItems: {
+        foo: customLinkItem,
+      },
+    },
+    {
+      title: "`target` is 50 character",
+      customLinkItems: {
+        foo: customLinkItem,
+      },
+    },
+  ])("[normal] %s", ({ customLinkItems }) => {
+    expect(() =>
+      customLinkItemsSchema.parse(customLinkItems)
+    ).not.toThrowError();
+  });
+  test.each<TestCase>([
+    {
+      title: "item's id is empty",
+      customLinkItems: {
+        "": customLinkItem,
+      },
+      expected: "item's id must be between 1 and 50 characters.",
+    },
+    {
+      title: "item's id is more than 50 characters(51 characters)",
+      customLinkItems: {
+        baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: customLinkItem,
+      },
+      expected: "item's id must be between 1 and 50 characters.",
+    },
+  ])("[normal] %s", ({ customLinkItems, expected }) => {
+    expect(() => customLinkItemsSchema.parse(customLinkItems)).toThrowError(
       expected
     );
   });

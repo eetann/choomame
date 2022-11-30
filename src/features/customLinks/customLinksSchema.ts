@@ -19,14 +19,7 @@ export const customLinkSchema = z.object({
 
 export type CustomLink = z.infer<typeof customLinkSchema>;
 
-export const customLinkListIdSchema = z
-  .string()
-  .min(1, { message: "list_id must be between 1 and 50 characters." })
-  .max(50, { message: "list_id must be between 1 and 50 characters." })
-  .regex(/^[A-Za-z0-9_-]*$/, {
-    message:
-      "Only A to Z, a to z, 0 to 9, hyphens and underscores are allowed.",
-  });
+export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
 
 export const customLinkItemSchema = z.object({
   list_id: customLinkListIdSchema,
@@ -49,7 +42,10 @@ export const customLinkItemSchema = z.object({
 
 export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
 
-export const customLinkItemsSchema = z.record(customLinkItemSchema);
+export const customLinkItemsSchema = z.record(
+  messageStringMinMax("item's id", 1, 50),
+  customLinkItemSchema
+);
 
 export type CustomLinkItems = z.infer<typeof customLinkItemsSchema>;
 
