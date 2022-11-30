@@ -6,6 +6,7 @@ import {
   customLinkItemsSchema,
   customLinkListIdSchema,
   customLinkSchema,
+  customLinkUrlSchema,
 } from "./customLinksSchema";
 import { describe, expect, test } from "vitest";
 
@@ -266,6 +267,40 @@ describe("customLinkItems test", () => {
     },
   ])("[normal] %s", ({ customLinkItems, expected }) => {
     expect(() => customLinkItemsSchema.parse(customLinkItems)).toThrowError(
+      expected
+    );
+  });
+});
+
+describe("customLinkUrl test", () => {
+  type TestCase = {
+    title: string;
+    customLinkUrl: string;
+    expected?: string;
+  };
+  test.each<TestCase>([
+    {
+      title: "list's URL is 150 character",
+      customLinkUrl:
+        "https://www.google.com/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    },
+  ])("[normal] %s", ({ customLinkUrl }) => {
+    expect(() => customLinkUrlSchema.parse(customLinkUrl)).not.toThrowError();
+  });
+  test.each<TestCase>([
+    {
+      title: "list's id is more than 150 characters(151 characters)",
+      customLinkUrl:
+        "https://www.google.com/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+      expected: "list's URL is less than or equal to letter 150",
+    },
+    {
+      title: "list's URL is invalid.",
+      customLinkUrl: "Kerry",
+      expected: "list's URL is invalid.",
+    },
+  ])("[normal] %s", ({ customLinkUrl, expected }) => {
+    expect(() => customLinkUrlSchema.parse(customLinkUrl)).toThrowError(
       expected
     );
   });

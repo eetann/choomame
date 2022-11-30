@@ -49,10 +49,15 @@ export const customLinkItemsSchema = z.record(
 
 export type CustomLinkItems = z.infer<typeof customLinkItemsSchema>;
 
+export const customLinkUrlSchema = z
+  .string()
+  .url({ message: "list's URL is invalid." })
+  .max(150, { message: "list's URL is less than or equal to letter 150" });
+
 export const customLinkListSchema = z.record(
   z.object({
-    name: z.string().min(1).max(50),
-    url: z.string().url().max(150),
+    name: messageStringMinMax("list's name", 1, 50),
+    url: customLinkUrlSchema,
   })
 );
 
@@ -65,7 +70,7 @@ export type CustomLinkItemsBucket = {
 
 export const fetchCustomLinkUrlSchema = z.object({
   id: customLinkListIdSchema,
-  name: z.string().min(1).max(50),
+  name: messageStringMinMax("list's name", 1, 50),
   items: customLinkItemsSchema,
 });
 
