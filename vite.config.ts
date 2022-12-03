@@ -8,6 +8,7 @@ export default defineConfig({
   test: {
     exclude: [
       '**/e2e/**',
+      '**/playwright-report/**',
       '**/node_modules/**',
       '**/dist/**',
       '**/cypress/**',
