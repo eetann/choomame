@@ -1,15 +1,18 @@
+import {
+  CustomLinkItems,
+  CustomLinkItemsBucket,
+  CustomLinkList,
+  FetchCustomLinkUrl,
+  fetchCustomLinkUrlSchema,
+  initialCustomLinkUrls,
+} from "./customLinksSchema";
 import { getBucket } from "@extend-chrome/storage";
 import JSON5 from "json5";
-import { CustomLinkItems, CustomLinkItemsBucket, CustomLinkList, FetchCustomLinkUrl, fetchCustomLinkUrlSchema } from "./customLinksSchema";
 
 export const customLinkBucket = getBucket<CustomLinkItemsBucket>("customLink");
 
 export const initialCustomLinkList: CustomLinkList = {};
 export const initialCustomLinkItems: CustomLinkItems = {};
-
-export const initialCustomLinkUrls = [
-  "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
-];
 
 export async function fetchCustomLinkUrl(
   url: string
@@ -30,25 +33,28 @@ export async function fetchCustomLinkUrl(
 
 export async function customLinkOnInstalled() {
   const listBucket = await customLinkBucket.get("list");
+  const customLinkList : CustomLinkList = {}
+  const customLinkItems: CustomLinkItems = {}
   if (Object.keys(listBucket).length === 0) {
     for (const customLinkUrl of initialCustomLinkUrls) {
       let response;
+
       try {
         response = await fetchCustomLinkUrl(customLinkUrl);
       } catch (e) {
         console.log(e);
         continue;
       }
-      customLinkBucket.set({
-        list: {
-          [response.id]: {
+      const list_id = response.id;
+
+      customLinkList[list_id] = {
             name: response.name,
             url: customLinkUrl,
-          },
-        },
-        items: response.items,
-      });
+          }
+      for (const [id, item] of Object.entries(response.items)) {
+        customLinkItems[id] = {...item, list_id}
+      }
     }
-    customLinkBucket.set({ list: {}, items: {} });
+    customLinkBucket.set({ list: customLinkList, items: customLinkItems });
   }
 }

@@ -7,6 +7,7 @@ import {
   customLinkListIdSchema,
   customLinkSchema,
   customLinkUrlSchema,
+  initialCustomLinkUrls,
 } from "./customLinksSchema";
 import { describe, expect, test } from "vitest";
 
@@ -278,6 +279,7 @@ describe("customLinkUrl test", () => {
     customLinkUrl: string;
     expected?: string;
   };
+
   test.each<TestCase>([
     {
       title: "list's URL is 150 character",
@@ -287,6 +289,7 @@ describe("customLinkUrl test", () => {
   ])("[normal] %s", ({ customLinkUrl }) => {
     expect(() => customLinkUrlSchema.parse(customLinkUrl)).not.toThrowError();
   });
+
   test.each<TestCase>([
     {
       title: "list's id is more than 150 characters(151 characters)",
@@ -303,5 +306,9 @@ describe("customLinkUrl test", () => {
     expect(() => customLinkUrlSchema.parse(customLinkUrl)).toThrowError(
       expected
     );
+  });
+
+  test.each<string>(initialCustomLinkUrls)("[normal] %s", (url) => {
+    expect(() => customLinkUrlSchema.parse(url)).not.toThrowError();
   });
 });

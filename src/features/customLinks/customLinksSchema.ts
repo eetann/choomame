@@ -68,10 +68,21 @@ export type CustomLinkItemsBucket = {
   items: CustomLinkItems;
 };
 
+export const fetchCustomLinkItemSchema = customLinkItemSchema.omit({list_id: true})
+
+export const fetchCustomLinkItemsSchema = z.record(
+  messageStringMinMax("item's id", 1, 50),
+  fetchCustomLinkItemSchema
+);
+
 export const fetchCustomLinkUrlSchema = z.object({
   id: customLinkListIdSchema,
   name: messageStringMinMax("list's name", 1, 50),
-  items: customLinkItemsSchema,
+  items: fetchCustomLinkItemsSchema,
 });
 
 export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;
+
+export const initialCustomLinkUrls = [
+  "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
+];
