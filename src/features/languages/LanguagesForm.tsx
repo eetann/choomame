@@ -1,5 +1,5 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import { Language, languagesKeyValue } from "./languages";
+import { Language, languagesKeyValue } from "./languagesSchema";
 import { addOneLanguage } from "./languagesSlice";
 import { AddIcon } from "@chakra-ui/icons";
 import {

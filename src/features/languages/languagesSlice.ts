@@ -1,9 +1,8 @@
 import {
-  initialLanguagesStorage,
-  Language,
   languagesBucket,
 } from "./languages";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { initialLanguagesStorage, Language } from "./languagesSchema";
 
 export const initLanguages = createAsyncThunk<Language[]>(
   "languages/initLanguages",

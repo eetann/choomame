@@ -1,5 +1,4 @@
 import type { AppDispatch } from "../../app/store";
-import { Time } from "./times";
 import { removeOneTime, selectTimes } from "./timesSlice";
 import {
   TableContainer,
@@ -12,6 +11,7 @@ import {
 import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
+import { Time } from "./timesSchema";
 
 const TimesTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

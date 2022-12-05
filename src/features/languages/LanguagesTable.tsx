@@ -1,5 +1,4 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import { Language, languagesKeyValue } from "./languages";
 import { removeOneLanguage } from "./languagesSlice";
 import {
   TableContainer,
@@ -12,6 +11,7 @@ import {
 import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
+import { Language, languagesKeyValue } from "./languagesSchema";
 
 const LanguagesTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

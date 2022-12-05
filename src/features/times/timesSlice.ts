@@ -1,19 +1,13 @@
 import type { RootState } from "../../app/store";
 import {
-  convertTimesToBucket,
-  getTimeId,
-  initialTimesStorage,
-  Time,
   timesBucket,
-  TimesBucket,
-  TimesUnit,
-  timeUnitOrder,
 } from "./times";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
+import { convertTimesToBucket, getTimeId, initialTimesStorage, Time, TimesBucket, TimesUnit, timeUnitOrder } from "./timesSchema";
 
 export const initTimes = createAsyncThunk<TimesBucket>(
   "times/initTimes",
