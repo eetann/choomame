@@ -23,9 +23,12 @@ test('Languages test', async ({ page, extensionId }) => {
   await page.locator("_react=LanguagesForm >> select").selectOption({label:"French"})
   await page.locator("_react=LanguagesForm >> _react=[aria-label = 'Add language']").click()
 
+  // remove language
+  await page.locator("_react=LanguagesTable >> tr:has-text('Japanese') >> _react=[aria-label = 'Delete language']").click()
+
   await page.goto('https://www.google.com/search?q=hoge');
 
-  for (const language of [...initialLanguagesStorage.languages, "lang_fr"]) {
+  for (const language of ["Any", "lang_en", "lang_fr"]) {
     await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(languagesKeyValue[language]));
   }
 });
