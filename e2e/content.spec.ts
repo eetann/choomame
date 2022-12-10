@@ -24,7 +24,21 @@ test('Languages test', async ({ page, extensionId }) => {
   // remove language
   await page.locator("_react=LanguagesTable >> tr:has-text('Japanese') >> _react=[aria-label = 'Delete language']").click()
 
+  // check
   await page.goto('https://www.google.com/search?q=hoge');
+  for (const language of ["Any", "English", "French"]) {
+    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(language));
+  }
 
+  // reset languages
+  await page.goto(`chrome-extension://${extensionId}/index.html`);
+  await page.locator("_react=App >> text='Language'").click();
+  await page.locator("_react=LanguagesReset >> text='Reset'").click();
+  await page.locator("text='Yes, reset.'").click();
+
+  // check
+  await page.goto('https://www.google.com/search?q=hoge');
+  for (const language of ["Any", "English", "Japanese"]) {
+    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(language));
   }
 });
