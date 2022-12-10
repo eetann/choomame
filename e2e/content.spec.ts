@@ -1,18 +1,16 @@
 import { test, expect } from "./fixtures.js";
-import { initialLanguagesStorage, languagesKeyValue } from "../src/features/languages/languagesSchema.js";
-import { getTimeText, initialTimesStorage } from "../src/features/times/timesSchema.js";
 
 test('onInstalled test', async ({ page }) => {
   await page.goto('https://www.google.com/search?q=hoge');
 
   // onInstalled languages
-  for (const language of initialLanguagesStorage.languages) {
-    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(languagesKeyValue[language]));
+  for (const language of ["Any", "English", "Japanese"]) {
+    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(language));
   }
 
   // onInstalled times
-  for (const times of initialTimesStorage) {
-    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(getTimeText(times.unit, times.number)));
+  for (const times of ["Any", "1 day", "1 month", "6 month", "1 week", "3 year"]) {
+    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(times));
   }
 });
 
@@ -28,7 +26,5 @@ test('Languages test', async ({ page, extensionId }) => {
 
   await page.goto('https://www.google.com/search?q=hoge');
 
-  for (const language of ["Any", "lang_en", "lang_fr"]) {
-    await expect(page.locator('#choomameRoot')).toHaveText(new RegExp(languagesKeyValue[language]));
   }
 });
