@@ -1,5 +1,9 @@
+import {
+  convertTimesToBucket,
+  initialTimesStorage,
+  TimesBucket,
+} from "./timesSchema";
 import { getBucket } from "@extend-chrome/storage";
-import { convertTimesToBucket, initialTimesStorage, TimesBucket } from "./timesSchema";
 
 export const timesBucket = getBucket<TimesBucket>("times");
 

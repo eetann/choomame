@@ -1,5 +1,9 @@
+import {
+  initialLanguagesStorage,
+  Language,
+  LanguagesBucket,
+} from "./languagesSchema";
 import { getBucket } from "@extend-chrome/storage";
-import { initialLanguagesStorage, Language, LanguagesBucket } from "./languagesSchema";
 
 export const languagesBucket = getBucket<LanguagesBucket>("languages");
 

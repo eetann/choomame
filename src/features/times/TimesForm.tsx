@@ -1,4 +1,5 @@
 import type { AppDispatch } from "../../app/store";
+import { getTimeId, TimesUnit, timeUnitOrder } from "./timesSchema";
 import { addOneTime, selectTimes } from "./timesSlice";
 import { AddIcon } from "@chakra-ui/icons";
 import {
@@ -17,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTimeId, TimesUnit, timeUnitOrder } from "./timesSchema";
 
 const TimesForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

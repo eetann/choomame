@@ -1,9 +1,9 @@
 import { getLink } from "../../common/getLink";
 import { Param } from "../param/param";
 import { getTimes } from "./times";
+import { getTimeText, TimesBucket } from "./timesSchema";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getTimeText, TimesBucket } from "./timesSchema";
 
 type Props = {
   param: Param;
