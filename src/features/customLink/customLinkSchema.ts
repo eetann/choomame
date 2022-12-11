@@ -47,7 +47,7 @@ export const customLinkItemsSchema = z.record(
   customLinkItemSchema
 );
 
-export type CustomLinkItems = z.infer<typeof customLinkItemsSchema>;
+export type CustomLinkItemsBucket = z.infer<typeof customLinkItemsSchema>;
 
 export const customLinkUrlSchema = z
   .string()
@@ -61,14 +61,11 @@ export const customLinkListSchema = z.record(
   })
 );
 
-export type CustomLinkList = z.infer<typeof customLinkListSchema>;
+export type CustomLinkListBucket = z.infer<typeof customLinkListSchema>;
 
-export type CustomLinkItemsBucket = {
-  list: CustomLinkList;
-  items: CustomLinkItems;
-};
-
-export const fetchCustomLinkItemSchema = customLinkItemSchema.omit({list_id: true})
+export const fetchCustomLinkItemSchema = customLinkItemSchema.omit({
+  list_id: true,
+});
 
 export const fetchCustomLinkItemsSchema = z.record(
   messageStringMinMax("item's id", 1, 50),

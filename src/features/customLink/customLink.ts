@@ -1,18 +1,20 @@
 import {
-  CustomLinkItems,
   CustomLinkItemsBucket,
-  CustomLinkList,
+  CustomLinkListBucket,
   FetchCustomLinkUrl,
   fetchCustomLinkUrlSchema,
   initialCustomLinkUrls,
-} from "./customLinksSchema";
+} from "./customLinkSchema";
 import { getBucket } from "@extend-chrome/storage";
 import JSON5 from "json5";
 
-export const customLinkBucket = getBucket<CustomLinkItemsBucket>("customLink");
+export const customLinkListBucket =
+  getBucket<CustomLinkListBucket>("customLinkList");
+export const customLinkItemsBucket =
+  getBucket<CustomLinkItemsBucket>("customLinkItems");
 
-export const initialCustomLinkList: CustomLinkList = {};
-export const initialCustomLinkItems: CustomLinkItems = {};
+export const initialCustomLinkList: CustomLinkListBucket = {};
+export const initialCustomLinkItems: CustomLinkItemsBucket = {};
 
 export async function fetchCustomLinkUrl(
   url: string
@@ -32,9 +34,7 @@ export async function fetchCustomLinkUrl(
 }
 
 export async function customLinkOnInstalled() {
-  const listBucket = await customLinkBucket.get("list");
-  const customLinkList : CustomLinkList = {}
-  const customLinkItems: CustomLinkItems = {}
+  const listBucket = await customLinkListBucket.get();
   if (Object.keys(listBucket).length === 0) {
     for (const customLinkUrl of initialCustomLinkUrls) {
       let response;
@@ -47,14 +47,18 @@ export async function customLinkOnInstalled() {
       }
       const list_id = response.id;
 
-      customLinkList[list_id] = {
-            name: response.name,
-            url: customLinkUrl,
-          }
+      customLinkListBucket.set({
+        [list_id]: {
+          name: response.name,
+          url: customLinkUrl,
+        },
+      });
+
       for (const [id, item] of Object.entries(response.items)) {
-        customLinkItems[id] = {...item, list_id}
+        customLinkItemsBucket.set({
+          [id]: { ...item, list_id },
+        });
       }
     }
-    customLinkBucket.set({ list: customLinkList, items: customLinkItems });
   }
 }

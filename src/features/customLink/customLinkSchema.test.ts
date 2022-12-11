@@ -1,14 +1,14 @@
 import {
   CustomLink,
   CustomLinkItem,
-  CustomLinkItems,
+  CustomLinkItemsBucket,
   customLinkItemSchema,
   customLinkItemsSchema,
   customLinkListIdSchema,
   customLinkSchema,
   customLinkUrlSchema,
   initialCustomLinkUrls,
-} from "./customLinksSchema";
+} from "./customLinkSchema";
 import { describe, expect, test } from "vitest";
 
 describe("customLinkSchema test", () => {
@@ -218,7 +218,7 @@ describe("customLinkItem test", () => {
 describe("customLinkItems test", () => {
   type TestCase = {
     title: string;
-    customLinkItems: CustomLinkItems;
+    customLinkItems: CustomLinkItemsBucket;
     expected?: string;
   };
   const customLinkItem: CustomLinkItem = {
