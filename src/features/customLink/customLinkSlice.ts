@@ -53,27 +53,11 @@ export const fetchAllCustomLinkItems = createAsyncThunk<CustomLinkItemsBucket>(
   }
 );
 
-export const addOneCustomLinkItems = createAsyncThunk(
-  "customLink/addOneCustomLinkItems",
-  async (arg: CustomLinkItemsBucket) => {
-    customLinkItemsBucket.set(arg);
-    return arg;
-  }
-);
-
 export const addManyCustomLinkItems = createAsyncThunk(
   "customLink/addManyCustomLinkItems",
   async (arg: CustomLinkItemsBucket) => {
     customLinkItemsBucket.set(arg);
     return arg;
-  }
-);
-
-export const removeOneCustomLinkItems = createAsyncThunk(
-  "customLink/removeOneCustomLinkItems",
-  async (list_id: string) => {
-    customLinkItemsBucket.remove(list_id);
-    return list_id;
   }
 );
 
@@ -141,17 +125,6 @@ export const customLinkSlice = createSlice({
         state.items = action.payload;
         state.status = "idle";
       })
-      .addCase(addOneCustomLinkItems.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addOneCustomLinkItems.rejected, (state) => {
-        state.status = "failed";
-      })
-      .addCase(addOneCustomLinkItems.fulfilled, (state, action) => {
-        const item_id = Object.keys(action.payload)[0];
-        state.items[item_id] = action.payload[item_id];
-        state.status = "idle";
-      })
       .addCase(addManyCustomLinkItems.pending, (state) => {
         state.status = "loading";
       })
@@ -160,16 +133,6 @@ export const customLinkSlice = createSlice({
       })
       .addCase(addManyCustomLinkItems.fulfilled, (state, action) => {
         state.items = { ...state.items, ...action.payload };
-        state.status = "idle";
-      })
-      .addCase(removeOneCustomLinkItems.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(removeOneCustomLinkItems.rejected, (state) => {
-        state.status = "failed";
-      })
-      .addCase(removeOneCustomLinkItems.fulfilled, (state, action) => {
-        delete state.items[action.payload];
         state.status = "idle";
       });
   },
