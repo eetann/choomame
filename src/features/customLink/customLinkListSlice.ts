@@ -46,6 +46,7 @@ export const customLinkSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // init
       .addCase(initCustomLinkList.pending, (state) => {
         state.status = "loading";
       })
@@ -56,6 +57,7 @@ export const customLinkSlice = createSlice({
         state.list = action.payload;
         state.status = "idle";
       })
+      // fetch
       .addCase(fetchAllCustomLinkList.pending, (state) => {
         state.status = "loading";
       })
@@ -66,6 +68,7 @@ export const customLinkSlice = createSlice({
         state.list = action.payload;
         state.status = "idle";
       })
+      // addOne
       .addCase(addOneCustomLinkList.pending, (state) => {
         state.status = "loading";
       })
@@ -77,6 +80,7 @@ export const customLinkSlice = createSlice({
         state.list[list_id] = action.payload[list_id];
         state.status = "idle";
       })
+      // removeOne
       .addCase(removeOneCustomLinkList.pending, (state) => {
         state.status = "loading";
       })
