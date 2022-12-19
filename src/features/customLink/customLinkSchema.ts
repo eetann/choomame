@@ -22,6 +22,7 @@ export type CustomLink = z.infer<typeof customLinkSchema>;
 export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
 
 export const customLinkItemSchema = z.object({
+  id: messageStringMinMax("item's id", 1, 50),
   list_id: customLinkListIdSchema,
   target: messageStringMinMax("target", 1, 50),
   hit: z.string().refine(
@@ -42,12 +43,9 @@ export const customLinkItemSchema = z.object({
 
 export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
 
-export const customLinkItemsSchema = z.record(
-  messageStringMinMax("item's id", 1, 50),
-  customLinkItemSchema
-);
+export const customLinkItemsSchema = z.array(customLinkItemSchema);
 
-export type CustomLinkItemsBucket = z.infer<typeof customLinkItemsSchema>;
+export type CustomLinkItemsBucket = Record<string, CustomLinkItem>;
 
 export const customLinkUrlSchema = z
   .string()

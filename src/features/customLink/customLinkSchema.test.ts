@@ -1,9 +1,7 @@
 import {
   CustomLink,
   CustomLinkItem,
-  CustomLinkItemsBucket,
   customLinkItemSchema,
-  customLinkItemsSchema,
   customLinkListIdSchema,
   customLinkSchema,
   customLinkUrlSchema,
@@ -148,8 +146,29 @@ describe("customLinkItem test", () => {
   };
   test.each<TestCase>([
     {
+      title: "`id` is 1 character",
+      customLinkItem: {
+        id: "a",
+        list_id: "a",
+        target: "a",
+        hit: "javascript|js",
+        links: [customLink],
+      },
+    },
+    {
+      title: "`id` is 50 character",
+      customLinkItem: {
+        id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        list_id: "a",
+        target: "a",
+        hit: "javascript|js",
+        links: [customLink],
+      },
+    },
+    {
       title: "`target` is 1 character",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "a",
         hit: "javascript|js",
@@ -159,6 +178,7 @@ describe("customLinkItem test", () => {
     {
       title: "`target` is 50 character",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         hit: "javascript|js",
@@ -168,6 +188,7 @@ describe("customLinkItem test", () => {
     {
       title: "`hit` is valid RegExp",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "JavaScript",
         hit: "javascript|js",
@@ -179,8 +200,31 @@ describe("customLinkItem test", () => {
   });
   test.each<TestCase>([
     {
+      title: "`id` is empty",
+      customLinkItem: {
+        id: "",
+        list_id: "a",
+        target: "a",
+        hit: "javascript|js",
+        links: [customLink],
+      },
+      expected: "item's id must be between 1 and 50 characters.",
+    },
+    {
+      title: "`id` is more than 50 characters(51 characters)",
+      customLinkItem: {
+        id: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        list_id: "a",
+        target: "a",
+        hit: "javascript|js",
+        links: [customLink],
+      },
+      expected: "item's id must be between 1 and 50 characters.",
+    },
+    {
       title: "`target` is empty",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "",
         hit: "javascript|js",
@@ -191,6 +235,7 @@ describe("customLinkItem test", () => {
     {
       title: "`target` is more than 50 characters(51 characters)",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         hit: "javascript|js",
@@ -201,6 +246,7 @@ describe("customLinkItem test", () => {
     {
       title: "`hit` is invalid RegExp",
       customLinkItem: {
+        id: "a",
         list_id: "a",
         target: "JavaScript",
         hit: "+javascript|js",
@@ -210,64 +256,6 @@ describe("customLinkItem test", () => {
     },
   ])("[normal] %s", ({ customLinkItem, expected }) => {
     expect(() => customLinkItemSchema.parse(customLinkItem)).toThrowError(
-      expected
-    );
-  });
-});
-
-describe("customLinkItems test", () => {
-  type TestCase = {
-    title: string;
-    customLinkItems: CustomLinkItemsBucket;
-    expected?: string;
-  };
-  const customLinkItem: CustomLinkItem = {
-    list_id: "a",
-    target: "a",
-    hit: "javascript|js",
-    links: [
-      {
-        kind: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        url: "https://www.google.com/search",
-        enable: false,
-      },
-    ],
-  };
-  test.each<TestCase>([
-    {
-      title: "`target` is 1 character",
-      customLinkItems: {
-        foo: customLinkItem,
-      },
-    },
-    {
-      title: "`target` is 50 character",
-      customLinkItems: {
-        foo: customLinkItem,
-      },
-    },
-  ])("[normal] %s", ({ customLinkItems }) => {
-    expect(() =>
-      customLinkItemsSchema.parse(customLinkItems)
-    ).not.toThrowError();
-  });
-  test.each<TestCase>([
-    {
-      title: "item's id is empty",
-      customLinkItems: {
-        "": customLinkItem,
-      },
-      expected: "item's id must be between 1 and 50 characters.",
-    },
-    {
-      title: "item's id is more than 50 characters(51 characters)",
-      customLinkItems: {
-        baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: customLinkItem,
-      },
-      expected: "item's id must be between 1 and 50 characters.",
-    },
-  ])("[normal] %s", ({ customLinkItems, expected }) => {
-    expect(() => customLinkItemsSchema.parse(customLinkItems)).toThrowError(
       expected
     );
   });
