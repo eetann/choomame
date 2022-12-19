@@ -33,32 +33,48 @@ export async function fetchCustomLinkUrl(
   return fetchCustomLinkUrlSchema.parse(response);
 }
 
-export async function customLinkOnInstalled() {
+export async function customLinkListOnInstalled() {
+  const listBucket = await customLinkListBucket.get();
+  if (Object.keys(listBucket).length !== 0) {
+    return;
+  }
+  for (const customLinkUrl of initialCustomLinkUrls) {
+    let response;
+
+    try {
+      response = await fetchCustomLinkUrl(customLinkUrl);
+    } catch (e) {
+      console.log(e);
+      continue;
+    }
+    const list_id = response.id;
+
+    customLinkListBucket.set({
+      [list_id]: {
+        name: response.name,
+        url: customLinkUrl,
+      },
+    });
+  }
+}
+
+export async function customLinkItemsOnInstalled() {
   const listBucket = await customLinkListBucket.get();
   if (Object.keys(listBucket).length === 0) {
-    for (const customLinkUrl of initialCustomLinkUrls) {
-      let response;
-
-      try {
-        response = await fetchCustomLinkUrl(customLinkUrl);
-      } catch (e) {
-        console.log(e);
-        continue;
-      }
-      const list_id = response.id;
-
-      customLinkListBucket.set({
-        [list_id]: {
-          name: response.name,
-          url: customLinkUrl,
-        },
+    return;
+  }
+  for (const list_id in listBucket) {
+    let response;
+    try {
+      response = await fetchCustomLinkUrl(listBucket[list_id].url);
+    } catch (e) {
+      console.log(e);
+      continue;
+    }
+    for (const [id, item] of Object.entries(response.items)) {
+      customLinkItemsBucket.set({
+        [id]: { ...item, list_id },
       });
-
-      for (const [id, item] of Object.entries(response.items)) {
-        customLinkItemsBucket.set({
-          [id]: { ...item, list_id },
-        });
-      }
     }
   }
 }

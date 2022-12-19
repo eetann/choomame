@@ -45,6 +45,8 @@ export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
 
 export const customLinkItemsSchema = z.array(customLinkItemSchema);
 
+export type CustomLinkItems = z.infer<typeof customLinkItemsSchema>;
+
 export type CustomLinkItemsBucket = Record<string, CustomLinkItem>;
 
 export const customLinkUrlSchema = z
