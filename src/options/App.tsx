@@ -1,4 +1,5 @@
 import AppearanceArea from "../features/appearance/AppearanceArea";
+import CustomLinkTab from "../features/customLink/CustomLinkTab";
 import LanguagesTab from "../features/languages/LanguagesTab";
 import TimesTab from "../features/times/TimesTab";
 import {
@@ -19,7 +20,6 @@ import {
   HiOutlineClock,
   HiOutlineTranslate,
 } from "react-icons/hi";
-import CustomLinkTab from "../features/customLink/CustomLinkTab";
 
 const App: React.FC = () => {
   return (
@@ -43,7 +43,7 @@ const App: React.FC = () => {
           </Tab>
           <Tab>
             <Icon as={HiOutlineBookmark} mr="1" />
-            CustomLink
+            Custom Link
           </Tab>
         </TabList>
         <TabPanels>
@@ -54,7 +54,7 @@ const App: React.FC = () => {
             <LanguagesTab />
           </TabPanel>
           <TabPanel>
-            <CustomLinkTab/>
+            <CustomLinkTab />
           </TabPanel>
         </TabPanels>
       </Tabs>
