@@ -7,7 +7,7 @@ import { Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const TimesTab: React.FC = () => {
+const LanguagesTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -22,4 +22,4 @@ const TimesTab: React.FC = () => {
     </Stack>
   );
 };
-export default TimesTab;
+export default LanguagesTab;
