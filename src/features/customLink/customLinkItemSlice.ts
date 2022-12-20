@@ -65,7 +65,7 @@ const initialState = customLinkItemsAdapter.getInitialState({
   status: "idle",
 });
 
-export const customLinkSlice = createSlice({
+export const customLinkItemSlice = createSlice({
   name: "customLink",
   initialState,
   reducers: {},
@@ -117,3 +117,5 @@ export const customLinkSlice = createSlice({
       });
   },
 });
+
+export default customLinkItemSlice.reducer;

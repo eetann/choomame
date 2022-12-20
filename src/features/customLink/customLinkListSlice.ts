@@ -40,7 +40,7 @@ const initialState = {
   status: "idle",
 };
 
-export const customLinkSlice = createSlice({
+export const customLinkListSlice = createSlice({
   name: "customLink",
   initialState,
   reducers: {},
@@ -93,3 +93,5 @@ export const customLinkSlice = createSlice({
       });
   },
 });
+
+export default customLinkListSlice.reducer;

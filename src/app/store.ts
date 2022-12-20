@@ -1,4 +1,6 @@
 import appearanceReducer from "../features/appearance/appearanceSlice";
+import customLinkItemReducer from "../features/customLink/customLinkItemSlice";
+import customLinkListReducer from "../features/customLink/customLinkListSlice";
 import languagesReducer from "../features/languages/languagesSlice";
 import timesReducer from "../features/times/timesSlice";
 import { configureStore } from "@reduxjs/toolkit";
@@ -8,6 +10,8 @@ export const store = configureStore({
     times: timesReducer,
     languages: languagesReducer,
     appearance: appearanceReducer,
+    customLinkList: customLinkListReducer,
+    customLinkItem: customLinkItemReducer,
   },
 });
 
