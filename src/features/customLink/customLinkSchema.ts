@@ -14,7 +14,7 @@ export const customLinkSchema = z.object({
     .string()
     .url({ message: "URL is invalid." })
     .max(200, { message: "URL should not exceed 200 characters." }),
-  enable: z.boolean(),
+  enable: z.boolean().default(true),
 });
 
 export type CustomLink = z.infer<typeof customLinkSchema>;
@@ -23,7 +23,6 @@ export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
 
 export const customLinkItemSchema = z.object({
   id: messageStringMinMax("item's id", 1, 50),
-  list_id: customLinkListIdSchema,
   target: messageStringMinMax("target", 1, 50),
   hit: z.string().refine(
     (value: string) => {
@@ -67,15 +66,10 @@ export const fetchCustomLinkItemSchema = customLinkItemSchema.omit({
   list_id: true,
 });
 
-export const fetchCustomLinkItemsSchema = z.record(
-  messageStringMinMax("item's id", 1, 50),
-  fetchCustomLinkItemSchema
-);
-
 export const fetchCustomLinkUrlSchema = z.object({
   id: customLinkListIdSchema,
   name: messageStringMinMax("list's name", 1, 50),
-  items: fetchCustomLinkItemsSchema,
+  items: customLinkItemsSchema,
 });
 
 export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;

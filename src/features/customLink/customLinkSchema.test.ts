@@ -149,7 +149,6 @@ describe("customLinkItem test", () => {
       title: "`id` is 1 character",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "a",
         hit: "javascript|js",
         links: [customLink],
@@ -159,7 +158,6 @@ describe("customLinkItem test", () => {
       title: "`id` is 50 character",
       customLinkItem: {
         id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        list_id: "a",
         target: "a",
         hit: "javascript|js",
         links: [customLink],
@@ -169,7 +167,6 @@ describe("customLinkItem test", () => {
       title: "`target` is 1 character",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "a",
         hit: "javascript|js",
         links: [customLink],
@@ -179,7 +176,6 @@ describe("customLinkItem test", () => {
       title: "`target` is 50 character",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         hit: "javascript|js",
         links: [customLink],
@@ -189,7 +185,6 @@ describe("customLinkItem test", () => {
       title: "`hit` is valid RegExp",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "JavaScript",
         hit: "javascript|js",
         links: [customLink],
@@ -203,7 +198,6 @@ describe("customLinkItem test", () => {
       title: "`id` is empty",
       customLinkItem: {
         id: "",
-        list_id: "a",
         target: "a",
         hit: "javascript|js",
         links: [customLink],
@@ -214,7 +208,6 @@ describe("customLinkItem test", () => {
       title: "`id` is more than 50 characters(51 characters)",
       customLinkItem: {
         id: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        list_id: "a",
         target: "a",
         hit: "javascript|js",
         links: [customLink],
@@ -225,7 +218,6 @@ describe("customLinkItem test", () => {
       title: "`target` is empty",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "",
         hit: "javascript|js",
         links: [customLink],
@@ -236,7 +228,6 @@ describe("customLinkItem test", () => {
       title: "`target` is more than 50 characters(51 characters)",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         hit: "javascript|js",
         links: [customLink],
@@ -247,7 +238,6 @@ describe("customLinkItem test", () => {
       title: "`hit` is invalid RegExp",
       customLinkItem: {
         id: "a",
-        list_id: "a",
         target: "JavaScript",
         hit: "+javascript|js",
         links: [customLink],
