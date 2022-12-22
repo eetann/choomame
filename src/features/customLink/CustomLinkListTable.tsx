@@ -9,7 +9,6 @@ import {
   IconButton,
   Thead,
   Th,
-  Tooltip,
   Link,
 } from "@chakra-ui/react";
 import React from "react";
@@ -46,9 +45,7 @@ const CustomLinkListTable: React.FC = () => {
                   {list.name}
                 </Td>
                 <Td fontSize="md" py="1">
-                  <Tooltip label={list.url}>
-                    <Link color="teal">{list.url}</Link>
-                  </Tooltip>
+                  <Link color="teal">{list.url}</Link>
                 </Td>
                 <Td py="1" pr="1">
                   <IconButton
