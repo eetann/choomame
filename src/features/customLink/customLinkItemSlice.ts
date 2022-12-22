@@ -1,3 +1,4 @@
+import { RootState } from "../../app/store";
 import {
   customLinkItemsBucket,
   customLinkItemsOnInstalled,
@@ -14,7 +15,7 @@ import {
 } from "@reduxjs/toolkit";
 
 export const initCustomLinkItem = createAsyncThunk<CustomLinkItemsBucket>(
-  "customLink/initCustomLinkItem",
+  "customLinkItem/initCustomLinkItem",
   async () => {
     await customLinkItemsBucket.clear();
     customLinkItemsOnInstalled();
@@ -34,19 +35,20 @@ const customLinkItemsAdapter = createEntityAdapter<CustomLinkItem>({
 });
 
 export const fetchAllCustomLinkItems = createAsyncThunk<CustomLinkItemsBucket>(
-  "customLink/fetchAllCustomLinkItems",
+  "customLinkItem/fetchAllCustomLinkItems",
   async () => {
     return await customLinkItemsBucket.get();
   }
 );
 
 export const addManyCustomLinkItems = createAsyncThunk(
-  "customLink/addManyCustomLinkItems",
-  async (arg: CustomLinkItems) => {
+  "customLinkItem/addManyCustomLinkItems",
+  async (args: { list_id: string; items: CustomLinkItems }) => {
     const customLinkItems = {} as CustomLinkItemsBucket;
-    for (const item_id in arg) {
-      const customLink = arg[item_id];
-      customLinkItems[`${customLink.list_id}/${item_id}`] = customLink;
+    for (const item_id in args.items) {
+      const item = args.items[item_id];
+      // TODO:
+      customLinkItems[`${args.list_id}/${item_id}`] = item;
     }
     customLinkItemsBucket.set(customLinkItems);
     return customLinkItems;
@@ -66,7 +68,7 @@ const initialState = customLinkItemsAdapter.getInitialState({
 });
 
 export const customLinkItemSlice = createSlice({
-  name: "customLink",
+  name: "customLinkItem",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -117,5 +119,10 @@ export const customLinkItemSlice = createSlice({
       });
   },
 });
+
+export const selectCustomLinkItems =
+  customLinkItemsAdapter.getSelectors<RootState>(
+    (state) => state.customLinkItem
+  );
 
 export default customLinkItemSlice.reducer;

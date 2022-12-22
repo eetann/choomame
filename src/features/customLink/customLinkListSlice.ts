@@ -3,7 +3,7 @@ import { CustomLinkListBucket } from "./customLinkSchema";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
-  "customLink/initCustomLinkList",
+  "customLinkList/initCustomLinkList",
   async () => {
     await customLinkListBucket.clear();
     customLinkListOnInstalled();
@@ -12,7 +12,7 @@ export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
 );
 
 export const fetchAllCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
-  "customLink/fetchAllCustomLinkList",
+  "customLinkList/fetchAllCustomLinkList",
   async () => {
     const bucket = await customLinkListBucket.get();
     return bucket;
@@ -20,7 +20,7 @@ export const fetchAllCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
 );
 
 export const addOneCustomLinkList = createAsyncThunk(
-  "customLink/addOneCustomLinkList",
+  "customLinkList/addOneCustomLinkList",
   async (arg: CustomLinkListBucket) => {
     customLinkListBucket.set(arg);
     return arg;
@@ -28,7 +28,7 @@ export const addOneCustomLinkList = createAsyncThunk(
 );
 
 export const removeOneCustomLinkList = createAsyncThunk(
-  "customLink/removeOneCustomLinkList",
+  "customLinkList/removeOneCustomLinkList",
   async (list_id: string) => {
     customLinkListBucket.remove(list_id);
     return list_id;
@@ -41,7 +41,7 @@ const initialState = {
 };
 
 export const customLinkListSlice = createSlice({
-  name: "customLink",
+  name: "customLinkList",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

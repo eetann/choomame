@@ -1,4 +1,5 @@
 import type { AppDispatch } from "../../app/store";
+import CustomLinkItemTable from "./CustomLinkItemTable";
 import CustomLinkListTable from "./CustomLinkListTable";
 import { fetchAllCustomLinkItems } from "./customLinkItemSlice";
 import { fetchAllCustomLinkList } from "./customLinkListSlice";
@@ -17,6 +18,7 @@ const CustomLinkTab: React.FC = () => {
   return (
     <Stack spacing="10">
       <CustomLinkListTable />
+      <CustomLinkItemTable />
     </Stack>
   );
 };
