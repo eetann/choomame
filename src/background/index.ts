@@ -1,6 +1,6 @@
 import { appearanceOnInstalled } from "../features/appearance/appearanceSlice";
 import {
-  customLinkItemsOnInstalled,
+  customLinksOnInstalled,
   customLinkListOnInstalled,
 } from "../features/customLink/customLink";
 import { languagesOnInstalled } from "../features/languages/languages";
@@ -11,5 +11,5 @@ chrome.runtime.onInstalled.addListener(async () => {
   await languagesOnInstalled();
   await appearanceOnInstalled();
   await customLinkListOnInstalled();
-  await customLinkItemsOnInstalled();
+  await customLinksOnInstalled();
 });

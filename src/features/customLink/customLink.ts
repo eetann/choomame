@@ -1,5 +1,5 @@
 import {
-  CustomLinkItemsBucket,
+  CustomLinksBucket,
   CustomLinkListBucket,
   FetchCustomLinkUrl,
   fetchCustomLinkUrlSchema,
@@ -10,11 +10,10 @@ import JSON5 from "json5";
 
 export const customLinkListBucket =
   getBucket<CustomLinkListBucket>("customLinkList");
-export const customLinkItemsBucket =
-  getBucket<CustomLinkItemsBucket>("customLinkItems");
+export const customLinksBucket = getBucket<CustomLinksBucket>("customLinks");
 
 export const initialCustomLinkList: CustomLinkListBucket = {};
-export const initialCustomLinkItems: CustomLinkItemsBucket = {};
+export const initialCustomLinks: CustomLinksBucket = {};
 
 export async function fetchCustomLinkUrl(
   url: string
@@ -58,7 +57,7 @@ export async function customLinkListOnInstalled() {
   }
 }
 
-export async function customLinkItemsOnInstalled() {
+export async function customLinksOnInstalled() {
   const listBucket = await customLinkListBucket.get();
   if (Object.keys(listBucket).length === 0) {
     return;
@@ -71,9 +70,9 @@ export async function customLinkItemsOnInstalled() {
       console.log(e);
       continue;
     }
-    for (const [id, item] of Object.entries(response.items)) {
-      customLinkItemsBucket.set({
-        [id]: { ...item, list_id },
+    for (const [id, customLink] of Object.entries(response.links)) {
+      customLinksBucket.set({
+        [`${list_id}/${id}`]: customLink,
       });
     }
   }

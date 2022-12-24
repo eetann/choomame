@@ -1,6 +1,6 @@
 import appearanceReducer from "../features/appearance/appearanceSlice";
-import customLinkItemReducer from "../features/customLink/customLinkItemSlice";
 import customLinkListReducer from "../features/customLink/customLinkListSlice";
+import customLinkReducer from "../features/customLink/customLinkSlice";
 import languagesReducer from "../features/languages/languagesSlice";
 import timesReducer from "../features/times/timesSlice";
 import { configureStore } from "@reduxjs/toolkit";
@@ -11,7 +11,7 @@ export const store = configureStore({
     languages: languagesReducer,
     appearance: appearanceReducer,
     customLinkList: customLinkListReducer,
-    customLinkItem: customLinkItemReducer,
+    customLinks: customLinkReducer,
   },
 });
 

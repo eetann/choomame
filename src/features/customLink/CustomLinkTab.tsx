@@ -1,8 +1,8 @@
 import type { AppDispatch } from "../../app/store";
-import CustomLinkItemTable from "./CustomLinkItemTable";
 import CustomLinkListTable from "./CustomLinkListTable";
-import { fetchAllCustomLinkItems } from "./customLinkItemSlice";
+import CustomLinkTable from "./CustomLinkTable";
 import { fetchAllCustomLinkList } from "./customLinkListSlice";
+import { fetchAllCustomLinks } from "./customLinkSlice";
 import { Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -12,13 +12,13 @@ const CustomLinkTab: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchAllCustomLinkList());
-    dispatch(fetchAllCustomLinkItems());
+    dispatch(fetchAllCustomLinks());
   }, [dispatch]);
 
   return (
     <Stack spacing="10">
       <CustomLinkListTable />
-      <CustomLinkItemTable />
+      <CustomLinkTable />
     </Stack>
   );
 };

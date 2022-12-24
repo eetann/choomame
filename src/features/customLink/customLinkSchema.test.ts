@@ -1,9 +1,7 @@
 import {
   CustomLink,
-  CustomLinkItem,
-  customLinkItemSchema,
-  customLinkListIdSchema,
   customLinkSchema,
+  customLinkListIdSchema,
   customLinkUrlSchema,
   initialCustomLinkUrls,
 } from "./customLinkSchema";
@@ -15,30 +13,67 @@ describe("customLinkSchema test", () => {
     customLink: CustomLink;
     expected?: string;
   };
+  const defaultCustomLink = {
+    id: "abc",
+    name: "abc",
+    url: "https://www.google.com/search",
+    match: "javascript|js",
+    group: "abc",
+    enable: false,
+  };
   test.each<TestCase>([
     {
-      title: "`kind` is 1 character",
-      customLink: {
-        kind: "a",
-        url: "https://www.google.com/search",
-        enable: false,
-      },
+      title: "custom link id is 1 character",
+      customLink: Object.assign({}, defaultCustomLink, { id: "a" }),
     },
     {
-      title: "`kind` is 50 characters",
-      customLink: {
-        kind: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        url: "https://www.google.com/search",
-        enable: false,
-      },
+      title: "custom link id is 50 characters",
+      customLink: Object.assign({}, defaultCustomLink, {
+        id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
     },
     {
-      title: "`url` is 200 characters",
-      customLink: {
-        kind: "Document",
+      title: "custom link name is 1 character",
+      customLink: Object.assign({}, defaultCustomLink, { name: "a" }),
+    },
+    {
+      title: "custom link name is 50 characters",
+      customLink: Object.assign({}, defaultCustomLink, {
+        name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+    },
+    {
+      title: "custom link URL is 200 characters",
+      customLink: Object.assign({}, defaultCustomLink, {
         url: "https://www.google.com/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        enable: false,
-      },
+      }),
+    },
+    {
+      title: "custom link match is 1 character",
+      customLink: Object.assign({}, defaultCustomLink, { match: "a" }),
+    },
+    {
+      title: "custom link match is 100 characters",
+      customLink: Object.assign({}, defaultCustomLink, {
+        match:
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+    },
+    {
+      title: "custom link match is valid RegExp",
+      customLink: Object.assign({}, defaultCustomLink, {
+        match: "javascript|js",
+      }),
+    },
+    {
+      title: "custom link group name is 1 character",
+      customLink: Object.assign({}, defaultCustomLink, { group: "a" }),
+    },
+    {
+      title: "custom link group name is 50 characters",
+      customLink: Object.assign({}, defaultCustomLink, {
+        group: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
     },
   ])("[normal] %s", ({ customLink }) => {
     expect(customLinkSchema.parse(customLink)).toEqual(customLink);
@@ -46,49 +81,76 @@ describe("customLinkSchema test", () => {
 
   test.each<TestCase>([
     {
-      title: "`kind` is empty",
-      customLink: {
-        kind: "",
-        url: "https://www.google.com/search",
-        enable: false,
-      },
-      expected: "kind must be between 1 and 50 characters.",
+      title: "custom link id is empty",
+      customLink: Object.assign({}, defaultCustomLink, { id: "" }),
+      expected: "custom link id must be between 1 and 50 characters.",
     },
     {
-      title: "`kind` is more than 50 characters(51 characters)",
-      customLink: {
-        kind: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        url: "https://www.google.com/search",
-        enable: false,
-      },
-      expected: "kind must be between 1 and 50 characters.",
+      title: "custom link id is more than 50 characters(51 characters)",
+      customLink: Object.assign({}, defaultCustomLink, {
+        id: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+      expected: "custom link id must be between 1 and 50 characters.",
     },
     {
-      title: "`url` is not a valid URL format",
-      customLink: {
-        kind: "Document",
-        url: "Kerry",
-        enable: false,
-      },
-      expected: "URL is invalid.",
+      title: "custom link name is empty",
+      customLink: Object.assign({}, defaultCustomLink, { name: "" }),
+      expected: "custom link name must be between 1 and 50 characters.",
     },
     {
-      title: "`url` is empty",
-      customLink: {
-        kind: "Document",
-        url: "",
-        enable: false,
-      },
-      expected: "URL is invalid.",
+      title: "custom link name is more than 50 characters(51 characters)",
+      customLink: Object.assign({}, defaultCustomLink, {
+        name: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+      expected: "custom link name must be between 1 and 50 characters.",
     },
     {
-      title: "`url` is more than 200 characters(201 characters)",
-      customLink: {
-        kind: "Document",
+      title: "custom link url is more than 200 characters(201 characters)",
+      customLink: Object.assign({}, defaultCustomLink, {
         url: "https://www.google.com/search?q=baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        enable: false,
-      },
+      }),
       expected: "URL should not exceed 200 characters.",
+    },
+    {
+      title: "custom link url is not a valid URL format",
+      customLink: Object.assign({}, defaultCustomLink, { url: "Kerry" }),
+      expected: "URL is invalid.",
+    },
+    {
+      title: "custom link url is not a valid URL format",
+      customLink: Object.assign({}, defaultCustomLink, { url: "" }),
+      expected: "URL is invalid.",
+    },
+    {
+      title: "custom link match is invalid RegExp",
+      customLink: Object.assign({}, defaultCustomLink, {
+        match: "+javascript|js",
+      }),
+    },
+    {
+      title: "custom link match is empty",
+      customLink: Object.assign({}, defaultCustomLink, { match: "" }),
+      expected: "custom link match must be between 1 and 100 characters.",
+    },
+    {
+      title: "custom link match is more than 100 characters(101 characters)",
+      customLink: Object.assign({}, defaultCustomLink, {
+        match:
+          "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+      expected: "custom link match must be between 1 and 100 characters.",
+    },
+    {
+      title: "custom link group is empty",
+      customLink: Object.assign({}, defaultCustomLink, { group: "" }),
+      expected: "custom link group name must be between 1 and 50 characters.",
+    },
+    {
+      title: "custom link group is more than 50 characters(51 characters)",
+      customLink: Object.assign({}, defaultCustomLink, {
+        group: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      }),
+      expected: "custom link group name must be between 1 and 50 characters.",
     },
   ])("[exception] %s", ({ customLink, expected }) => {
     expect(() => customLinkSchema.parse(customLink)).toThrowError(expected);
@@ -115,6 +177,7 @@ describe("customLinkListIdSchema test", () => {
       customLinkListIdSchema.parse(customLinkListId)
     ).not.toThrowError();
   });
+
   test.each<TestCase>([
     {
       title: "`customLinkListId` is empty",
@@ -128,124 +191,6 @@ describe("customLinkListIdSchema test", () => {
     },
   ])("[exception] %s", ({ customLinkListId, expected }) => {
     expect(() => customLinkListIdSchema.parse(customLinkListId)).toThrowError(
-      expected
-    );
-  });
-});
-
-describe("customLinkItem test", () => {
-  type TestCase = {
-    title: string;
-    customLinkItem: CustomLinkItem;
-    expected?: string;
-  };
-  const customLink: CustomLink = {
-    kind: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    url: "https://www.google.com/search",
-    enable: false,
-  };
-  test.each<TestCase>([
-    {
-      title: "`id` is 1 character",
-      customLinkItem: {
-        id: "a",
-        target: "a",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-    },
-    {
-      title: "`id` is 50 character",
-      customLinkItem: {
-        id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        target: "a",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-    },
-    {
-      title: "`target` is 1 character",
-      customLinkItem: {
-        id: "a",
-        target: "a",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-    },
-    {
-      title: "`target` is 50 character",
-      customLinkItem: {
-        id: "a",
-        target: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-    },
-    {
-      title: "`hit` is valid RegExp",
-      customLinkItem: {
-        id: "a",
-        target: "JavaScript",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-    },
-  ])("[normal] %s", ({ customLinkItem }) => {
-    expect(() => customLinkItemSchema.parse(customLinkItem)).not.toThrowError();
-  });
-  test.each<TestCase>([
-    {
-      title: "`id` is empty",
-      customLinkItem: {
-        id: "",
-        target: "a",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-      expected: "item's id must be between 1 and 50 characters.",
-    },
-    {
-      title: "`id` is more than 50 characters(51 characters)",
-      customLinkItem: {
-        id: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        target: "a",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-      expected: "item's id must be between 1 and 50 characters.",
-    },
-    {
-      title: "`target` is empty",
-      customLinkItem: {
-        id: "a",
-        target: "",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-      expected: "target must be between 1 and 50 characters.",
-    },
-    {
-      title: "`target` is more than 50 characters(51 characters)",
-      customLinkItem: {
-        id: "a",
-        target: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        hit: "javascript|js",
-        links: [customLink],
-      },
-      expected: "target must be between 1 and 50 characters.",
-    },
-    {
-      title: "`hit` is invalid RegExp",
-      customLinkItem: {
-        id: "a",
-        target: "JavaScript",
-        hit: "+javascript|js",
-        links: [customLink],
-      },
-      expected: "'+javascript|js' is not a valid regular expression",
-    },
-  ])("[normal] %s", ({ customLinkItem, expected }) => {
-    expect(() => customLinkItemSchema.parse(customLinkItem)).toThrowError(
       expected
     );
   });
@@ -272,7 +217,7 @@ describe("customLinkUrl test", () => {
     {
       title: "list's id is more than 150 characters(151 characters)",
       customLinkUrl:
-        "https://www.google.com/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "https://www.google.com/search?q=baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       expected: "list's URL is less than or equal to letter 150",
     },
     {

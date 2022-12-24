@@ -9,22 +9,13 @@ function messageStringMinMax(variable: string, min: number, max: number) {
 }
 
 export const customLinkSchema = z.object({
-  kind: messageStringMinMax("kind", 1, 50),
+  id: messageStringMinMax("custom link id", 1, 50),
+  name: messageStringMinMax("custom link name", 1, 50),
   url: z
     .string()
     .url({ message: "URL is invalid." })
     .max(200, { message: "URL should not exceed 200 characters." }),
-  enable: z.boolean().default(true),
-});
-
-export type CustomLink = z.infer<typeof customLinkSchema>;
-
-export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
-
-export const customLinkItemSchema = z.object({
-  id: messageStringMinMax("item's id", 1, 50),
-  target: messageStringMinMax("target", 1, 50),
-  hit: z.string().refine(
+  match: messageStringMinMax("custom link match", 1, 100).refine(
     (value: string) => {
       try {
         new RegExp(value);
@@ -37,16 +28,17 @@ export const customLinkItemSchema = z.object({
       message: `'${value}' is not a valid regular expression`,
     })
   ),
-  links: z.array(customLinkSchema),
+  group: messageStringMinMax("custom link group name", 1, 50),
+  enable: z.boolean().default(true),
 });
 
-export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
+export type CustomLink = z.infer<typeof customLinkSchema>;
 
-export const customLinkItemsSchema = z.array(customLinkItemSchema);
+export const customLinksSchema = z.array(customLinkSchema);
 
-export type CustomLinkItems = z.infer<typeof customLinkItemsSchema>;
+export type CustomLinks = z.infer<typeof customLinksSchema>;
 
-export type CustomLinkItemsBucket = Record<string, CustomLinkItem>;
+export type CustomLinksBucket = Record<string, CustomLink>;
 
 export const customLinkUrlSchema = z
   .string()
@@ -62,14 +54,12 @@ export const customLinkListSchema = z.record(
 
 export type CustomLinkListBucket = z.infer<typeof customLinkListSchema>;
 
-export const fetchCustomLinkItemSchema = customLinkItemSchema.omit({
-  list_id: true,
-});
+export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
 
 export const fetchCustomLinkUrlSchema = z.object({
   id: customLinkListIdSchema,
   name: messageStringMinMax("list's name", 1, 50),
-  items: customLinkItemsSchema,
+  links: customLinksSchema,
 });
 
 export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;
