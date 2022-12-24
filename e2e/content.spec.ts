@@ -26,18 +26,26 @@ test("onInstalled test", async ({ page }) => {
 test("Languages test", async ({ page, extensionId }) => {
   // add new language
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator("_react=App >> text='Language'").click();
+  await page.locator(["_react=App", "text='Language'"].join(" >> ")).click();
   await page
-    .locator("_react=LanguagesForm >> select")
+    .locator(["_react=LanguagesForm", "select"].join(" >> "))
     .selectOption({ label: "French" });
   await page
-    .locator("_react=LanguagesForm >> _react=[aria-label = 'Add language']")
+    .locator(
+      ["_react=LanguagesForm", "_react=[aria-label = 'Add language']"].join(
+        " >> "
+      )
+    )
     .click();
 
   // remove language
   await page
     .locator(
-      "_react=LanguagesTable >> tr:has-text('Japanese') >> _react=[aria-label = 'Delete language']"
+      [
+        "_react=LanguagesTable",
+        "tr:has-text('Japanese')",
+        "_react=[aria-label = 'Delete language']",
+      ].join(" >> ")
     )
     .click();
 
@@ -51,8 +59,10 @@ test("Languages test", async ({ page, extensionId }) => {
 
   // reset languages
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator("_react=App >> text='Language'").click();
-  await page.locator("_react=LanguagesReset >> text='Reset'").click();
+  await page.locator(["_react=App", "text='Language'"].join(" >> ")).click();
+  await page
+    .locator(["_react=LanguagesReset", "text='Reset'"].join(" >> "))
+    .click();
   await page.locator("text='Yes, reset.'").click();
 
   // check
@@ -67,19 +77,27 @@ test("Languages test", async ({ page, extensionId }) => {
 test("Times test", async ({ page, extensionId }) => {
   // add new time
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator("_react=App >> text='Time'").click();
-  await page.locator("_react=TimesForm >> #timeNumber").fill("3");
+  await page.locator(["_react=App", "text='Time'"].join(" >> ")).click();
   await page
-    .locator("_react=TimesForm >> select")
+    .locator(["_react=TimesForm", "#timeNumber"].join(" >> "))
+    .fill("3");
+  await page
+    .locator(["_react=TimesForm", "select"].join(" >> "))
     .selectOption({ label: "day" });
   await page
-    .locator("_react=TimesForm >> _react=[aria-label = 'Add time']")
+    .locator(
+      ["_react=TimesForm", "_react=[aria-label = 'Add time']"].join(" >> ")
+    )
     .click();
 
   // remove time
   await page
     .locator(
-      "_react=TimesTable >> tr:has-text('6 month') >> _react=[aria-label = 'Delete time']"
+      [
+        "_react=TimesTable",
+        "tr:has-text('6 month')",
+        "_react=[aria-label = 'Delete time']",
+      ].join(" >> ")
     )
     .click();
 
@@ -99,8 +117,10 @@ test("Times test", async ({ page, extensionId }) => {
 
   // reset times
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator("_react=App >> text='Time'").click();
-  await page.locator("_react=TimesReset >> text='Reset'").click();
+  await page.locator(["_react=App", "text='Time'"].join(" >> ")).click();
+  await page
+    .locator(["_react=TimesReset", "text='Reset'"].join(" >> "))
+    .click();
   await page.locator("text='Yes, reset.'").click();
 
   // check
@@ -116,3 +136,28 @@ test("Times test", async ({ page, extensionId }) => {
     await expect(page.locator("#choomameRoot")).toHaveText(new RegExp(time));
   }
 });
+
+// test("CustomLink test", async ({ page, extensionId }) => {
+//   // add new CustomLink list
+//   await page.goto(`chrome-extension://${extensionId}/index.html`);
+//   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+//
+//   // remove custom link list
+//   await page
+//     .locator(
+//       ["_react=CustomLinkListTable", "tr:has-text('hoge')", "_react=[aria-label = 'Delete custom link list']"].join(" >> ")
+//     )
+//     .click();
+//
+//   // check
+//   await page.goto("https://www.google.com/search?q=hoge");
+//
+//   // reset times
+//   await page.goto(`chrome-extension://${extensionId}/index.html`);
+//   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+//   await page.locator(["_react=TimesReset", "text='Reset'"].join" >> ").click();
+//   await page.locator("text='Yes, reset.'").click();
+//
+//   // check
+//   await page.goto("https://www.google.com/search?q=hoge");
+// });
