@@ -1,5 +1,9 @@
-import { customLinkListBucket, customLinkListOnInstalled } from "./customLink";
-import { CustomLinkListBucket } from "./customLinkSchema";
+import {
+  customLinkListBucket,
+  customLinkListOnInstalled,
+  fetchCustomLinkUrl,
+} from "./customLink";
+import { CustomLinkListBucket, customLinkUrlSchema } from "./customLinkSchema";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
@@ -21,9 +25,22 @@ export const fetchAllCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
 
 export const addOneCustomLinkList = createAsyncThunk(
   "customLinkList/addOneCustomLinkList",
-  async (arg: CustomLinkListBucket) => {
-    customLinkListBucket.set(arg);
-    return arg;
+  async (arg: string) => {
+    const result = customLinkUrlSchema.safeParse(arg);
+    if (!result.success) {
+      throw new Error(result.error.issues[0].message);
+    }
+    const customLinkUrl = result.data;
+    const response = await fetchCustomLinkUrl(customLinkUrl);
+    const list_id = response.id;
+    const customLinkList: CustomLinkListBucket = {
+      [list_id]: {
+        name: response.name,
+        url: customLinkUrl,
+      },
+    };
+    customLinkListBucket.set(customLinkList);
+    return customLinkList;
   }
 );
 
@@ -38,6 +55,7 @@ export const removeOneCustomLinkList = createAsyncThunk(
 const initialState = {
   list: {} as CustomLinkListBucket,
   status: "idle",
+  errorMessage: "",
 };
 
 export const customLinkListSlice = createSlice({
@@ -49,47 +67,59 @@ export const customLinkListSlice = createSlice({
       // init
       .addCase(initCustomLinkList.pending, (state) => {
         state.status = "loading";
+        state.errorMessage = "";
       })
       .addCase(initCustomLinkList.rejected, (state) => {
         state.status = "failed";
+        state.errorMessage = "";
       })
       .addCase(initCustomLinkList.fulfilled, (state, action) => {
         state.list = action.payload;
         state.status = "idle";
+        state.errorMessage = "";
       })
       // fetch
       .addCase(fetchAllCustomLinkList.pending, (state) => {
         state.status = "loading";
+        state.errorMessage = "";
       })
       .addCase(fetchAllCustomLinkList.rejected, (state) => {
         state.status = "failed";
+        state.errorMessage = "";
       })
       .addCase(fetchAllCustomLinkList.fulfilled, (state, action) => {
         state.list = action.payload;
         state.status = "idle";
+        state.errorMessage = "";
       })
       // addOne
       .addCase(addOneCustomLinkList.pending, (state) => {
         state.status = "loading";
+        state.errorMessage = "";
       })
-      .addCase(addOneCustomLinkList.rejected, (state) => {
+      .addCase(addOneCustomLinkList.rejected, (state, action) => {
         state.status = "failed";
+        state.errorMessage = action.error.message ?? "";
       })
       .addCase(addOneCustomLinkList.fulfilled, (state, action) => {
         const list_id = Object.keys(action.payload)[0];
         state.list[list_id] = action.payload[list_id];
         state.status = "idle";
+        state.errorMessage = "";
       })
       // removeOne
       .addCase(removeOneCustomLinkList.pending, (state) => {
         state.status = "loading";
+        state.errorMessage = "";
       })
       .addCase(removeOneCustomLinkList.rejected, (state) => {
         state.status = "failed";
+        state.errorMessage = "";
       })
       .addCase(removeOneCustomLinkList.fulfilled, (state, action) => {
         delete state.list[action.payload];
         state.status = "idle";
+        state.errorMessage = "";
       });
   },
 });
