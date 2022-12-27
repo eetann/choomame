@@ -50,7 +50,7 @@ const CustomLinkListTable: React.FC = () => {
                 <Td py="1" pr="1">
                   <IconButton
                     fontSize="20"
-                    aria-label="Delete time"
+                    aria-label="Delete custom link list"
                     icon={<HiOutlineTrash />}
                     onClick={() => dispatch(removeOneCustomLinkList(list_id))}
                   />
