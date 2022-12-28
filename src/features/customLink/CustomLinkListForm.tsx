@@ -25,8 +25,9 @@ const CustomLinkListForm: React.FC = () => {
   return (
     <HStack>
       <FormControl isInvalid={isError}>
-        <FormLabel htmlFor="">list URL</FormLabel>
+        <FormLabel htmlFor="customLinkListURL">list URL</FormLabel>
         <Input
+          id="customLinkListURL"
           type="url"
           value={listUrl}
           onChange={(e) => setListUrl(e.target.value)}

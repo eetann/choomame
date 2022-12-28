@@ -27,9 +27,13 @@ export async function fetchCustomLinkUrl(
   try {
     response = JSON5.parse<FetchCustomLinkUrl>(response);
   } catch (e) {
-    throw new Error(`JOSN5 parse Error: ${url}`);
+    throw new Error("The JSON5 in this URL is an invalid format.");
   }
-  return fetchCustomLinkUrlSchema.parse(response);
+  const result = fetchCustomLinkUrlSchema.safeParse(response);
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+  return result.data;
 }
 
 export async function customLinkListOnInstalled() {

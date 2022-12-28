@@ -137,27 +137,43 @@ test("Times test", async ({ page, extensionId }) => {
   }
 });
 
-// test("CustomLink test", async ({ page, extensionId }) => {
-//   // add new CustomLink list
-//   await page.goto(`chrome-extension://${extensionId}/index.html`);
-//   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
-//
-//   // remove custom link list
-//   await page
-//     .locator(
-//       ["_react=CustomLinkListTable", "tr:has-text('hoge')", "_react=[aria-label = 'Delete custom link list']"].join(" >> ")
-//     )
-//     .click();
-//
-//   // check
-//   await page.goto("https://www.google.com/search?q=hoge");
-//
-//   // reset times
-//   await page.goto(`chrome-extension://${extensionId}/index.html`);
-//   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
-//   await page.locator(["_react=TimesReset", "text='Reset'"].join" >> ").click();
-//   await page.locator("text='Yes, reset.'").click();
-//
-//   // check
-//   await page.goto("https://www.google.com/search?q=hoge");
-// });
+test("CustomLink test", async ({ page, extensionId }) => {
+  // add new CustomLink list
+  await page.goto(`chrome-extension://${extensionId}/index.html`);
+  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+
+  // error handling: zod schema
+  await page.locator("#customLinkListURL").fill("aaaa");
+  await page
+    .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+    .click();
+  await expect(page.locator("_react=CustomLinkListForm")).toHaveText(
+    /list's URL is invalid/
+  );
+
+  // error handling: invalid JSON5 format
+  await page
+    .locator("#customLinkListURL")
+    .fill(
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5555"
+    );
+  await page
+    .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+    .click();
+  await expect(page.locator("_react=CustomLinkListForm")).toHaveText(
+    /The JSON5 in this URL is an invalid format/
+  );
+
+  // add
+  await page
+    .locator("#customLinkListURL")
+    .fill(
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
+    );
+  await page
+    .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+    .click();
+  await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+    /eetann\(for E2E test\)/
+  );
+});
