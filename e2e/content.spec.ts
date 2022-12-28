@@ -137,7 +137,7 @@ test("Times test", async ({ page, extensionId }) => {
   }
 });
 
-test("CustomLink test", async ({ page, extensionId }) => {
+test("CustomLink list test", async ({ page, extensionId }) => {
   // add new CustomLink list
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
@@ -176,4 +176,25 @@ test("CustomLink test", async ({ page, extensionId }) => {
   await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
     /eetann\(for E2E test\)/
   );
+  // TODO: customLinkがTable・content scriptで表示されるか確認
+
+  // remove
+  await page
+    .locator("#customLinkListURL")
+    .fill(
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
+    );
+  await page
+    .locator(
+      [
+        "_react=CustomLinkListTable",
+        "tr:has-text('eetann(for E2E test)')",
+        "_react=[aria-label = 'Delete custom link list']",
+      ].join(" >> ")
+    )
+    .click();
+  await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
+    /eetann\(for E2E test\)/
+  );
+  // TODO: customLinkがTable・content scriptで表示されないことを確認
 });
