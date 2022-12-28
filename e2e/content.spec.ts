@@ -197,4 +197,17 @@ test("CustomLink list test", async ({ page, extensionId }) => {
     /eetann\(for E2E test\)/
   );
   // TODO: customLinkがTable・content scriptで表示されないことを確認
+
+  // toggle
+  await page
+    .locator(
+      [
+        "_react=CustomLinkTable",
+        "_react=[key = 'developer/javascript-en-doc']",
+        // "_react=[key = 'eetann/eetann-portfolio']",
+        "input[type=checkbox] ~ span",
+      ].join(" >> ")
+    )
+    .click();
+  // TODO: customLinkがcontent scriptで表示されないことを確認
 });
