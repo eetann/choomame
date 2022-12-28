@@ -74,10 +74,11 @@ export async function customLinksOnInstalled() {
       console.log(e);
       continue;
     }
-    for (const [id, customLink] of Object.entries(response.links)) {
+    response.links.forEach((customLink) => {
+      customLink.id = `${list_id}/${customLink.id}`;
       customLinksBucket.set({
-        [`${list_id}/${id}`]: customLink,
+        [customLink.id]: customLink,
       });
-    }
+    });
   }
 }
