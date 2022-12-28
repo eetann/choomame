@@ -39,7 +39,12 @@ const CustomLinkListForm: React.FC = () => {
         isLoading={isLoading}
         onClick={async () => {
           setIsLoading(true);
-          await dispatch(addOneCustomLinkList(listUrl));
+          try {
+            await dispatch(addOneCustomLinkList(listUrl)).unwrap();
+            setListUrl("");
+          } catch (e) {
+            // error
+          }
           setIsLoading(false);
         }}
         colorScheme="teal"
