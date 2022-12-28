@@ -1,5 +1,5 @@
 import type { AppDispatch } from "../../app/store";
-import { selectCustomLinks } from "./customLinkSlice";
+import { selectCustomLinks, toggleOneCustomLink } from "./customLinkSlice";
 import {
   TableContainer,
   Table,
@@ -10,6 +10,7 @@ import {
   Thead,
   Th,
   Link,
+  Switch,
 } from "@chakra-ui/react";
 import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
@@ -30,8 +31,8 @@ const CustomLinkTable: React.FC = () => {
         <Thead>
           <Tr>
             <Th>group name</Th>
-            <Th>link name</Th>
             <Th>match</Th>
+            <Th>link name</Th>
             <Th>URL</Th>
             <Th></Th>
           </Tr>
@@ -44,21 +45,29 @@ const CustomLinkTable: React.FC = () => {
                   {customLink.group}
                 </Td>
                 <Td fontSize="md" py="1" minWidth="48">
-                  {customLink.name}
+                  {customLink.match}
                 </Td>
                 <Td fontSize="md" py="1" minWidth="48">
-                  {customLink.match}
+                  {customLink.name}
                 </Td>
                 <Td fontSize="md" py="1">
                   <Link color="teal">{customLink.url}</Link>
                 </Td>
                 <Td py="1" pr="1">
-                  <IconButton
-                    fontSize="20"
-                    aria-label="toggle enable customLink"
-                    icon={<HiOutlineTrash />}
-                    // onClick={() => dispatch()}
-                  />
+                  {customLink.id.startsWith("user/") ? (
+                    <IconButton
+                      // onClick={() => dispatch()}
+                      fontSize="20"
+                      aria-label="delete customLink"
+                      icon={<HiOutlineTrash />}
+                    />
+                  ) : (
+                    <Switch
+                      isChecked={customLink.enable}
+                      onChange={() => dispatch(toggleOneCustomLink(customLink))}
+                      colorScheme="teal"
+                    />
+                  )}
                 </Td>
               </Tr>
             );

@@ -41,14 +41,24 @@ export const fetchAllCustomLinks = createAsyncThunk<CustomLinksBucket>(
   }
 );
 
+export const toggleOneCustomLink = createAsyncThunk(
+  "customLinks/toggleOneCustomLink",
+  async (args: CustomLink) => {
+    const customLink: CustomLink = { ...args, enable: !args.enable };
+    customLinksBucket.set({ [customLink.id]: customLink });
+    return customLink;
+  }
+);
+
 export const addManyCustomLinks = createAsyncThunk(
   "customLinks/addManyCustomLinks",
   async (args: { list_id: string; items: CustomLinks }) => {
     const customLinks = {} as CustomLinksBucket;
     for (const item_id in args.items) {
       const item = args.items[item_id];
+      item.id = `${args.list_id}/${item_id}`;
       // TODO:
-      customLinks[`${args.list_id}/${item_id}`] = item;
+      customLinks[item.id] = item;
     }
     customLinksBucket.set(customLinks);
     return customLinks;
@@ -93,6 +103,21 @@ export const customLinkSlice = createSlice({
       })
       .addCase(fetchAllCustomLinks.fulfilled, (state, action) => {
         customLinksAdapter.setAll(state, action.payload);
+        state.status = "idle";
+      })
+      // toggle enable
+      .addCase(toggleOneCustomLink.pending, (state) => {
+        console.log(100);
+        state.status = "loading";
+      })
+      .addCase(toggleOneCustomLink.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(toggleOneCustomLink.fulfilled, (state, action) => {
+        customLinksAdapter.updateOne(state, {
+          id: action.payload.id,
+          changes: action.payload,
+        });
         state.status = "idle";
       })
       // addMany
