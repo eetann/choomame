@@ -1,4 +1,5 @@
 import type { AppDispatch } from "../../app/store";
+import CustomLinkForm from "./CustomLinkForm";
 import CustomLinkListForm from "./CustomLinkListForm";
 import CustomLinkListTable from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
@@ -20,6 +21,7 @@ const CustomLinkTab: React.FC = () => {
     <Stack spacing="10">
       <CustomLinkListForm />
       <CustomLinkListTable />
+      <CustomLinkForm />
       <CustomLinkTable />
     </Stack>
   );

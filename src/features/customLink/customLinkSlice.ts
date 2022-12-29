@@ -1,10 +1,15 @@
 import { RootState } from "../../app/store";
 import { customLinksBucket, customLinksOnInstalled } from "./customLink";
-import { CustomLink, CustomLinks, CustomLinksBucket } from "./customLinkSchema";
+import {
+  CustomLink,
+  CustomLinksBucket,
+  CustomLinkWithoutId,
+} from "./customLinkSchema";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
+  nanoid,
 } from "@reduxjs/toolkit";
 
 export const initCustomLinks = createAsyncThunk<CustomLinksBucket>(
@@ -52,13 +57,19 @@ export const toggleOneCustomLink = createAsyncThunk(
 
 export const addManyCustomLinks = createAsyncThunk(
   "customLinks/addManyCustomLinks",
-  async (args: { list_id: string; items: CustomLinks }) => {
+  async (args: { items: CustomLinkWithoutId[]; list_id?: string }) => {
+    if (typeof args.list_id === "undefined") {
+      args.list_id = "user";
+    }
     const customLinks = {} as CustomLinksBucket;
-    for (const item_id in args.items) {
-      const item = args.items[item_id];
-      item.id = `${args.list_id}/${item_id}`;
-      // TODO:
-      customLinks[item.id] = item;
+    for (const item of args.items) {
+      let id = "";
+      if (item.id) {
+        id = `${args.list_id}/${item.id}`;
+      } else {
+        id = `${args.list_id}/${nanoid()}`;
+      }
+      customLinks[id] = { id, ...item };
     }
     customLinksBucket.set(customLinks);
     return customLinks;
