@@ -138,7 +138,6 @@ test("Times test", async ({ page, extensionId }) => {
 });
 
 test("CustomLink list test", async ({ page, extensionId }) => {
-  // add new CustomLink list
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
 
@@ -210,4 +209,26 @@ test("CustomLink list test", async ({ page, extensionId }) => {
     )
     .click();
   // TODO: customLinkがcontent scriptで表示されないことを確認
+});
+
+test("CustomLinks test", async ({ page, extensionId }) => {
+  await page.goto(`chrome-extension://${extensionId}/index.html`);
+  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+
+  // error handling: zod schema
+  await page
+    .locator("_react=CustomLinkForm")
+    .getByLabel("Group name")
+    .fill("a");
+  await page.locator("_react=CustomLinkForm").getByLabel("Match").fill("a");
+  await page.locator("_react=CustomLinkForm").getByLabel("Link name").fill("a");
+  await page.locator("_react=CustomLinkForm").getByLabel("URL").fill("a");
+  await expect(
+    page.locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+  ).toBeDisabled();
+  await expect(page.locator("_react=CustomLinkForm")).toHaveText(
+    /URL is invalid./
+  );
+
+  // add new CustomLink
 });
