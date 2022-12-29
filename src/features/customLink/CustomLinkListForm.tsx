@@ -6,7 +6,7 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  HStack,
+  VStack,
   FormErrorMessage,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -23,16 +23,19 @@ const CustomLinkListForm: React.FC = () => {
   const isError = customLinkListErrorMessage !== "";
 
   return (
-    <HStack>
+    <VStack alignItems="start">
       <FormControl isInvalid={isError}>
-        <FormLabel htmlFor="customLinkListURL">list URL</FormLabel>
+        <FormLabel htmlFor="customLinkListURL">new List</FormLabel>
+        <FormHelperText>
+          Write URL. Example:
+          https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5
+        </FormHelperText>
         <Input
           id="customLinkListURL"
           type="url"
           value={listUrl}
           onChange={(e) => setListUrl(e.target.value)}
         />
-        <FormHelperText>Write URL for custom link list</FormHelperText>
         <FormErrorMessage>{customLinkListErrorMessage}</FormErrorMessage>
       </FormControl>
       <Button
@@ -51,7 +54,7 @@ const CustomLinkListForm: React.FC = () => {
       >
         Add
       </Button>
-    </HStack>
+    </VStack>
   );
 };
 export default CustomLinkListForm;

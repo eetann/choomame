@@ -5,7 +5,7 @@ import CustomLinkListTable from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import { fetchAllCustomLinkList } from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
-import { Stack } from "@chakra-ui/react";
+import { Card, CardBody, Heading, Stack, StackDivider } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -18,11 +18,25 @@ const CustomLinkTab: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Stack spacing="10">
-      <CustomLinkListForm />
-      <CustomLinkListTable />
-      <CustomLinkForm />
-      <CustomLinkTable />
+    <Stack divider={<StackDivider />} spacing="10">
+      <Stack>
+        <Heading size="md">List</Heading>
+        <Card>
+          <CardBody>
+            <CustomLinkListForm />
+          </CardBody>
+        </Card>
+        <CustomLinkListTable />
+      </Stack>
+      <Stack>
+        <Heading size="md">Custom Links</Heading>
+        <Card>
+          <CardBody>
+            <CustomLinkForm />
+          </CardBody>
+        </Card>
+        <CustomLinkTable />
+      </Stack>
     </Stack>
   );
 };

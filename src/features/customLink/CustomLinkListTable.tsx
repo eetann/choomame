@@ -45,9 +45,11 @@ const CustomLinkListTable: React.FC = () => {
                   {list.name}
                 </Td>
                 <Td fontSize="md" py="1">
-                  <Link color="teal">{list.url}</Link>
+                  <Link color="teal" href={list.url}>
+                    {list.url}
+                  </Link>
                 </Td>
-                <Td py="1" pr="1">
+                <Td py="1" pr="1" height="14">
                   <IconButton
                     fontSize="20"
                     aria-label="Delete custom link list"

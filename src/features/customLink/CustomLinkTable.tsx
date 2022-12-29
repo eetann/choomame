@@ -27,7 +27,7 @@ const CustomLinkTable: React.FC = () => {
       maxW="min-content"
       whiteSpace="normal"
     >
-      <Table variant="simple">
+      <Table variant="simple" width="80%">
         <Thead>
           <Tr>
             <Th>group name</Th>
@@ -40,20 +40,22 @@ const CustomLinkTable: React.FC = () => {
         <Tbody>
           {customLinks.map((customLink) => {
             return (
-              <Tr key={customLink.id}>
-                <Td fontSize="md" py="1" minWidth="48">
+              <Tr key={customLink.id} minHeight="96">
+                <Td fontSize="md" py="1" minWidth="48" maxWidth="64">
                   {customLink.group}
                 </Td>
-                <Td fontSize="md" py="1" minWidth="48">
+                <Td fontSize="md" py="1" minWidth="48" maxWidth="64">
                   {customLink.match}
                 </Td>
-                <Td fontSize="md" py="1" minWidth="48">
+                <Td fontSize="md" py="1" minWidth="48" maxWidth="64">
                   {customLink.name}
                 </Td>
-                <Td fontSize="md" py="1">
-                  <Link color="teal">{customLink.url}</Link>
+                <Td fontSize="md" py="1" minWidth="48" maxWidth="80">
+                  <Link color="teal" href={customLink.url}>
+                    {customLink.url}
+                  </Link>
                 </Td>
-                <Td py="1" pr="1">
+                <Td py="1" pr="1" height="14">
                   {customLink.id.startsWith("user/") ? (
                     <IconButton
                       // onClick={() => dispatch()}
