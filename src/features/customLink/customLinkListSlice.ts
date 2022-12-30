@@ -1,10 +1,11 @@
 import {
   customLinkListBucket,
   customLinkListOnInstalled,
+  customLinksBucket,
   fetchCustomLinkUrl,
 } from "./customLink";
 import { CustomLinkListBucket, customLinkUrlSchema } from "./customLinkSchema";
-import { addManyCustomLinks } from "./customLinkSlice";
+import { addManyCustomLinks, removeManyCustomLinks } from "./customLinkSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
@@ -48,8 +49,13 @@ export const addOneCustomLinkList = createAsyncThunk(
 
 export const removeOneCustomLinkList = createAsyncThunk(
   "customLinkList/removeOneCustomLinkList",
-  async (list_id: string) => {
+  async (list_id: string, { dispatch }) => {
     customLinkListBucket.remove(list_id);
+    let customLinkIds = await customLinksBucket.getKeys();
+    customLinkIds = customLinkIds.filter((item_id) =>
+      item_id.startsWith(list_id)
+    );
+    await dispatch(removeManyCustomLinks(customLinkIds));
     return list_id;
   }
 );

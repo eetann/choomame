@@ -198,7 +198,15 @@ test("CustomLink list test", async ({ page, extensionId }) => {
   await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
     /eetann\(for E2E test\)/
   );
-  // TODO: customLinkがTable・content scriptで表示されないことを確認
+  for (const url of [
+    "https://hub-eetann.vercel.app",
+    "https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn",
+  ]) {
+    await expect(page.locator("_react=CustomLinkTable")).not.toHaveText(
+      new RegExp(url)
+    );
+  }
+  // TODO: customLinkがcontent scriptで表示されないことを確認
 
   // toggle
   await page
