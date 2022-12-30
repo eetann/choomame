@@ -11,6 +11,7 @@
     "zip": "echo 'use chrome-webstore-upload-cli in GitHub Actions'",
     "build": "tsc && vite build",
     "lint": "eslint src && prettier --check src",
+    "lint:format": "prettier --write src e2e",
     "preview": "vite preview"
   },
   "dependencies": {
