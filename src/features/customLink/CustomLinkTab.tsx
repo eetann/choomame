@@ -1,9 +1,13 @@
 import type { AppDispatch } from "../../app/store";
+import ResetButton from "../../common/ResetButton";
 import CustomLinkForm from "./CustomLinkForm";
 import CustomLinkListForm from "./CustomLinkListForm";
 import CustomLinkListTable from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
-import { fetchAllCustomLinkList } from "./customLinkListSlice";
+import {
+  fetchAllCustomLinkList,
+  initCustomLinkAll,
+} from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
 import { Card, CardBody, Heading, Stack, StackDivider } from "@chakra-ui/react";
 import React, { useEffect } from "react";
@@ -37,6 +41,7 @@ const CustomLinkTab: React.FC = () => {
         </Card>
         <CustomLinkTable />
       </Stack>
+      <ResetButton name="Custom Link" action={initCustomLinkAll} />
     </Stack>
   );
 };

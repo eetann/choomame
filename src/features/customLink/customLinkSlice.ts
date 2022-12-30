@@ -16,7 +16,7 @@ export const initCustomLinks = createAsyncThunk<CustomLinksBucket>(
   "customLinks/initCustomLinks",
   async () => {
     await customLinksBucket.clear();
-    customLinksOnInstalled();
+    await customLinksOnInstalled();
     return await customLinksBucket.get();
   }
 );

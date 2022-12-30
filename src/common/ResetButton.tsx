@@ -47,7 +47,7 @@ const ResetButton = ({ name, action }: Props) => {
           <AlertDialogContent>
             <AlertDialogHeader fontSize="3xl">Reset {name}?</AlertDialogHeader>
             <AlertDialogBody fontSize="lg">
-              If you reset {name}, {name} you added will disappear.
+              If you reset, {name} you added will disappear.
               <br />
               Do you really want to reset?
               <Center my="5" rounded="xl" backgroundColor="black">

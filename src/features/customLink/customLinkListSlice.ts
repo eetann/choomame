@@ -5,7 +5,11 @@ import {
   fetchCustomLinkUrl,
 } from "./customLink";
 import { CustomLinkListBucket, customLinkUrlSchema } from "./customLinkSchema";
-import { addManyCustomLinks, removeManyCustomLinks } from "./customLinkSlice";
+import {
+  addManyCustomLinks,
+  initCustomLinks,
+  removeManyCustomLinks,
+} from "./customLinkSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
@@ -13,6 +17,16 @@ export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
   async () => {
     await customLinkListBucket.clear();
     customLinkListOnInstalled();
+    return await customLinkListBucket.get();
+  }
+);
+
+export const initCustomLinkAll = createAsyncThunk<CustomLinkListBucket>(
+  "customLinkList/initCustomLinkAll",
+  async (_, { dispatch }) => {
+    await customLinkListBucket.clear();
+    await customLinkListOnInstalled();
+    await dispatch(initCustomLinks());
     return await customLinkListBucket.get();
   }
 );
@@ -82,6 +96,20 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = "";
       })
       .addCase(initCustomLinkList.fulfilled, (state, action) => {
+        state.list = action.payload;
+        state.status = "idle";
+        state.errorMessage = "";
+      })
+      // init All
+      .addCase(initCustomLinkAll.pending, (state) => {
+        state.status = "loading";
+        state.errorMessage = "";
+      })
+      .addCase(initCustomLinkAll.rejected, (state) => {
+        state.status = "failed";
+        state.errorMessage = "";
+      })
+      .addCase(initCustomLinkAll.fulfilled, (state, action) => {
         state.list = action.payload;
         state.status = "idle";
         state.errorMessage = "";
