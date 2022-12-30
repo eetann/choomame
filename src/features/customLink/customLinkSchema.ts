@@ -33,7 +33,7 @@ export const customLinkSchema = z.object({
 });
 
 export type CustomLink = z.infer<typeof customLinkSchema>;
-export const customLinkWithoutIdSchema = customLinkSchema.partial({ id: true });
+export const customLinkWithoutIdSchema = customLinkSchema.omit({ id: true });
 export type CustomLinkWithoutId = z.infer<typeof customLinkWithoutIdSchema>;
 
 export const customLinksSchema = z.array(customLinkSchema);

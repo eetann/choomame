@@ -55,21 +55,24 @@ export const toggleOneCustomLink = createAsyncThunk(
   }
 );
 
+export const addOneCustomLink = createAsyncThunk(
+  "customLinks/addOneCustomLink",
+  async (item: CustomLinkWithoutId) => {
+    const list_id = "user";
+    const id = `${list_id}/${nanoid()}`;
+    const customLink = { id, ...item };
+    customLinksBucket.set({ id: customLink });
+    return customLink;
+  }
+);
+
 export const addManyCustomLinks = createAsyncThunk(
   "customLinks/addManyCustomLinks",
-  async (args: { items: CustomLinkWithoutId[]; list_id?: string }) => {
-    if (typeof args.list_id === "undefined") {
-      args.list_id = "user";
-    }
+  async (args: { items: CustomLink[]; list_id: string }) => {
     const customLinks = {} as CustomLinksBucket;
     for (const item of args.items) {
-      let id = "";
-      if (item.id) {
-        id = `${args.list_id}/${item.id}`;
-      } else {
-        id = `${args.list_id}/${nanoid()}`;
-      }
-      customLinks[id] = { id, ...item };
+      item.id = `${args.list_id}/${item.id}`;
+      customLinks[item.id] = item;
     }
     customLinksBucket.set(customLinks);
     return customLinks;
@@ -129,6 +132,17 @@ export const customLinkSlice = createSlice({
           id: action.payload.id,
           changes: action.payload,
         });
+        state.status = "idle";
+      })
+      // addOne
+      .addCase(addOneCustomLink.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addOneCustomLink.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(addOneCustomLink.fulfilled, (state, action) => {
+        customLinksAdapter.addOne(state, action.payload);
         state.status = "idle";
       })
       // addMany

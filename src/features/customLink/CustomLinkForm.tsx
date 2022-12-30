@@ -4,7 +4,7 @@ import {
   CustomLinkWithoutId,
   customLinkWithoutIdSchema,
 } from "./customLinkSchema";
-import { addManyCustomLinks } from "./customLinkSlice";
+import { addOneCustomLink } from "./customLinkSlice";
 import { Button, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -19,7 +19,7 @@ const CustomLinkForm: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<CustomLinkWithoutId> = (data) => {
-    dispatch(addManyCustomLinks({ items: [data] }));
+    dispatch(addOneCustomLink(data));
 
     // keep the input string
     methods.setValue("group", data.group);

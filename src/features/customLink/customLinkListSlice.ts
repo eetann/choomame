@@ -4,6 +4,7 @@ import {
   fetchCustomLinkUrl,
 } from "./customLink";
 import { CustomLinkListBucket, customLinkUrlSchema } from "./customLinkSchema";
+import { addManyCustomLinks } from "./customLinkSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
@@ -25,7 +26,7 @@ export const fetchAllCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
 
 export const addOneCustomLinkList = createAsyncThunk(
   "customLinkList/addOneCustomLinkList",
-  async (arg: string) => {
+  async (arg: string, { dispatch }) => {
     const result = customLinkUrlSchema.safeParse(arg);
     if (!result.success) {
       throw new Error(result.error.issues[0].message);
@@ -40,6 +41,7 @@ export const addOneCustomLinkList = createAsyncThunk(
       },
     };
     customLinkListBucket.set(customLinkList);
+    await dispatch(addManyCustomLinks({ items: response.links, list_id }));
     return customLinkList;
   }
 );
