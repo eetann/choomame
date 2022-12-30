@@ -18,8 +18,17 @@ const CustomLinkForm: React.FC = () => {
     mode: "all",
   });
 
-  const onSubmit: SubmitHandler<CustomLinkWithoutId> = (data) =>
+  const onSubmit: SubmitHandler<CustomLinkWithoutId> = (data) => {
     dispatch(addManyCustomLinks({ items: [data] }));
+
+    // keep the input string
+    methods.setValue("group", data.group);
+    methods.setValue("match", data.match);
+
+    // clear the input string
+    methods.setValue("name", "");
+    methods.setValue("url", "");
+  };
 
   return (
     <FormProvider {...methods}>
