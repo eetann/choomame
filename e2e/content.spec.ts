@@ -231,4 +231,33 @@ test("CustomLinks test", async ({ page, extensionId }) => {
   );
 
   // add new CustomLink
+  await page
+    .locator("_react=CustomLinkForm")
+    .getByLabel("Group name")
+    .fill("test");
+  await page.locator("_react=CustomLinkForm").getByLabel("Match").fill(".*");
+  await page
+    .locator("_react=CustomLinkForm")
+    .getByLabel("Link name")
+    .fill("eetann GitHub");
+  await page
+    .locator("_react=CustomLinkForm")
+    .getByLabel("URL")
+    .fill("https://github.com/eetann");
+  await page
+    .locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+    .click();
+  // check
+  await expect(
+    page.locator("_react=CustomLinkForm").getByLabel("Group name")
+  ).toHaveValue("test");
+  await expect(
+    page.locator("_react=CustomLinkForm").getByLabel("Match")
+  ).toHaveValue(".*");
+  await expect(
+    page.locator("_react=CustomLinkForm").getByLabel("Link name")
+  ).toHaveValue("");
+  await expect(
+    page.locator("_react=CustomLinkForm").getByLabel("URL")
+  ).toHaveValue("");
 });
