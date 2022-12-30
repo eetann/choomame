@@ -1,5 +1,4 @@
-import type { AppDispatch } from "../../app/store";
-import { initTimes } from "./timesSlice";
+import type { AppDispatch } from "../app/store";
 import { Icon } from "@chakra-ui/icons";
 import {
   Box,
@@ -14,11 +13,18 @@ import {
   HStack,
   Center,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useRef } from "react";
 import { HiExclamation } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 
-const TimesReset: React.FC = () => {
+type Props = {
+  name: string;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  action: AsyncThunk<any, void, any>;
+};
+
+const ResetButton = ({ name, action }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -39,9 +45,9 @@ const TimesReset: React.FC = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="3xl">Reset Time?</AlertDialogHeader>
+            <AlertDialogHeader fontSize="3xl">Reset {name}?</AlertDialogHeader>
             <AlertDialogBody fontSize="lg">
-              If you reset Time, the Time you added will disappear.
+              If you reset {name}, {name} you added will disappear.
               <br />
               Do you really want to reset?
               <Center my="5" rounded="xl" backgroundColor="black">
@@ -57,7 +63,7 @@ const TimesReset: React.FC = () => {
                   leftIcon={<HiExclamation fontSize="24" />}
                   colorScheme="red"
                   onClick={() => {
-                    dispatch(initTimes());
+                    dispatch(action());
                     onClose();
                   }}
                 >
@@ -71,4 +77,4 @@ const TimesReset: React.FC = () => {
     </Box>
   );
 };
-export default TimesReset;
+export default ResetButton;
