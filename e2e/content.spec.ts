@@ -179,11 +179,6 @@ test("CustomLink list test", async ({ page, extensionId }) => {
 
   // remove
   await page
-    .locator("#customLinkListURL")
-    .fill(
-      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
-    );
-  await page
     .locator(
       [
         "_react=CustomLinkListTable",
@@ -234,7 +229,7 @@ test("CustomLinks test", async ({ page, extensionId }) => {
   await page
     .locator("_react=CustomLinkForm")
     .getByLabel("Group name")
-    .fill("test");
+    .fill("Test group");
   await page.locator("_react=CustomLinkForm").getByLabel("Match").fill(".*");
   await page
     .locator("_react=CustomLinkForm")
@@ -250,7 +245,7 @@ test("CustomLinks test", async ({ page, extensionId }) => {
   // check
   await expect(
     page.locator("_react=CustomLinkForm").getByLabel("Group name")
-  ).toHaveValue("test");
+  ).toHaveValue("Test group");
   await expect(
     page.locator("_react=CustomLinkForm").getByLabel("Match")
   ).toHaveValue(".*");
@@ -260,4 +255,20 @@ test("CustomLinks test", async ({ page, extensionId }) => {
   await expect(
     page.locator("_react=CustomLinkForm").getByLabel("URL")
   ).toHaveValue("");
+  // TODO: customLinkがcontent scriptで表示されるか確認
+
+  // remove
+  await page
+    .locator(
+      [
+        "_react=CustomLinkTable",
+        "tr:has-text('Test group')",
+        "_react=[aria-label = 'Delete customLink']",
+      ].join(" >> ")
+    )
+    .click();
+  await expect(page.locator("_react=CustomLinkTable")).not.toHaveText(
+    /Test group/
+  );
+  // TODO: customLinkがcontent scriptで表示されないこと確認
 });

@@ -1,5 +1,9 @@
 import type { AppDispatch } from "../../app/store";
-import { selectCustomLinks, toggleOneCustomLink } from "./customLinkSlice";
+import {
+  removeManyCustomLinks,
+  selectCustomLinks,
+  toggleOneCustomLink,
+} from "./customLinkSlice";
 import {
   TableContainer,
   Table,
@@ -58,9 +62,11 @@ const CustomLinkTable: React.FC = () => {
                 <Td py="1" pr="1" height="14">
                   {customLink.id.startsWith("user/") ? (
                     <IconButton
-                      // onClick={() => dispatch()}
+                      onClick={() =>
+                        dispatch(removeManyCustomLinks([customLink.id]))
+                      }
                       fontSize="20"
-                      aria-label="delete customLink"
+                      aria-label="Delete customLink"
                       icon={<HiOutlineTrash />}
                     />
                   ) : (
