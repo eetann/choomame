@@ -1,5 +1,5 @@
 import type { AppDispatch } from "../../app/store";
-import { getTimeId, TimesUnit, timeUnitOrder } from "./times";
+import { getTimeId, TimesUnit, timeUnitOrder } from "./timesSchema";
 import { addOneTime, selectTimes } from "./timesSlice";
 import { AddIcon } from "@chakra-ui/icons";
 import {

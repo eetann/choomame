@@ -1,5 +1,5 @@
 import type { AppDispatch } from "../../app/store";
-import { Time } from "./times";
+import { Time } from "./timesSchema";
 import { removeOneTime, selectTimes } from "./timesSlice";
 import {
   TableContainer,

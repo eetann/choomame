@@ -1,4 +1,5 @@
 import AppearanceArea from "../features/appearance/AppearanceArea";
+import CustomLinkTab from "../features/customLink/CustomLinkTab";
 import LanguagesTab from "../features/languages/LanguagesTab";
 import TimesTab from "../features/times/TimesTab";
 import {
@@ -15,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {
-  HiOutlineBan,
+  HiOutlineBookmark,
   HiOutlineClock,
   HiOutlineTranslate,
 } from "react-icons/hi";
@@ -40,10 +41,9 @@ const App: React.FC = () => {
             <Icon as={HiOutlineTranslate} mr="1" />
             Language
           </Tab>
-
-          <Tab isDisabled>
-            <Icon as={HiOutlineBan} mr="1" />
-            Recipe
+          <Tab>
+            <Icon as={HiOutlineBookmark} mr="1" />
+            Custom Link
           </Tab>
         </TabList>
         <TabPanels>
@@ -54,7 +54,7 @@ const App: React.FC = () => {
             <LanguagesTab />
           </TabPanel>
           <TabPanel>
-            <p>recipe</p>
+            <CustomLinkTab />
           </TabPanel>
         </TabPanels>
       </Tabs>

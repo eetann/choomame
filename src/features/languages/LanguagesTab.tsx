@@ -1,13 +1,13 @@
 import type { AppDispatch } from "../../app/store";
+import ResetButton from "../../common/ResetButton";
 import LanguagesForm from "./LanguagesForm";
-import LanguagesReset from "./LanguagesReset";
 import LanguagesTable from "./LanguagesTable";
-import { fetchLanguages } from "./languagesSlice";
+import { fetchLanguages, initLanguages } from "./languagesSlice";
 import { Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const TimesTab: React.FC = () => {
+const LanguagesTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -18,8 +18,8 @@ const TimesTab: React.FC = () => {
     <Stack spacing="10">
       <LanguagesForm />
       <LanguagesTable />
-      <LanguagesReset />
+      <ResetButton name="Language" action={initLanguages} />
     </Stack>
   );
 };
-export default TimesTab;
+export default LanguagesTab;

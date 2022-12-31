@@ -1,15 +1,9 @@
 import { getLink } from "../../common/getLink";
 import { Param } from "../param/param";
-import { getTimes, TimesBucket, TimesUnit } from "./times";
+import { getTimes } from "./times";
+import { getTimeText, TimesBucket } from "./timesSchema";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-
-function get_name(unit: TimesUnit, number: number): string {
-  if (unit === "Any") {
-    return "Any";
-  }
-  return number + " " + unit;
-}
 
 type Props = {
   param: Param;
@@ -84,7 +78,7 @@ const TimesLink: React.FC<Props> = ({ param }) => {
                 backgroundColor: "blackAlpha.50",
               }}
             >
-              {get_name(time.unit, time.number)}
+              {getTimeText(time.unit, time.number)}
             </Button>
           );
         })}

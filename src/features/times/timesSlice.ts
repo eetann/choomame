@@ -1,14 +1,14 @@
 import type { RootState } from "../../app/store";
+import { timesBucket } from "./times";
 import {
   convertTimesToBucket,
   getTimeId,
   initialTimesStorage,
   Time,
-  timesBucket,
   TimesBucket,
   TimesUnit,
   timeUnitOrder,
-} from "./times";
+} from "./timesSchema";
 import {
   createAsyncThunk,
   createEntityAdapter,
