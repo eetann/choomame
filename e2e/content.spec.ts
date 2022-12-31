@@ -335,4 +335,39 @@ test("CustomLinks", async ({ page, extensionId }) => {
   test.step("check @ content script", async () => {
     // TODO: removeの確認
   });
+
+  await test.step("reset customLink", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+    await page
+      .locator(
+        ["_react=ResetButton[name = 'Custom Link']", "text='Reset'"].join(
+          " >> "
+        )
+      )
+      .click();
+    await page.locator("text='Yes, reset.'").click();
+  });
+
+  await test.step("check @ option page", async () => {
+    // list
+    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
+      /eetann\(for E2E test\)/
+    );
+    // customLink
+    for (const url of [
+      "https://hub-eetann.vercel.app",
+      "https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn",
+    ]) {
+      await expect(page.locator("_react=CustomLinkTable")).not.toHaveText(
+        new RegExp(url)
+      );
+    }
+  });
+
+  await test.step("check @ content script", async () => {
+    // TODO: 初期値が表示されるか確認
+  });
 });
