@@ -1,6 +1,6 @@
 import { Param } from "../param/param";
 import { CustomLinks } from "./customLinkSchema";
-import { Flex, Heading, Link } from "@chakra-ui/react";
+import { VStack, Text, Link, Box } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 type Props = {
@@ -43,12 +43,12 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
           name: "ああああああああああああああああああああああああ",
           url: "https://www.google.co.jp",
           match: ".*",
-          group: "ええええええええ",
+          group: "EEEEEEEE",
           enable: true,
         },
         {
           id: "aaaaaaaaaa2",
-          name: "ああああああああああああああああああああああああ",
+          name: "ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
           url: "https://www.google.co.jp",
           match: ".*",
           group: "なんでも",
@@ -76,17 +76,16 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
   }, []);
 
   return (
-    <Flex
-      direction="column"
+    <VStack
       className="no-drag-area"
       cursor="auto"
-      height="max-content"
       mb="2"
       p="2"
       boxShadow="base"
       rounded="md"
       backgroundColor="whiteAlpha.700"
       backdropBlur="2xl"
+      alignItems="start"
       overflowY="auto"
       sx={{
         "--scrollbarBG": "#CFD8DC",
@@ -107,25 +106,34 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
         },
       }}
     >
-      {customLinks.map((link) => {
-        return (
-          <React.Fragment key={link.id}>
-            <Heading size="xs" key={link.group}>
-              {link.group}
-            </Heading>
-            <Link
-              href={link.url}
-              color="teal"
-              _visited={{
-                color: "purple",
-              }}
-            >
-              {link.name}
-            </Link>
-          </React.Fragment>
-        );
-      })}
-    </Flex>
+      {Object.entries(
+        customLinks.reduce(
+          (linksByGroup: Record<string, JSX.Element[]>, customLink) => {
+            const { group } = customLink;
+            linksByGroup[group] = linksByGroup[group] ?? [];
+            linksByGroup[group].push(
+              <Link
+                key={customLink.id}
+                href={customLink.url}
+                color="teal"
+                _visited={{
+                  color: "purple",
+                }}
+              >
+                {customLink.name}
+              </Link>
+            );
+            return linksByGroup;
+          },
+          {}
+        )
+      ).map(([group, links]) => (
+        <Box key={group}>
+          <Text as="b">{group}</Text>
+          <VStack alignItems="start">{links}</VStack>
+        </Box>
+      ))}
+    </VStack>
   );
 };
 export default CustomLinksLink;
