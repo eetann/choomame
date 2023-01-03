@@ -68,7 +68,7 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
           url: "https://www.google.co.jp",
           match: ".*",
           group: "なんでも",
-          enable: true,
+          enable: false,
         },
       ];
       setCustomLinks(links);
@@ -111,18 +111,20 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
           (linksByGroup: Record<string, JSX.Element[]>, customLink) => {
             const { group } = customLink;
             linksByGroup[group] = linksByGroup[group] ?? [];
-            linksByGroup[group].push(
-              <Link
-                key={customLink.id}
-                href={customLink.url}
-                color="teal"
-                _visited={{
-                  color: "purple",
-                }}
-              >
-                {customLink.name}
-              </Link>
-            );
+            if (customLink.enable) {
+              linksByGroup[group].push(
+                <Link
+                  key={customLink.id}
+                  href={customLink.url}
+                  color="teal"
+                  _visited={{
+                    color: "purple",
+                  }}
+                >
+                  {customLink.name}
+                </Link>
+              );
+            }
             return linksByGroup;
           },
           {}
