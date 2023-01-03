@@ -1,5 +1,4 @@
 import { appearanceBucket } from "../features/appearance/appearanceSlice";
-import DragMoveIcon from "./DragMoveIcon";
 import { MinimumContext } from "./ToolBar";
 import { Flex, Stack } from "@chakra-ui/react";
 import React, {
@@ -13,7 +12,7 @@ import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 const defaultBoxWidth = 500;
-const defaultBoxHight = 200;
+const defaultBoxHight = 400;
 const marginXY = 20;
 const minBoxWidth = 85;
 const minBoxHeight = 115;
@@ -166,21 +165,9 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         overflow="auto"
         visibility={visible ? "visible" : "hidden"}
         flexDirection="column"
-        justify="space-between"
+        justify={minimum ? "center" : "space-between"}
       >
-        <Stack
-          className="no-drag-area"
-          m="2"
-          p="2"
-          rounded="md"
-          cursor="auto"
-          boxShadow="base"
-          backgroundColor="whiteAlpha.700"
-          backdropBlur="2xl"
-        >
-          {children}
-        </Stack>
-        <DragMoveIcon />
+        {children}
       </Flex>
     </Rnd>
   );

@@ -4,7 +4,7 @@ import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
 import ToolBar from "./ToolBar";
 import { MinimumContext } from "./ToolBar";
-import { Center } from "@chakra-ui/react";
+import { Box, Center, Flex, Stack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
@@ -26,15 +26,27 @@ const App: React.FC = () => {
     <MinimumContext.Provider value={{ minimum, setMinimum }}>
       <RndView isBottomRight={isBottomRight}>
         {minimum ? (
-          <Center>
+          <Box m="2">
             <ToolBar />
-          </Center>
+          </Box>
         ) : (
-          <>
-            <TimesLink param={param} />
-            <LanguagesLink param={param} />
+          <Stack m="2">
             <ToolBar />
-          </>
+            <Flex
+              className="no-drag-area"
+              cursor="auto"
+              direction="column"
+              height="fit-content"
+              p="2"
+              boxShadow="base"
+              rounded="md"
+              backgroundColor="whiteAlpha.700"
+              backdropBlur="2xl"
+            >
+              <TimesLink param={param} />
+              <LanguagesLink param={param} />
+            </Flex>
+          </Stack>
         )}
       </RndView>
     </MinimumContext.Provider>
