@@ -1,10 +1,11 @@
+import CustomLinksLink from "../features/customLink/CustomLinksLink";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
 import ToolBar from "./ToolBar";
 import { MinimumContext } from "./ToolBar";
-import { Box, Center, Flex, Stack } from "@chakra-ui/react";
+import { Box, Flex, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
@@ -30,23 +31,23 @@ const App: React.FC = () => {
             <ToolBar />
           </Box>
         ) : (
-          <Stack m="2">
+          <Flex direction="column" gap="2" m="2" height="calc(100% - 6px)">
             <ToolBar />
-            <Flex
+            <VStack
               className="no-drag-area"
               cursor="auto"
-              direction="column"
-              height="fit-content"
               p="2"
               boxShadow="base"
               rounded="md"
               backgroundColor="whiteAlpha.700"
               backdropBlur="2xl"
+              alignItems="start"
             >
               <TimesLink param={param} />
               <LanguagesLink param={param} />
-            </Flex>
-          </Stack>
+            </VStack>
+            <CustomLinksLink param={param} />
+          </Flex>
         )}
       </RndView>
     </MinimumContext.Provider>

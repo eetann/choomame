@@ -162,7 +162,6 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         rounded="md"
         w={boxState.width}
         h={boxState.height}
-        overflow="auto"
         visibility={visible ? "visible" : "hidden"}
         flexDirection="column"
         justify={minimum ? "center" : "space-between"}
