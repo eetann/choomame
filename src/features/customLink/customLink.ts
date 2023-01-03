@@ -82,3 +82,7 @@ export async function customLinksOnInstalled() {
     });
   }
 }
+
+export async function getCustomLinks(): Promise<CustomLinksBucket> {
+  return await customLinksBucket.get();
+}

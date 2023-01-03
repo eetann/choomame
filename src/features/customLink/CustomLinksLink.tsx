@@ -1,6 +1,6 @@
 import { Param } from "../param/param";
-import { CustomLinks } from "./customLinkSchema";
-import { VStack, Text, Link, Box } from "@chakra-ui/react";
+import { getCustomLinks } from "./customLink";
+import { VStack, Heading, Link, Box } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 type Props = {
@@ -8,70 +8,33 @@ type Props = {
 };
 
 const CustomLinksLink: React.FC<Props> = ({ param }) => {
-  const [customLinks, setCustomLinks] = useState<CustomLinks>([]);
+  const [linksByGroup, setLinksByGroup] = useState<
+    Record<string, JSX.Element[]>
+  >({});
 
   useEffect(() => {
     (async () => {
-      // let links = await hoge();
-      const links = [
-        {
-          id: "abc",
-          name: "abc",
-          url: "https://www.google.com",
-          match: "javascript|js",
-          group: "ABCDEF",
-          enable: true,
-        },
-        {
-          id: "def",
-          name: "def",
-          url: "https://www.google.com",
-          match: "javascript|js",
-          group: "ABCDEF",
-          enable: true,
-        },
-        {
-          id: "aaaaaaaaaaa",
-          name: "ああああああああああああああああああああああああ",
-          url: "https://www.google.co.jp",
-          match: ".*",
-          group: "なんでも",
-          enable: true,
-        },
-        {
-          id: "aaaaaaaaaa1",
-          name: "ああああああああああああああああああああああああ",
-          url: "https://www.google.co.jp",
-          match: ".*",
-          group: "EEEEEEEE",
-          enable: true,
-        },
-        {
-          id: "aaaaaaaaaa2",
-          name: "ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
-          url: "https://www.google.co.jp",
-          match: ".*",
-          group: "なんでも",
-          enable: true,
-        },
-        {
-          id: "aaaaaaaaaa3",
-          name: "最後-1",
-          url: "https://www.google.co.jp",
-          match: ".*",
-          group: "なんでも",
-          enable: true,
-        },
-        {
-          id: "aaaaaaaaaa4",
-          name: "最後",
-          url: "https://www.google.co.jp",
-          match: ".*",
-          group: "なんでも",
-          enable: false,
-        },
-      ];
-      setCustomLinks(links);
+      const bucket = await getCustomLinks();
+      const links: Record<string, JSX.Element[]> = {};
+      Object.values(bucket).forEach((customLink) => {
+        const { group } = customLink;
+        links[group] = links[group] ?? [];
+        if (customLink.enable) {
+          links[group].push(
+            <Link
+              key={customLink.id}
+              href={customLink.url}
+              color="teal"
+              _visited={{
+                color: "purple",
+              }}
+            >
+              {customLink.name}
+            </Link>
+          );
+        }
+      });
+      setLinksByGroup(links);
     })();
   }, []);
 
@@ -106,33 +69,14 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
         },
       }}
     >
-      {Object.entries(
-        customLinks.reduce(
-          (linksByGroup: Record<string, JSX.Element[]>, customLink) => {
-            const { group } = customLink;
-            linksByGroup[group] = linksByGroup[group] ?? [];
-            if (customLink.enable) {
-              linksByGroup[group].push(
-                <Link
-                  key={customLink.id}
-                  href={customLink.url}
-                  color="teal"
-                  _visited={{
-                    color: "purple",
-                  }}
-                >
-                  {customLink.name}
-                </Link>
-              );
-            }
-            return linksByGroup;
-          },
-          {}
-        )
-      ).map(([group, links]) => (
+      {Object.entries(linksByGroup).map(([group, links]) => (
         <Box key={group}>
-          <Text as="b">{group}</Text>
-          <VStack alignItems="start">{links}</VStack>
+          <Heading size="xs" mt="2" mb="1">
+            {group}
+          </Heading>
+          <VStack alignItems="start" spacing="2">
+            {links}
+          </VStack>
         </Box>
       ))}
     </VStack>
