@@ -1,6 +1,6 @@
-import { appearanceBucket } from "../features/appearance/appearanceSlice";
+import { appearanceBucket } from "../features/appearance/appearance";
 import { MinimumContext } from "./ToolBar";
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, {
   useContext,
   useEffect,
@@ -39,7 +39,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
 
   useEffect(() => {
     // locationがtop-rightの時、boxのX座標を150に変更。bottom-rightのときはフラグをtrue
-    // locatioin判定後に可視化
+    // location判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
       if (!isBottomRight && bucket.location === "top-right") {

@@ -1,4 +1,4 @@
-import { appearanceOnInstalled } from "../features/appearance/appearanceSlice";
+import { appearanceOnInstalled } from "../features/appearance/appearance";
 import {
   customLinksOnInstalled,
   customLinkListOnInstalled,
