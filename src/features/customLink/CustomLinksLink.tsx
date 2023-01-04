@@ -18,25 +18,26 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
       const links: Record<string, JSX.Element[]> = {};
       Object.values(bucket).forEach((customLink) => {
         const { group } = customLink;
-        links[group] = links[group] ?? [];
-        if (customLink.enable) {
-          links[group].push(
-            <Link
-              key={customLink.id}
-              href={customLink.url}
-              color="teal"
-              _visited={{
-                color: "purple",
-              }}
-            >
-              {customLink.name}
-            </Link>
-          );
+        if (!new RegExp(customLink.match).test(param.q) || !customLink.enable) {
+          return;
         }
+        links[group] = links[group] ?? [];
+        links[group].push(
+          <Link
+            key={customLink.id}
+            href={customLink.url}
+            color="teal"
+            _visited={{
+              color: "purple",
+            }}
+          >
+            {customLink.name}
+          </Link>
+        );
       });
       setLinksByGroup(links);
     })();
-  }, []);
+  }, [param.q]);
 
   return (
     <VStack
