@@ -61,7 +61,7 @@ export const addOneCustomLink = createAsyncThunk(
     const list_id = "user";
     const id = `${list_id}/${nanoid()}`;
     const customLink = { id, ...item };
-    customLinksBucket.set({ id: customLink });
+    customLinksBucket.set({ [id]: customLink });
     return customLink;
   }
 );
