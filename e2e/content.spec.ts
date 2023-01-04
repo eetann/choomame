@@ -1,11 +1,9 @@
 import { test, expect } from "./fixtures.js";
 
-test.describe("onInstalled", () => {
-  test.beforeAll(async ({ page }) => {
-    await page.goto("https://www.google.com/search?q=hoge");
-  });
+test("onInstalled", async ({ page }) => {
+  await page.goto("https://www.google.com/search?q=hoge");
 
-  test("Language", async ({ page }) => {
+  await test.step("Language", async () => {
     for (const language of ["Any", "English", "Japanese"]) {
       await expect(page.locator("#choomameRoot")).toHaveText(
         new RegExp(language)
@@ -13,7 +11,7 @@ test.describe("onInstalled", () => {
     }
   });
 
-  test("Time", async ({ page }) => {
+  await test.step("Time", async () => {
     for (const times of [
       "Any",
       "1 day",
@@ -26,8 +24,8 @@ test.describe("onInstalled", () => {
     }
   });
 
-  test.skip("customLink", async () => {
-    // TODO: customLink
+  await test.step("customLink", async () => {
+    await expect(page.locator("_react=CustomLinksLink")).toHaveCount(0);
   });
 });
 
@@ -213,6 +211,7 @@ test("CustomLink list", async ({ page, extensionId }) => {
 
   await test.step("check @ content script", async () => {
     // TODO: customLinkがcontent scriptで表示されるか確認
+    // await page.goto("https://www.google.com/search?q=eetann");
   });
 
   await test.step("remove list", async () => {
