@@ -265,6 +265,27 @@ test("CustomLink list", async ({ page, extensionId }) => {
 });
 
 test("CustomLinks", async ({ page, extensionId }) => {
+  await test.step("check URL", async () => {
+    await page.goto("https://www.google.com/search?q=javascript+foreach");
+    // check googleWithURL
+    await expect(
+      page.locator(["#choomameCustomLinksLink", "a:has(svg)"].join(" >> "))
+    ).toHaveAttribute(
+      "href",
+      "https://www.google.com/search?q=site:developer.mozilla.org/en-US/docs/Web/JavaScript foreach"
+    );
+    // check search in the site
+    await expect(
+      page.locator(
+        ["#choomameCustomLinksLink", "a:has-text('Search in Reference')"].join(
+          " >> "
+        )
+      )
+    ).toHaveAttribute(
+      "href",
+      "https://developer.mozilla.org/en-US/search?q=foreach"
+    );
+  });
   await test.step("error handling: zod schema", async () => {
     await page.goto(`chrome-extension://${extensionId}/index.html`);
     await page
