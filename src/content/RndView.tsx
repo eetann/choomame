@@ -1,7 +1,6 @@
-import { appearanceBucket } from "../features/appearance/appearanceSlice";
-import DragMoveIcon from "./DragMoveIcon";
+import { appearanceBucket } from "../features/appearance/appearance";
 import { MinimumContext } from "./ToolBar";
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, {
   useContext,
   useEffect,
@@ -13,7 +12,7 @@ import { Rnd } from "react-rnd";
 import useWindowSize from "react-use/lib/useWindowSize";
 
 const defaultBoxWidth = 500;
-const defaultBoxHight = 200;
+const defaultBoxHight = 400;
 const marginXY = 20;
 const minBoxWidth = 85;
 const minBoxHeight = 115;
@@ -40,7 +39,7 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
 
   useEffect(() => {
     // locationがtop-rightの時、boxのX座標を150に変更。bottom-rightのときはフラグをtrue
-    // locatioin判定後に可視化
+    // location判定後に可視化
     (async () => {
       const bucket = await appearanceBucket.get();
       if (!isBottomRight && bucket.location === "top-right") {
@@ -163,24 +162,11 @@ const RndView: React.FC<Props> = ({ children, isBottomRight }) => {
         rounded="md"
         w={boxState.width}
         h={boxState.height}
-        overflow="auto"
         visibility={visible ? "visible" : "hidden"}
         flexDirection="column"
-        justify="space-between"
+        justify={minimum ? "center" : "space-between"}
       >
-        <Stack
-          className="no-drag-area"
-          m="2"
-          p="2"
-          rounded="md"
-          cursor="auto"
-          boxShadow="base"
-          backgroundColor="whiteAlpha.700"
-          backdropBlur="2xl"
-        >
-          {children}
-        </Stack>
-        <DragMoveIcon />
+        {children}
       </Flex>
     </Rnd>
   );

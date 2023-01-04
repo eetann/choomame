@@ -1,9 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import {
-  fetchAllAppearance,
-  LocationType,
-  updateLocation,
-} from "./appearanceSlice";
+import { LocationType } from "./appearance";
+import { fetchAllAppearance, updateLocation } from "./appearanceSlice";
 import { FormControl, FormLabel, Select, VStack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

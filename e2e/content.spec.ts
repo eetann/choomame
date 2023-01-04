@@ -1,11 +1,9 @@
 import { test, expect } from "./fixtures.js";
 
-test.describe("onInstalled", () => {
-  test.beforeAll(async ({ page }) => {
-    await page.goto("https://www.google.com/search?q=hoge");
-  });
+test("onInstalled", async ({ page }) => {
+  await page.goto("https://www.google.com/search?q=hoge");
 
-  test("Language", async ({ page }) => {
+  await test.step("Language", async () => {
     for (const language of ["Any", "English", "Japanese"]) {
       await expect(page.locator("#choomameRoot")).toHaveText(
         new RegExp(language)
@@ -13,7 +11,7 @@ test.describe("onInstalled", () => {
     }
   });
 
-  test("Time", async ({ page }) => {
+  await test.step("Time", async () => {
     for (const times of [
       "Any",
       "1 day",
@@ -26,8 +24,10 @@ test.describe("onInstalled", () => {
     }
   });
 
-  test.skip("customLink", async () => {
-    // TODO: customLink
+  await test.step("customLink", async () => {
+    await expect(page.locator("#choomameCustomLinksLink >> div")).toHaveCount(
+      0
+    );
   });
 });
 
@@ -162,10 +162,12 @@ test("Times", async ({ page, extensionId }) => {
 });
 
 test("CustomLink list", async ({ page, extensionId }) => {
-  await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
-
   await test.step("error handling: zod schema", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page.locator("#customLinkListURL").fill("aaaa");
     await page
       .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
@@ -212,10 +214,21 @@ test("CustomLink list", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ content script", async () => {
-    // TODO: customLinkがcontent scriptで表示されるか確認
+    await page.goto("https://www.google.com/search?q=eetann");
+    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(/eetann/);
+    for (const customLink of ["Portfolio", "GitHub"]) {
+      await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+        new RegExp(customLink)
+      );
+    }
   });
 
   await test.step("remove list", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page
       .locator(
         [
@@ -239,15 +252,46 @@ test("CustomLink list", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ content script", async () => {
-    // TODO: customLinkがcontent scriptで表示されないか確認
+    await page.goto("https://www.google.com/search?q=eetann");
+    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      /eetann/
+    );
+    for (const customLink of ["Portfolio", "GitHub"]) {
+      await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+        new RegExp(customLink)
+      );
+    }
   });
 });
 
 test("CustomLinks", async ({ page, extensionId }) => {
-  await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
-
+  await test.step("check URL", async () => {
+    await page.goto("https://www.google.com/search?q=javascript+foreach");
+    // check googleWithURL
+    await expect(
+      page.locator(["#choomameCustomLinksLink", "a:has(svg)"].join(" >> "))
+    ).toHaveAttribute(
+      "href",
+      "https://www.google.com/search?q=site:developer.mozilla.org/en-US/docs/Web/JavaScript foreach"
+    );
+    // check search in the site
+    await expect(
+      page.locator(
+        ["#choomameCustomLinksLink", "a:has-text('Search in Reference')"].join(
+          " >> "
+        )
+      )
+    ).toHaveAttribute(
+      "href",
+      "https://developer.mozilla.org/en-US/search?q=foreach"
+    );
+  });
   await test.step("error handling: zod schema", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page
       .locator("_react=CustomLinkForm")
       .getByLabel("Group name")
@@ -285,7 +329,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .click();
   });
 
-  test.step("check @ form", async () => {
+  await test.step("check @ form", async () => {
     await expect(
       page.locator("_react=CustomLinkForm").getByLabel("Group name")
     ).toHaveValue("Test group");
@@ -305,19 +349,34 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .locator(
         [
           "_react=CustomLinkTable",
-          "_react=[key = 'developer/javascript-en-doc']",
-          // "_react=[key = 'eetann/eetann-portfolio']",
+          "_react=[key = 'developer/typescript-en-homepage']",
           "input[type=checkbox] ~ span",
         ].join(" >> ")
       )
       .click();
   });
 
-  test.step("check @ content script", async () => {
-    // TODO: add, toggleの確認
+  await test.step("check @ content script", async () => {
+    await page.goto("https://www.google.com/search?q=typescript+record");
+    // check add
+    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+      /Test group/
+    );
+    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+      new RegExp("eetann GitHub")
+    );
+    // check toggle
+    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      new RegExp("Homepage")
+    );
   });
 
   await test.step("remove customLink", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page
       .locator(
         [
@@ -332,15 +391,38 @@ test("CustomLinks", async ({ page, extensionId }) => {
     );
   });
 
-  test.step("check @ content script", async () => {
-    // TODO: removeの確認
+  await test.step("check @ content script", async () => {
+    await page.goto("https://www.google.com/search?q=typescript+record");
+    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      /Test group/
+    );
   });
 
-  await test.step("reset customLink", async () => {
+  await test.step("add new CustomLink for reset", async () => {
     await page.goto(`chrome-extension://${extensionId}/index.html`);
     await page
       .locator(["_react=App", "text='Custom Link'"].join(" >> "))
       .click();
+
+    await page
+      .locator("_react=CustomLinkForm")
+      .getByLabel("Group name")
+      .fill("Test group");
+    await page.locator("_react=CustomLinkForm").getByLabel("Match").fill(".*");
+    await page
+      .locator("_react=CustomLinkForm")
+      .getByLabel("Link name")
+      .fill("eetann GitHub");
+    await page
+      .locator("_react=CustomLinkForm")
+      .getByLabel("URL")
+      .fill("https://github.com/eetann");
+    await page
+      .locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+      .click();
+  });
+
+  await test.step("reset customLink", async () => {
     await page
       .locator(
         ["_react=ResetButton[name = 'Custom Link']", "text='Reset'"].join(
@@ -368,6 +450,14 @@ test("CustomLinks", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ content script", async () => {
-    // TODO: 初期値が表示されるか確認
+    await page.goto("https://www.google.com/search?q=typescript+record");
+    // check for add
+    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      /Test group/
+    );
+    // check for toggle
+    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+      new RegExp("Homepage")
+    );
   });
 });
