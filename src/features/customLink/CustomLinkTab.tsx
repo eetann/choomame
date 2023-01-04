@@ -18,10 +18,14 @@ import {
   Icon,
   Stack,
   StackDivider,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { HiOutlineLink } from "react-icons/hi";
-import { HiOutlineListBullet } from "react-icons/hi2";
+import {
+  HiOutlineListBullet,
+  HiOutlineQuestionMarkCircle,
+} from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 
 const CustomLinkTab: React.FC = () => {
@@ -38,6 +42,11 @@ const CustomLinkTab: React.FC = () => {
         <HStack>
           <Icon as={HiOutlineListBullet} boxSize={5} />
           <Heading size="md">List</Heading>
+          <Tooltip label="You can add a list of custom links. It is automatically and regularly updated.">
+            <span>
+              <Icon as={HiOutlineQuestionMarkCircle} boxSize={5} />
+            </span>
+          </Tooltip>
         </HStack>
         <HStack justifyContent="space-between">
           <Button>WIP</Button>
