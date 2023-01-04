@@ -168,11 +168,14 @@ test("CustomLink list", async ({ page, extensionId }) => {
       .locator(["_react=App", "text='Custom Link'"].join(" >> "))
       .click();
 
+    await page.getByTestId("open-popover-for-new-list").click();
     await page.locator("#customLinkListURL").fill("aaaa");
     await page
-      .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+      .locator(
+        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+      )
       .click();
-    await expect(page.locator("_react=CustomLinkListForm")).toHaveText(
+    await expect(page.locator("#customLinkListURL ~ div")).toHaveText(
       /list's URL is invalid/
     );
   });
@@ -184,9 +187,11 @@ test("CustomLink list", async ({ page, extensionId }) => {
         "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5555"
       );
     await page
-      .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+      .locator(
+        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+      )
       .click();
-    await expect(page.locator("_react=CustomLinkListForm")).toHaveText(
+    await expect(page.locator("#customLinkListURL ~ div")).toHaveText(
       /The JSON5 in this URL is an invalid format/
     );
   });
@@ -198,7 +203,9 @@ test("CustomLink list", async ({ page, extensionId }) => {
         "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
       );
     await page
-      .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
+      .locator(
+        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+      )
       .click();
     await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
       /eetann\(for E2E test\)/

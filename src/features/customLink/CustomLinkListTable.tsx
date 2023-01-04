@@ -22,12 +22,7 @@ const CustomLinkListTable: React.FC = () => {
   );
 
   return (
-    <TableContainer
-      rounded="md"
-      boxShadow="xs"
-      maxW="min-content"
-      whiteSpace="normal"
-    >
+    <TableContainer rounded="md" boxShadow="xs" whiteSpace="normal">
       <Table variant="simple">
         <Thead>
           <Tr>

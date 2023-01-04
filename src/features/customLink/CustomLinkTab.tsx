@@ -9,8 +9,19 @@ import {
   initCustomLinkAll,
 } from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
-import { Card, CardBody, Heading, Stack, StackDivider } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Heading,
+  HStack,
+  Icon,
+  Stack,
+  StackDivider,
+} from "@chakra-ui/react";
 import React, { useEffect } from "react";
+import { HiOutlineLink } from "react-icons/hi";
+import { HiOutlineListBullet } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 
 const CustomLinkTab: React.FC = () => {
@@ -24,16 +35,21 @@ const CustomLinkTab: React.FC = () => {
   return (
     <Stack divider={<StackDivider />} spacing="10">
       <Stack>
-        <Heading size="md">List</Heading>
-        <Card>
-          <CardBody>
-            <CustomLinkListForm />
-          </CardBody>
-        </Card>
+        <HStack>
+          <Icon as={HiOutlineListBullet} boxSize={5} />
+          <Heading size="md">List</Heading>
+        </HStack>
+        <HStack justifyContent="space-between">
+          <Button>WIP</Button>
+          <CustomLinkListForm />
+        </HStack>
         <CustomLinkListTable />
       </Stack>
       <Stack>
-        <Heading size="md">Custom Links</Heading>
+        <HStack>
+          <Icon as={HiOutlineLink} boxSize={5} />
+          <Heading size="md">Links</Heading>
+        </HStack>
         <Card>
           <CardBody>
             <CustomLinkForm />

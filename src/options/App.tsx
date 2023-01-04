@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {
-  HiOutlineBookmark,
+  HiOutlineLink,
   HiOutlineClock,
   HiOutlineTranslate,
 } from "react-icons/hi";
@@ -42,7 +42,7 @@ const App: React.FC = () => {
             Language
           </Tab>
           <Tab>
-            <Icon as={HiOutlineBookmark} mr="1" />
+            <Icon as={HiOutlineLink} mr="1" />
             Custom Link
           </Tab>
         </TabList>
