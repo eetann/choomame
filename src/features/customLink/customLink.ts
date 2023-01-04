@@ -86,3 +86,22 @@ export async function customLinksOnInstalled() {
 export async function getCustomLinks(): Promise<CustomLinksBucket> {
   return await customLinksBucket.get();
 }
+
+/**
+ * change to include a delimiter before and after `match`
+ * example: `nodejs` is not matched to `js`
+ */
+export function toMatchWithDelimiter(match: string): RegExp {
+  return new RegExp("(^|\\s)(" + match + ")(\\s|$)", "i");
+}
+
+/**
+ * replace for URL-specific search. leave directory.
+ * example: to distinguish "developer.mozilla.org/ja" and "developer.mozilla.org/en-US"
+ */
+export function toGoogleWithUrl(url: string, keyword: string): string {
+  const parent = url
+    .replace(/^https?:\/\//, "")
+    .replace(/[^/]*\.(html|php)$/, "");
+  return `https://www.google.com/search?q=site:${parent} ${keyword}`;
+}
