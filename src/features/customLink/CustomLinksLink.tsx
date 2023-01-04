@@ -82,6 +82,7 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
 
   return (
     <VStack
+      id="choomameCustomLinksLink"
       className="no-drag-area"
       cursor="auto"
       mb="2"

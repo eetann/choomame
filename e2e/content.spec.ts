@@ -25,7 +25,9 @@ test("onInstalled", async ({ page }) => {
   });
 
   await test.step("customLink", async () => {
-    await expect(page.locator("_react=CustomLinksLink")).toHaveCount(0);
+    await expect(page.locator("#choomameCustomLinksLink >> div")).toHaveCount(
+      0
+    );
   });
 });
 
@@ -160,10 +162,12 @@ test("Times", async ({ page, extensionId }) => {
 });
 
 test("CustomLink list", async ({ page, extensionId }) => {
-  await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
-
   await test.step("error handling: zod schema", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page.locator("#customLinkListURL").fill("aaaa");
     await page
       .locator(["_react=CustomLinkListForm", "text='Add'"].join(" >> "))
@@ -210,11 +214,21 @@ test("CustomLink list", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ content script", async () => {
-    // TODO: customLinkがcontent scriptで表示されるか確認
-    // await page.goto("https://www.google.com/search?q=eetann");
+    await page.goto("https://www.google.com/search?q=eetann");
+    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(/eetann/);
+    for (const customLink of ["Portfolio", "GitHub"]) {
+      await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+        new RegExp(customLink)
+      );
+    }
   });
 
   await test.step("remove list", async () => {
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    await page
+      .locator(["_react=App", "text='Custom Link'"].join(" >> "))
+      .click();
+
     await page
       .locator(
         [
@@ -238,7 +252,15 @@ test("CustomLink list", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ content script", async () => {
-    // TODO: customLinkがcontent scriptで表示されないか確認
+    await page.goto("https://www.google.com/search?q=eetann");
+    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      /eetann/
+    );
+    for (const customLink of ["Portfolio", "GitHub"]) {
+      await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+        new RegExp(customLink)
+      );
+    }
   });
 });
 
