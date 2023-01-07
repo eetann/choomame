@@ -27,7 +27,7 @@ const CustomLinkListForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [listUrl, setListUrl] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const firstFieldRef = useRef<HTMLInputElement>(null);
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   const isError = customLinkListErrorMessage !== "";
 
@@ -37,7 +37,7 @@ const CustomLinkListForm: React.FC = () => {
       onClose={onClose}
       closeOnBlur={false} // for continuous input
       placement="left-end"
-      initialFocusRef={firstFieldRef}
+      initialFocusRef={initialFocusRef}
     >
       <PopoverTrigger>
         <Button
@@ -64,7 +64,7 @@ const CustomLinkListForm: React.FC = () => {
                 type="url"
                 value={listUrl}
                 onChange={(e) => setListUrl(e.target.value)}
-                ref={firstFieldRef}
+                ref={initialFocusRef}
               />
               <FormErrorMessage>{customLinkListErrorMessage}</FormErrorMessage>
             </FormControl>

@@ -11,8 +11,6 @@ import {
 import { fetchAllCustomLinks } from "./customLinkSlice";
 import {
   Button,
-  Card,
-  CardBody,
   Heading,
   HStack,
   Icon,
@@ -59,11 +57,9 @@ const CustomLinkTab: React.FC = () => {
           <Icon as={HiOutlineLink} boxSize={5} />
           <Heading size="md">Links</Heading>
         </HStack>
-        <Card>
-          <CardBody>
-            <CustomLinkForm />
-          </CardBody>
-        </Card>
+        <HStack justifyContent="end">
+          <CustomLinkForm />
+        </HStack>
         <CustomLinkTable />
       </Stack>
       <ResetButton name="Custom Link" action={initCustomLinkAll} />

@@ -299,6 +299,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .locator(["_react=App", "text='Custom Link'"].join(" >> "))
       .click();
 
+    await page.getByTestId("open-popover-for-new-link").click();
     await page
       .locator("_react=CustomLinkForm")
       .getByLabel("Group name")
@@ -310,9 +311,9 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .fill("a");
     await page.locator("_react=CustomLinkForm").getByLabel("URL").fill("a");
     await expect(
-      page.locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+      page.locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
     ).toBeDisabled();
-    await expect(page.locator("_react=CustomLinkForm")).toHaveText(
+    await expect(page.locator("div:has(> #urlInput) + div")).toHaveText(
       /URL is invalid./
     );
   });
@@ -332,7 +333,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .getByLabel("URL")
       .fill("https://github.com/eetann");
     await page
-      .locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+      .locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
       .click();
   });
 
@@ -411,6 +412,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .locator(["_react=App", "text='Custom Link'"].join(" >> "))
       .click();
 
+    await page.getByTestId("open-popover-for-new-link").click();
     await page
       .locator("_react=CustomLinkForm")
       .getByLabel("Group name")
@@ -425,7 +427,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .getByLabel("URL")
       .fill("https://github.com/eetann");
     await page
-      .locator(["_react=CustomLinkForm", "text='Add'"].join(" >> "))
+      .locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
       .click();
   });
 
