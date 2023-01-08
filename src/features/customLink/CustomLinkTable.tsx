@@ -1,4 +1,4 @@
-import type { AppDispatch } from "../../app/store";
+import type { AppDispatch, RootState } from "../../app/store";
 import { CustomLink } from "./customLinkSchema";
 import {
   removeManyCustomLinks,
@@ -34,6 +34,7 @@ declare module "@tanstack/table-core" {
   interface TableMeta<TData extends RowData> {
     removeCustomLink: (id: string) => Promise<AnyAction>;
     toggleCustomLink: (customLink: CustomLink) => Promise<AnyAction>;
+    getListName: (list_id: string) => string;
   }
 }
 
@@ -45,7 +46,6 @@ const columns = [
     header: "Group name",
     meta: {
       props: {
-        minWidth: 48,
         maxWidth: 64,
       },
     },
@@ -55,7 +55,6 @@ const columns = [
     header: "Match",
     meta: {
       props: {
-        minWidth: 48,
         maxWidth: 64,
       },
     },
@@ -65,7 +64,6 @@ const columns = [
     header: "Link name",
     meta: {
       props: {
-        minWidth: 48,
         maxWidth: 64,
       },
     },
@@ -82,12 +80,23 @@ const columns = [
     header: "URL",
     meta: {
       props: {
-        minWidth: 48,
         maxWidth: 80,
       },
     },
   }),
-  // TODO: Listの名前も書く
+  columnHelper.accessor((row) => `${row.id}`, {
+    id: "listName",
+    cell: ({ getValue, table }) => {
+      const id = getValue();
+      const list_id = id.substring(0, id.indexOf("/"));
+      return table.options.meta?.getListName(list_id);
+    },
+    meta: {
+      props: {
+        maxWidth: 64,
+      },
+    },
+  }),
   columnHelper.accessor("enable", {
     cell: ({ row, table }) => {
       const customLink = row.original;
@@ -122,6 +131,9 @@ const columns = [
 const CustomLinkTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const customLinks = useSelector(selectCustomLinks.selectAll);
+  const customLinkList = useSelector(
+    (state: RootState) => state.customLinkList.list
+  );
   const table = useReactTable<CustomLink>({
     data: customLinks,
     columns,
@@ -130,6 +142,7 @@ const CustomLinkTable: React.FC = () => {
       removeCustomLink: (id: string) => dispatch(removeManyCustomLinks([id])),
       toggleCustomLink: (customLink: CustomLink) =>
         dispatch(toggleOneCustomLink(customLink)),
+      getListName: (list_id: string) => customLinkList[list_id]?.name ?? "user",
     },
   });
 

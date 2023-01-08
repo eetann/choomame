@@ -357,7 +357,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .locator(
         [
           "_react=CustomLinkTable",
-          "_react=[key = 'developer/typescript-en-homepage']",
+          "tr:has-text('Homepagehttps://www.typescriptlang.org')",
           "input[type=checkbox] ~ span",
         ].join(" >> ")
       )
