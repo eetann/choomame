@@ -22,6 +22,7 @@
     "@extend-chrome/storage": "^1.5.0",
     "@hookform/resolvers": "^2.9.10",
     "@reduxjs/toolkit": "^1.9.1",
+    "@tanstack/react-table": "^8.7.4",
     "framer-motion": "^6.5.1",
     "json5": "^2.2.1",
     "react": "^18.2.0",
