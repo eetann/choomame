@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import type { AppDispatch, RootState } from "../../app/store";
 import { CustomLink } from "./customLinkSchema";
 import {
@@ -9,6 +10,7 @@ import {
   TableContainer,
   Table,
   Tbody,
+  Text,
   Tr,
   Td,
   IconButton,
@@ -19,6 +21,11 @@ import {
   VStack,
   HStack,
   Button,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  NumberInput,
 } from "@chakra-ui/react";
 import { AnyAction } from "@reduxjs/toolkit";
 import {
@@ -29,7 +36,7 @@ import {
   RowData,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import {
   HiOutlineChevronDoubleLeft,
@@ -160,6 +167,9 @@ const CustomLinkTable: React.FC = () => {
       getListName: (list_id: string) => customLinkList[list_id]?.name ?? "user",
     },
   });
+  const pageIndex = table.getState().pagination.pageIndex + 1;
+  const pageCount = table.getPageCount();
+  const [jumpPageIndex, setJumpPageIndex] = useState(pageIndex);
 
   return (
     <VStack>
@@ -218,9 +228,26 @@ const CustomLinkTable: React.FC = () => {
           icon={<HiOutlineChevronLeft />}
           fontSize="20"
         />
-        <Button fontWeight="normal">1</Button>
-        <Button fontWeight="normal">2</Button>
-        <Button fontWeight="normal">3</Button>
+        <Text fontSize="md">{`Page ${pageIndex}/${pageCount}`}</Text>
+        <NumberInput
+          maxW="24"
+          defaultValue={pageIndex}
+          min={1}
+          max={pageCount}
+          onChange={(value) => setJumpPageIndex(Number(value))}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+        <Button
+          fontWeight="normal"
+          onClick={() => table.setPageIndex(jumpPageIndex - 1)}
+        >
+          jump
+        </Button>
         <IconButton
           aria-label="jump next page"
           onClick={() => table.nextPage()}
@@ -230,7 +257,7 @@ const CustomLinkTable: React.FC = () => {
         />
         <IconButton
           aria-label="jump last page"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.setPageIndex(pageCount - 1)}
           disabled={!table.getCanNextPage()}
           icon={<HiOutlineChevronDoubleRight />}
           fontSize="20"
