@@ -10,6 +10,7 @@ import {
 } from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
 import {
+  Box,
   Button,
   Heading,
   HStack,
@@ -48,7 +49,9 @@ const CustomLinkTab: React.FC = () => {
         </HStack>
         <HStack justifyContent="space-between">
           <Button>WIP</Button>
-          <CustomLinkListForm />
+          <Box>
+            <CustomLinkListForm />
+          </Box>
         </HStack>
         <CustomLinkListTable />
       </Stack>
@@ -58,7 +61,9 @@ const CustomLinkTab: React.FC = () => {
           <Heading size="md">Links</Heading>
         </HStack>
         <HStack justifyContent="end">
-          <CustomLinkForm />
+          <Box>
+            <CustomLinkForm />
+          </Box>
         </HStack>
         <CustomLinkTable />
       </Stack>
