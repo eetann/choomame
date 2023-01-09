@@ -1,49 +1,16 @@
-/* eslint-disable react/jsx-no-undef */
 import type { AppDispatch, RootState } from "../../app/store";
+import ReactTable, { ReactTableProps } from "../../common/ReactTable";
 import { CustomLink } from "./customLinkSchema";
 import {
   removeManyCustomLinks,
   selectCustomLinks,
   toggleOneCustomLink,
 } from "./customLinkSlice";
-import {
-  TableContainer,
-  Table,
-  Tbody,
-  Text,
-  Tr,
-  Td,
-  IconButton,
-  Thead,
-  Th,
-  Link,
-  Switch,
-  VStack,
-  HStack,
-  Button,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInput,
-} from "@chakra-ui/react";
+import { IconButton, Link, Switch } from "@chakra-ui/react";
 import { AnyAction } from "@reduxjs/toolkit";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  RowData,
-  useReactTable,
-} from "@tanstack/react-table";
-import React, { useState } from "react";
+import { ColumnDef, createColumnHelper, RowData } from "@tanstack/react-table";
+import React from "react";
 import { HiOutlineTrash } from "react-icons/hi";
-import {
-  HiOutlineChevronDoubleLeft,
-  HiOutlineChevronDoubleRight,
-  HiOutlineChevronLeft,
-  HiOutlineChevronRight,
-} from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 
 declare module "@tanstack/table-core" {
@@ -57,7 +24,8 @@ declare module "@tanstack/table-core" {
 
 const columnHelper = createColumnHelper<CustomLink>();
 
-const columns = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const columns: ColumnDef<CustomLink, any>[] = [
   columnHelper.accessor("group", {
     cell: (info) => info.getValue(),
     header: "Group name",
@@ -155,115 +123,18 @@ const CustomLinkTable: React.FC = () => {
   const customLinkList = useSelector(
     (state: RootState) => state.customLinkList.list
   );
-  const table = useReactTable<CustomLink>({
-    data: customLinks,
+
+  const tableProps: ReactTableProps<CustomLink> = {
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    data: customLinks,
     meta: {
       removeCustomLink: (id: string) => dispatch(removeManyCustomLinks([id])),
       toggleCustomLink: (customLink: CustomLink) =>
         dispatch(toggleOneCustomLink(customLink)),
       getListName: (list_id: string) => customLinkList[list_id]?.name ?? "user",
     },
-  });
-  const pageIndex = table.getState().pagination.pageIndex + 1;
-  const pageCount = table.getPageCount();
-  const [jumpPageIndex, setJumpPageIndex] = useState(pageIndex);
+  };
 
-  return (
-    <VStack>
-      <TableContainer rounded="md" boxShadow="xs" whiteSpace="normal">
-        <Table variant="simple" layout="fixed" width="max-content">
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  const meta: any = header.column.columnDef.meta;
-                  return (
-                    <Th key={header.id} {...meta?.thProps}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </Th>
-                  );
-                })}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id} minHeight="96">
-                {row.getVisibleCells().map((cell) => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  const meta: any = cell.column.columnDef.meta;
-                  return (
-                    <Td key={cell.id} fontSize="md" py="1" {...meta?.tdProps}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </Td>
-                  );
-                })}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      <HStack>
-        <IconButton
-          aria-label="jump first page"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-          icon={<HiOutlineChevronDoubleLeft />}
-          fontSize="20"
-        />
-        <IconButton
-          aria-label="jump previous page"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          icon={<HiOutlineChevronLeft />}
-          fontSize="20"
-        />
-        <Text fontSize="md">{`Page ${pageIndex}/${pageCount}`}</Text>
-        <NumberInput
-          maxW="24"
-          defaultValue={pageIndex}
-          min={1}
-          max={pageCount}
-          onChange={(value) => setJumpPageIndex(Number(value))}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <Button
-          fontWeight="normal"
-          onClick={() => table.setPageIndex(jumpPageIndex - 1)}
-        >
-          jump
-        </Button>
-        <IconButton
-          aria-label="jump next page"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          icon={<HiOutlineChevronRight />}
-          fontSize="20"
-        />
-        <IconButton
-          aria-label="jump last page"
-          onClick={() => table.setPageIndex(pageCount - 1)}
-          disabled={!table.getCanNextPage()}
-          icon={<HiOutlineChevronDoubleRight />}
-          fontSize="20"
-        />
-      </HStack>
-    </VStack>
-  );
+  return <ReactTable {...tableProps} />;
 };
 export default CustomLinkTable;
