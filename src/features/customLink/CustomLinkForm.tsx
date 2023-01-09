@@ -72,7 +72,7 @@ const CustomLinkForm: React.FC = () => {
                   name="group"
                   label="Group name"
                   helperText="example: TypeScript"
-                  initialFocusRef={initialFocusRef}
+                  ref={initialFocusRef}
                 />
                 <InputWithLabelOnLeft
                   name="match"

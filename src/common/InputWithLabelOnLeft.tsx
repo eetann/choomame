@@ -17,21 +17,18 @@ interface Props extends InputProps {
   name: keyof CustomLinkWithoutId;
   label: string;
   helperText: string;
-  initialFocusRef?: Ref<HTMLInputElement>;
+  ref?: Ref<HTMLInputElement>;
 }
-const InputWithLabelOnLeft = React.forwardRef(function useBase({
-  name,
-  label,
-  helperText,
-  initialFocusRef,
-  ...props
-}: Props) {
+const InputWithLabelOnLeft = React.forwardRef(function useBase(
+  { name, label, helperText, ...props }: Omit<Props, "ref">,
+  ref
+) {
   const {
     register,
     formState: { errors },
   } = useFormContext<CustomLinkWithoutId>();
   const inputValue = register(name);
-  const inputRef = useMergeRefs(inputValue.ref, initialFocusRef);
+  const inputRef = useMergeRefs(inputValue.ref, ref);
   return (
     <FormControl isInvalid={Boolean(errors[name])}>
       <Grid
