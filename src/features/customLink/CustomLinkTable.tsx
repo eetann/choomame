@@ -1,5 +1,6 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import ReactTable, { ReactTableProps } from "../../common/ReactTable";
+import { selectCustomLinkList } from "./customLinkListSlice";
 import { CustomLink } from "./customLinkSchema";
 import {
   removeManyCustomLinks,
@@ -16,9 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 declare module "@tanstack/table-core" {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface TableMeta<TData extends RowData> {
-    removeCustomLink: (id: string) => Promise<AnyAction>;
-    toggleCustomLink: (customLink: CustomLink) => Promise<AnyAction>;
-    getListName: (list_id: string) => string;
+    removeCustomLink?: (id: string) => Promise<AnyAction>;
+    toggleCustomLink?: (customLink: CustomLink) => Promise<AnyAction>;
+    getListName?: (list_id: string) => string;
   }
 }
 
@@ -78,7 +79,7 @@ const columns: ColumnDef<CustomLink, any>[] = [
     cell: ({ getValue, table }) => {
       const id = getValue();
       const list_id = id.substring(0, id.indexOf("/"));
-      return table.options.meta?.getListName(list_id);
+      return table.options.meta?.getListName?.(list_id);
     },
     meta: {
       thProps: {
@@ -92,7 +93,9 @@ const columns: ColumnDef<CustomLink, any>[] = [
       if (customLink.id.startsWith("user/")) {
         return (
           <IconButton
-            onClick={() => table.options.meta?.removeCustomLink(customLink.id)}
+            onClick={() =>
+              table.options.meta?.removeCustomLink?.(customLink.id)
+            }
             fontSize="20"
             aria-label="Delete customLink"
             icon={<HiOutlineTrash />}
@@ -102,7 +105,7 @@ const columns: ColumnDef<CustomLink, any>[] = [
       return (
         <Switch
           isChecked={customLink.enable}
-          onChange={() => table.options.meta?.toggleCustomLink(customLink)}
+          onChange={() => table.options.meta?.toggleCustomLink?.(customLink)}
           colorScheme="teal"
         />
       );
@@ -120,9 +123,10 @@ const columns: ColumnDef<CustomLink, any>[] = [
 const CustomLinkTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const customLinks = useSelector(selectCustomLinks.selectAll);
-  const customLinkList = useSelector(
-    (state: RootState) => state.customLinkList.list
-  );
+  const CustomLinkListName = (list_id: string) =>
+    useSelector((state: RootState) =>
+      selectCustomLinkList.selectById(state, list_id)
+    )?.name ?? "user";
 
   const tableProps: ReactTableProps<CustomLink> = {
     columns,
@@ -131,7 +135,7 @@ const CustomLinkTable: React.FC = () => {
       removeCustomLink: (id: string) => dispatch(removeManyCustomLinks([id])),
       toggleCustomLink: (customLink: CustomLink) =>
         dispatch(toggleOneCustomLink(customLink)),
-      getListName: (list_id: string) => customLinkList[list_id]?.name ?? "user",
+      getListName: (list_id: string) => CustomLinkListName(list_id),
     },
   };
 

@@ -121,7 +121,6 @@ export const customLinkSlice = createSlice({
       })
       // toggle enable
       .addCase(toggleOneCustomLink.pending, (state) => {
-        console.log(100);
         state.status = "loading";
       })
       .addCase(toggleOneCustomLink.rejected, (state) => {

@@ -42,21 +42,22 @@ export type CustomLinks = z.infer<typeof customLinksSchema>;
 
 export type CustomLinksBucket = Record<string, CustomLink>;
 
+export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
+
 export const customLinkUrlSchema = z
   .string()
   .url({ message: "list's URL is invalid." })
   .max(150, { message: "list's URL is less than or equal to letter 150" });
 
-export const customLinkListSchema = z.record(
-  z.object({
-    name: messageStringMinMax("list's name", 1, 50),
-    url: customLinkUrlSchema,
-  })
-);
+export const customLinkListSchema = z.object({
+  id: customLinkListIdSchema,
+  name: messageStringMinMax("list's name", 1, 50),
+  url: customLinkUrlSchema,
+});
 
-export type CustomLinkListBucket = z.infer<typeof customLinkListSchema>;
+export type CustomLinkList = z.infer<typeof customLinkListSchema>;
 
-export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
+export type CustomLinkListBucket = Record<string, CustomLinkList>;
 
 export const fetchCustomLinkUrlSchema = z.object({
   id: customLinkListIdSchema,

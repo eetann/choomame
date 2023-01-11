@@ -37,7 +37,7 @@ const CustomLinkTab: React.FC = () => {
 
   return (
     <Stack divider={<StackDivider />} spacing="10">
-      <Stack>
+      <Stack alignItems="start">
         <HStack>
           <Icon as={HiOutlineListBullet} boxSize={5} />
           <Heading size="md">List</Heading>
@@ -47,7 +47,7 @@ const CustomLinkTab: React.FC = () => {
             </span>
           </Tooltip>
         </HStack>
-        <HStack justifyContent="space-between">
+        <HStack justifyContent="space-between" width="100%">
           <Button>WIP</Button>
           <Box>
             <CustomLinkListForm />
