@@ -81,6 +81,7 @@ const CustomLinkListTable: React.FC = () => {
       removeCustomLinkList: (list_id: string) =>
         dispatch(removeOneCustomLinkList(list_id)),
     },
+    pageSize: 10,
   };
 
   return <ReactTable {...tableProps} />;

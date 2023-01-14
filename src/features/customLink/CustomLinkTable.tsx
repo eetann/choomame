@@ -137,6 +137,7 @@ const CustomLinkTable: React.FC = () => {
         dispatch(toggleOneCustomLink(customLink)),
       getListName: (list_id: string) => CustomLinkListName(list_id),
     },
+    pageSize: 50,
   };
 
   return <ReactTable {...tableProps} />;

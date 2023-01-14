@@ -40,12 +40,14 @@ export interface ReactTableProps<TData extends RowData>
   data: TData[];
   columns: ColumnDef<TData>[];
   meta: TableMeta<TData>;
+  pageSize: number;
 }
 
 const ReactTable = <TDataType extends object>({
   data,
   columns,
   meta,
+  pageSize,
 }: ReactTableProps<TDataType>) => {
   const table = useReactTable<TDataType>({
     data,
@@ -53,6 +55,7 @@ const ReactTable = <TDataType extends object>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     meta,
+    initialState: { pagination: { pageSize: pageSize } },
   });
   const pageIndex = table.getState().pagination.pageIndex + 1;
   const pageCount = table.getPageCount();
