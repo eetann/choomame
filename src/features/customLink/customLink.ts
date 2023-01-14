@@ -54,6 +54,7 @@ export async function customLinkListOnInstalled() {
 
     customLinkListBucket.set({
       [list_id]: {
+        id: list_id,
         name: response.name,
         url: customLinkUrl,
       },

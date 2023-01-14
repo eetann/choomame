@@ -1,16 +1,25 @@
+import { RootState } from "../../app/store";
 import {
   customLinkListBucket,
   customLinkListOnInstalled,
   customLinksBucket,
   fetchCustomLinkUrl,
 } from "./customLink";
-import { CustomLinkListBucket, customLinkUrlSchema } from "./customLinkSchema";
+import {
+  CustomLinkList,
+  CustomLinkListBucket,
+  customLinkUrlSchema,
+} from "./customLinkSchema";
 import {
   addManyCustomLinks,
   initCustomLinks,
   removeManyCustomLinks,
 } from "./customLinkSlice";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
   "customLinkList/initCustomLinkList",
@@ -31,6 +40,17 @@ export const initCustomLinkAll = createAsyncThunk<CustomLinkListBucket>(
   }
 );
 
+const customLinkListAdapter = createEntityAdapter<CustomLinkList>({
+  selectId: (item) => item.id,
+  sortComparer: (a, b) => {
+    if (a.name < b.name) {
+      // a, b
+      return -1;
+    }
+    return 1;
+  },
+});
+
 export const fetchAllCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
   "customLinkList/fetchAllCustomLinkList",
   async () => {
@@ -49,13 +69,12 @@ export const addOneCustomLinkList = createAsyncThunk(
     const customLinkUrl = result.data;
     const response = await fetchCustomLinkUrl(customLinkUrl);
     const list_id = response.id;
-    const customLinkList: CustomLinkListBucket = {
-      [list_id]: {
-        name: response.name,
-        url: customLinkUrl,
-      },
+    const customLinkList: CustomLinkList = {
+      id: list_id,
+      name: response.name,
+      url: customLinkUrl,
     };
-    customLinkListBucket.set(customLinkList);
+    customLinkListBucket.set({ [list_id]: customLinkList });
     await dispatch(addManyCustomLinks({ items: response.links, list_id }));
     return customLinkList;
   }
@@ -74,11 +93,10 @@ export const removeOneCustomLinkList = createAsyncThunk(
   }
 );
 
-const initialState = {
-  list: {} as CustomLinkListBucket,
+const initialState = customLinkListAdapter.getInitialState({
   status: "idle",
   errorMessage: "",
-};
+});
 
 export const customLinkListSlice = createSlice({
   name: "customLinkList",
@@ -96,7 +114,7 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = "";
       })
       .addCase(initCustomLinkList.fulfilled, (state, action) => {
-        state.list = action.payload;
+        customLinkListAdapter.setAll(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       })
@@ -110,7 +128,7 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = "";
       })
       .addCase(initCustomLinkAll.fulfilled, (state, action) => {
-        state.list = action.payload;
+        customLinkListAdapter.setAll(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       })
@@ -124,7 +142,7 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = "";
       })
       .addCase(fetchAllCustomLinkList.fulfilled, (state, action) => {
-        state.list = action.payload;
+        customLinkListAdapter.setAll(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       })
@@ -138,8 +156,7 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = action.error.message ?? "";
       })
       .addCase(addOneCustomLinkList.fulfilled, (state, action) => {
-        const list_id = Object.keys(action.payload)[0];
-        state.list[list_id] = action.payload[list_id];
+        customLinkListAdapter.addOne(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       })
@@ -153,11 +170,16 @@ export const customLinkListSlice = createSlice({
         state.errorMessage = "";
       })
       .addCase(removeOneCustomLinkList.fulfilled, (state, action) => {
-        delete state.list[action.payload];
+        customLinkListAdapter.removeOne(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       });
   },
 });
+
+export const selectCustomLinkList =
+  customLinkListAdapter.getSelectors<RootState>(
+    (state) => state.customLinkList
+  );
 
 export default customLinkListSlice.reducer;

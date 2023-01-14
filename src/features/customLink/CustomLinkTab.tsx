@@ -9,8 +9,22 @@ import {
   initCustomLinkAll,
 } from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
-import { Card, CardBody, Heading, Stack, StackDivider } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Icon,
+  Stack,
+  StackDivider,
+  Tooltip,
+} from "@chakra-ui/react";
 import React, { useEffect } from "react";
+import { HiOutlineLink } from "react-icons/hi";
+import {
+  HiOutlineListBullet,
+  HiOutlineQuestionMarkCircle,
+} from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 
 const CustomLinkTab: React.FC = () => {
@@ -23,22 +37,34 @@ const CustomLinkTab: React.FC = () => {
 
   return (
     <Stack divider={<StackDivider />} spacing="10">
-      <Stack>
-        <Heading size="md">List</Heading>
-        <Card>
-          <CardBody>
+      <Stack alignItems="start">
+        <HStack>
+          <Icon as={HiOutlineListBullet} boxSize={5} />
+          <Heading size="md">List</Heading>
+          <Tooltip label="You can add a list of custom links. It is automatically and regularly updated.">
+            <span>
+              <Icon as={HiOutlineQuestionMarkCircle} boxSize={5} />
+            </span>
+          </Tooltip>
+        </HStack>
+        <HStack justifyContent="space-between" width="100%">
+          <Button>WIP</Button>
+          <Box>
             <CustomLinkListForm />
-          </CardBody>
-        </Card>
+          </Box>
+        </HStack>
         <CustomLinkListTable />
       </Stack>
       <Stack>
-        <Heading size="md">Custom Links</Heading>
-        <Card>
-          <CardBody>
+        <HStack>
+          <Icon as={HiOutlineLink} boxSize={5} />
+          <Heading size="md">Links</Heading>
+        </HStack>
+        <HStack justifyContent="end">
+          <Box>
             <CustomLinkForm />
-          </CardBody>
-        </Card>
+          </Box>
+        </HStack>
         <CustomLinkTable />
       </Stack>
       <ResetButton name="Custom Link" action={initCustomLinkAll} />

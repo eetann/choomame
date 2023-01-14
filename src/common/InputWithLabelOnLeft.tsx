@@ -8,20 +8,27 @@ import {
   Grid,
   GridItem,
   InputProps,
+  useMergeRefs,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { Ref } from "react";
 import { useFormContext } from "react-hook-form";
 
 interface Props extends InputProps {
   name: keyof CustomLinkWithoutId;
   label: string;
   helperText: string;
+  ref?: Ref<HTMLInputElement>;
 }
-const InputWithLabelOnLeft = ({ name, label, helperText, ...props }: Props) => {
+const InputWithLabelOnLeft = React.forwardRef(function useBase(
+  { name, label, helperText, ...props }: Omit<Props, "ref">,
+  ref
+) {
   const {
     register,
     formState: { errors },
   } = useFormContext<CustomLinkWithoutId>();
+  const inputValue = register(name);
+  const inputRef = useMergeRefs(inputValue.ref, ref);
   return (
     <FormControl isInvalid={Boolean(errors[name])}>
       <Grid
@@ -44,7 +51,10 @@ const InputWithLabelOnLeft = ({ name, label, helperText, ...props }: Props) => {
           <Input
             id={`${name}Input`}
             type="text"
-            {...register(name)}
+            name={inputValue.name}
+            onChange={inputValue.onChange}
+            onBlur={inputValue.onBlur}
+            ref={inputRef}
             {...props}
           />
         </GridItem>
@@ -54,5 +64,5 @@ const InputWithLabelOnLeft = ({ name, label, helperText, ...props }: Props) => {
       </Grid>
     </FormControl>
   );
-};
+});
 export default React.memo(InputWithLabelOnLeft);
