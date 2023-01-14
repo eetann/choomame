@@ -1,7 +1,6 @@
 import { IconButton, Spacer } from "@chakra-ui/react";
 import { Flex, Icon, Tooltip } from "@chakra-ui/react";
-import { createContext } from "react";
-import React, { useContext } from "react";
+import React, { useContext, createContext } from "react";
 import { CgArrowsExpandRight, CgCompressRight } from "react-icons/cg";
 import { RiDragMove2Fill } from "react-icons/ri";
 

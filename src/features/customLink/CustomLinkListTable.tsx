@@ -8,7 +8,7 @@ import { CustomLinkList } from "./customLinkSchema";
 import { IconButton, Link } from "@chakra-ui/react";
 import { AnyAction } from "@reduxjs/toolkit";
 import { ColumnDef, createColumnHelper, RowData } from "@tanstack/react-table";
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,8 +16,25 @@ declare module "@tanstack/table-core" {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface TableMeta<TData extends RowData> {
     removeCustomLinkList?: (list_id: string) => Promise<AnyAction>;
+    isUpdatingList?: boolean;
   }
 }
+
+export type IsUpdatingListContextType = {
+  isUpdatingList: boolean;
+  setStartUpdatingList: React.Dispatch<React.SetStateAction<boolean>>;
+  setStopUpdatingList: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const defaultIsUpdatingListContext: IsUpdatingListContextType = {
+  isUpdatingList: false,
+  setStartUpdatingList: () => true,
+  setStopUpdatingList: () => false,
+};
+
+export const IsUpdatingListContext = createContext<IsUpdatingListContextType>(
+  defaultIsUpdatingListContext
+);
 
 const columnHelper = createColumnHelper<CustomLinkList>();
 
@@ -59,6 +76,7 @@ const columns: ColumnDef<CustomLinkList, any>[] = [
         aria-label="Delete custom link list"
         icon={<HiOutlineTrash />}
         onClick={() => table.options.meta?.removeCustomLinkList?.(getValue())}
+        isLoading={table.options.meta?.isUpdatingList ?? false}
       />
     ),
     meta: {
@@ -73,6 +91,7 @@ const columns: ColumnDef<CustomLinkList, any>[] = [
 const CustomLinkListTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const customLinkList = useSelector(selectCustomLinkList.selectAll);
+  const { isUpdatingList } = useContext(IsUpdatingListContext);
 
   const tableProps: ReactTableProps<CustomLinkList> = {
     columns,
@@ -80,6 +99,7 @@ const CustomLinkListTable: React.FC = () => {
     meta: {
       removeCustomLinkList: (list_id: string) =>
         dispatch(removeOneCustomLinkList(list_id)),
+      isUpdatingList,
     },
     pageSize: 10,
   };
