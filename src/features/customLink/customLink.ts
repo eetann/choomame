@@ -20,7 +20,7 @@ export async function fetchCustomLinkUrl(
 ): Promise<FetchCustomLinkUrl> {
   let response;
   try {
-    response = await (await fetch(url)).text();
+    response = await (await fetch(url, { cache: "no-store" })).text();
   } catch (e) {
     throw new Error(`fetch failed: ${url}`);
   }

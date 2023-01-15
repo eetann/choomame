@@ -9,6 +9,7 @@ import CustomLinkTable from "./CustomLinkTable";
 import {
   fetchAllCustomLinkList,
   initCustomLinkAll,
+  updateManyCustomLinkList,
 } from "./customLinkListSlice";
 import { fetchAllCustomLinks } from "./customLinkSlice";
 import {
@@ -62,7 +63,7 @@ const CustomLinkTab: React.FC = () => {
               colorScheme="teal"
               onClick={async () => {
                 setStartUpdatingList();
-                await new Promise((s) => setTimeout(s, 3000));
+                await dispatch(updateManyCustomLinkList());
                 setStopUpdatingList();
               }}
               isLoading={isUpdatingList}

@@ -70,3 +70,32 @@ export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;
 export const initialCustomLinkUrls = [
   "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
 ];
+
+export type DiffCustomLinks = {
+  sameIds: Set<string>;
+  beforeOnlyIds: string[];
+  afterOnlyBucket: CustomLinksBucket;
+};
+
+export function diffCustomLinks(
+  before: CustomLinksBucket,
+  after: CustomLinksBucket
+): DiffCustomLinks {
+  const afterIdSet = new Set(Object.keys(after));
+  const beforeIds = Object.keys(before);
+  const sameIds = new Set(
+    beforeIds.filter((beforeId) => afterIdSet.has(beforeId))
+  );
+  const afterOnlyBucket: CustomLinksBucket = {};
+  afterIdSet.forEach((id) => {
+    if (!sameIds.has(id)) {
+      afterOnlyBucket[id] = after[id];
+    }
+  });
+
+  return {
+    sameIds,
+    beforeOnlyIds: beforeIds.filter((id) => !sameIds.has(id)),
+    afterOnlyBucket,
+  };
+}

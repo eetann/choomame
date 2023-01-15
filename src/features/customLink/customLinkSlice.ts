@@ -2,8 +2,10 @@ import { RootState } from "../../app/store";
 import { customLinksBucket, customLinksOnInstalled } from "./customLink";
 import {
   CustomLink,
+  CustomLinks,
   CustomLinksBucket,
   CustomLinkWithoutId,
+  diffCustomLinks,
 } from "./customLinkSchema";
 import {
   createAsyncThunk,
@@ -87,6 +89,56 @@ export const removeManyCustomLinks = createAsyncThunk(
   }
 );
 
+export const updateManyCustomLinks = createAsyncThunk(
+  "customLinks/updateManyCustomLinks",
+  async (
+    args: {
+      beforeCustomLinkBucket: CustomLinksBucket;
+      updateItems: CustomLink[];
+      list_id: string;
+    },
+    { dispatch }
+  ) => {
+    let updates: CustomLinks = [];
+
+    // diff
+    const afterCustomLinkBucket: CustomLinksBucket = {};
+    args.updateItems.forEach((customLink) => {
+      const id = `${args.list_id}/${customLink.id}`;
+      afterCustomLinkBucket[id] = { ...customLink, id };
+    });
+
+    console.log({
+      before: args.beforeCustomLinkBucket,
+      after: afterCustomLinkBucket,
+    });
+    const { sameIds, beforeOnlyIds, afterOnlyBucket } = diffCustomLinks(
+      args.beforeCustomLinkBucket,
+      afterCustomLinkBucket
+    );
+    console.log({ sameIds, beforeOnlyIds, afterOnlyBucket });
+
+    // update existing
+    for (const item_id of sameIds) {
+      const customLink = {
+        ...afterCustomLinkBucket[item_id],
+        enable: args.beforeCustomLinkBucket[item_id].enable,
+      };
+      await customLinksBucket.set({ [customLink.id]: customLink });
+      updates.push(customLink);
+    }
+
+    // add afterOnly
+    await customLinksBucket.set(afterOnlyBucket);
+    updates = updates.concat(Object.values(afterOnlyBucket));
+
+    // delete beforeOnly
+    await dispatch(removeManyCustomLinks(beforeOnlyIds));
+
+    return updates;
+  }
+);
+
 const initialState = customLinksAdapter.getInitialState({
   status: "idle",
 });
@@ -153,6 +205,17 @@ export const customLinkSlice = createSlice({
       })
       .addCase(addManyCustomLinks.fulfilled, (state, action) => {
         customLinksAdapter.addMany(state, action.payload);
+        state.status = "idle";
+      })
+      // updateMany
+      .addCase(updateManyCustomLinks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateManyCustomLinks.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(updateManyCustomLinks.fulfilled, (state, action) => {
+        customLinksAdapter.upsertMany(state, action.payload);
         state.status = "idle";
       })
       // removeMany
