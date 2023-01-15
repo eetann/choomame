@@ -108,15 +108,10 @@ export const updateManyCustomLinks = createAsyncThunk(
       afterCustomLinkBucket[id] = { ...customLink, id };
     });
 
-    console.log({
-      before: args.beforeCustomLinkBucket,
-      after: afterCustomLinkBucket,
-    });
     const { sameIds, beforeOnlyIds, afterOnlyBucket } = diffCustomLinks(
       args.beforeCustomLinkBucket,
       afterCustomLinkBucket
     );
-    console.log({ sameIds, beforeOnlyIds, afterOnlyBucket });
 
     // update existing
     for (const item_id of sameIds) {

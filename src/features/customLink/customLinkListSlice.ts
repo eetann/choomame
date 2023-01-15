@@ -118,13 +118,15 @@ export const updateManyCustomLinkList = createAsyncThunk(
             list_id,
           })
         );
+        const newList = {
+          id: list_id,
+          name: response.name,
+          url: customLinkList.url,
+        };
+        customLinkListBucket.set({ [list_id]: newList });
         return {
           id: list_id,
-          changes: {
-            id: list_id,
-            name: response.name,
-            url: customLinkList.url,
-          },
+          changes: newList,
         };
       })
     );
