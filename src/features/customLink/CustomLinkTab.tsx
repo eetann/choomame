@@ -64,6 +64,7 @@ const CustomLinkTab: React.FC = () => {
               onClick={async () => {
                 setStartUpdatingList();
                 await dispatch(updateManyCustomLinkList());
+                await new Promise((s) => setTimeout(s, 3000));
                 setStopUpdatingList();
               }}
               isLoading={isUpdatingList}
