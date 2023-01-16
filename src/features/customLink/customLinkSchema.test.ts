@@ -4,7 +4,6 @@ import {
   customLinkListIdSchema,
   customLinkUrlSchema,
   initialCustomLinkUrls,
-  CustomLinks,
   diffCustomLinks,
 } from "./customLinkSchema";
 import { describe, expect, test } from "vitest";
