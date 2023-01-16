@@ -208,7 +208,7 @@ test("CustomLink list", async ({ page, extensionId }) => {
       )
       .click();
     await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
-      /eetann\(for E2E test\)/
+      /eetann/
     );
     for (const url of [
       "https://hub-eetann.vercel.app",
@@ -240,13 +240,13 @@ test("CustomLink list", async ({ page, extensionId }) => {
       .locator(
         [
           "_react=CustomLinkListTable",
-          "tr:has-text('eetann(for E2E test)')",
+          "tr:has-text('eetann.json5')",
           "_react=[aria-label = 'Delete custom link list']",
         ].join(" >> ")
       )
       .click();
     await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann\(for E2E test\)/
+      /eetann.json5/
     );
     for (const url of [
       "https://hub-eetann.vercel.app",
@@ -445,7 +445,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
   await test.step("check @ option page", async () => {
     // list
     await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann\(for E2E test\)/
+      /eetann/
     );
     // customLink
     for (const url of [
