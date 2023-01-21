@@ -1,24 +1,17 @@
 {
   id: "eetann-e2e",
-  name: "eetann-E2E",
+  name: "eetann-E2E-after",
   links: [
     {
-      id: "portfolio",
-      name: "Portfolio",
-      url: "https://hub-eetann.vercel.app",
-      match: "eetann|えーたん",
-      group: "eetann",
-    },
-    {
-      id: "github",
-      name: "GitHub",
-      url: "https://github.com/eetann",
+      id: "note",
+      name: "note",
+      url: "https://note.com/hideharu092",
       match: "eetann|えーたん",
       group: "eetann",
     },
     {
       id: "twitter",
-      name: "Twitter",
+      name: "ツイッター",
       url: "https://twitter.com/eetann092",
       match: "eetann|えーたん",
       group: "eetann",
