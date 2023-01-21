@@ -1,6 +1,6 @@
 import { Param } from "../param/param";
 import {
-  getCustomLinks,
+  customLinksBucket,
   toGoogleWithUrl,
   toMatchWithDelimiter,
 } from "./customLink";
@@ -19,7 +19,7 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
 
   useEffect(() => {
     (async () => {
-      const bucket = await getCustomLinks();
+      const bucket = await customLinksBucket.get();
       const links: Record<string, JSX.Element[]> = {};
       Object.values(bucket).forEach((customLink) => {
         if (!customLink.enable) {

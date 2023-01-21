@@ -84,10 +84,6 @@ export async function customLinksOnInstalled() {
   }
 }
 
-export async function getCustomLinks(): Promise<CustomLinksBucket> {
-  return await customLinksBucket.get();
-}
-
 /**
  * change to include a delimiter before and after `match`
  * example: `nodejs` is not matched to `js`
