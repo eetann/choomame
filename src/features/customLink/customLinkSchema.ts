@@ -67,9 +67,14 @@ export const fetchCustomLinkUrlSchema = z.object({
 
 export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;
 
-export const initialCustomLinkUrls = [
+export let initialCustomLinkUrls = [
   "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
 ];
+if (import.meta.env.VITE_E2E) {
+  initialCustomLinkUrls = [
+    "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/choomame-e2e.json5",
+  ];
+}
 
 export type DiffCustomLinks = {
   sameIds: Set<string>;

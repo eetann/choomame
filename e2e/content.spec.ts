@@ -1,7 +1,7 @@
 import { test, expect } from "./fixtures.js";
 
 test("onInstalled", async ({ page }) => {
-  await page.goto("https://www.google.com/search?q=hoge");
+  await page.goto("https://www.google.com/search?q=typescript+record");
 
   await test.step("Language", async () => {
     for (const language of ["Any", "English", "Japanese"]) {
@@ -24,11 +24,9 @@ test("onInstalled", async ({ page }) => {
     }
   });
 
-  await test.step("customLink", async () => {
-    await expect(page.locator("#choomameCustomLinksLink >> div")).toHaveCount(
-      0
-    );
-  });
+  await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+    new RegExp("Homepage")
+  );
 });
 
 test("Languages", async ({ page, extensionId }) => {
@@ -445,7 +443,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
   await test.step("check @ option page", async () => {
     // list
     await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann/
+      /eetann.json5/
     );
     // customLink
     for (const url of [

@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
-    "e2e-test": "playwright test --reporter=list",
+    "dev:e2e": "VITE_E2E=true npm run dev",
+    "test:unit": "vitest",
+    "test:e2e": "playwright test --reporter=list",
     "coverage": "vitest run --coverage",
     "zip": "echo 'use chrome-webstore-upload-cli in GitHub Actions'",
     "build": "tsc && vite build",
