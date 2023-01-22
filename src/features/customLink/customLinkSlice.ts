@@ -1,11 +1,13 @@
 import { RootState } from "../../app/store";
-import { customLinksBucket, customLinksOnInstalled } from "./customLink";
+import {
+  customLinksBucket,
+  customLinksOnInstalled,
+  updateCustomLinks,
+} from "./customLink";
 import {
   CustomLink,
-  CustomLinks,
   CustomLinksBucket,
   CustomLinkWithoutId,
-  diffCustomLinks,
 } from "./customLinkSchema";
 import {
   createAsyncThunk,
@@ -84,7 +86,7 @@ export const addManyCustomLinks = createAsyncThunk(
 export const removeManyCustomLinks = createAsyncThunk(
   "customLink/removdeManyCustomLinks",
   async (customLinkIds: string[]) => {
-    customLinksBucket.remove(customLinkIds);
+    await customLinksBucket.remove(customLinkIds);
     return customLinkIds;
   }
 );
@@ -99,38 +101,15 @@ export const updateManyCustomLinks = createAsyncThunk(
     },
     { dispatch }
   ) => {
-    let updates: CustomLinks = [];
-
-    // diff
-    const afterCustomLinkBucket: CustomLinksBucket = {};
-    args.updateItems.forEach((customLink) => {
-      const id = `${args.list_id}/${customLink.id}`;
-      afterCustomLinkBucket[id] = { ...customLink, id };
-    });
-
-    const { sameIds, beforeOnlyIds, afterOnlyBucket } = diffCustomLinks(
+    const deleteFunction = async (beforeOnlyIds: string[]) => {
+      await dispatch(removeManyCustomLinks(beforeOnlyIds));
+    };
+    return await updateCustomLinks(
       args.beforeCustomLinkBucket,
-      afterCustomLinkBucket
+      args.updateItems,
+      args.list_id,
+      deleteFunction
     );
-
-    // update existing
-    for (const item_id of sameIds) {
-      const customLink = {
-        ...afterCustomLinkBucket[item_id],
-        enable: args.beforeCustomLinkBucket[item_id].enable,
-      };
-      await customLinksBucket.set({ [customLink.id]: customLink });
-      updates.push(customLink);
-    }
-
-    // add afterOnly
-    await customLinksBucket.set(afterOnlyBucket);
-    updates = updates.concat(Object.values(afterOnlyBucket));
-
-    // delete beforeOnly
-    await dispatch(removeManyCustomLinks(beforeOnlyIds));
-
-    return updates;
   }
 );
 

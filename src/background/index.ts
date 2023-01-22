@@ -2,6 +2,7 @@ import { appearanceOnInstalled } from "../features/appearance/appearance";
 import {
   customLinksOnInstalled,
   customLinkListOnInstalled,
+  updateCustomLinkListonAlarm,
 } from "../features/customLink/customLink";
 import { languagesOnInstalled } from "../features/languages/languages";
 import { timesOnInstalled } from "../features/times/times";
@@ -19,8 +20,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === alarmCustomLinkListUpdate) {
-    console.log("TODO: ここでupdate");
+    await updateCustomLinkListonAlarm();
   }
 });

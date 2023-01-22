@@ -4,10 +4,13 @@ import {
   customLinkListOnInstalled,
   customLinksBucket,
   fetchCustomLinkUrl,
+  updateCustomLinkList,
+  updateCustomLinks,
 } from "./customLink";
 import {
   CustomLinkList,
   CustomLinkListBucket,
+  CustomLinks,
   CustomLinksBucket,
   customLinkUrlSchema,
 } from "./customLinkSchema";
@@ -99,37 +102,21 @@ export const removeOneCustomLinkList = createAsyncThunk(
 export const updateManyCustomLinkList = createAsyncThunk(
   "customLinkList/updateManyCustomLinkList",
   async (_, { dispatch }): Promise<Update<CustomLinkList>[]> => {
-    const bucket = await customLinkListBucket.get();
-    const customLinkBucket = await customLinksBucket.get();
-    return await Promise.all(
-      Object.values(bucket).map(async (customLinkList) => {
-        const response = await fetchCustomLinkUrl(customLinkList.url);
-        const list_id = response.id;
-        const beforeCustomLinkBucket: CustomLinksBucket = {};
-        Object.entries(customLinkBucket).forEach(([id, customLink]) => {
-          if (id.startsWith(list_id)) {
-            beforeCustomLinkBucket[id] = customLink;
-          }
-        });
-        await dispatch(
-          updateManyCustomLinks({
-            beforeCustomLinkBucket,
-            updateItems: response.links,
-            list_id,
-          })
-        );
-        const newList = {
-          id: list_id,
-          name: response.name,
-          url: customLinkList.url,
-        };
-        customLinkListBucket.set({ [list_id]: newList });
-        return {
-          id: list_id,
-          changes: newList,
-        };
-      })
-    );
+    const updateCustomLinksFunction = async (
+      beforeCustomLinkBucket: CustomLinksBucket,
+      updateItems: CustomLinks,
+      list_id: string
+    ) => {
+      await dispatch(
+        updateManyCustomLinks({
+          beforeCustomLinkBucket,
+          updateItems,
+          list_id,
+        })
+      );
+      return [];
+    };
+    return await updateCustomLinkList(updateCustomLinksFunction);
   }
 );
 
