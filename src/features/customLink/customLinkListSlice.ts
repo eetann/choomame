@@ -5,7 +5,6 @@ import {
   customLinksBucket,
   fetchCustomLinkUrl,
   updateCustomLinkList,
-  updateCustomLinks,
 } from "./customLink";
 import {
   CustomLinkList,

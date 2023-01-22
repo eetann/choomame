@@ -17,20 +17,21 @@ export const customLinksBucket = getBucket<CustomLinksBucket>("customLinks");
 export const initialCustomLinkList: CustomLinkListBucket = {};
 export const initialCustomLinks: CustomLinksBucket = {};
 
-export const customLinkIsUpdatingBucket = getBucket<{ isUpdating: boolean }>(
+export const isBackgroundUpdatingBucket = getBucket<{ customLink: boolean }>(
   "customLinkIsUpdating"
 );
-export async function setStartUpdatingCustomLink() {
-  await customLinkIsUpdatingBucket.set({ isUpdating: true });
+export const alarmBackgroundUpdateCustomLink = "ChoomameCustomLinkUpdate";
+export async function setStartBackgroundUpdateCustomLink() {
+  await isBackgroundUpdatingBucket.set({ customLink: true });
 }
 
-export async function setStopUpdatingCustomLink() {
-  await customLinkIsUpdatingBucket.set({ isUpdating: false });
+export async function setStopBackgroundUpdateCustomLink() {
+  await isBackgroundUpdatingBucket.set({ customLink: false });
 }
 
-export async function isUpdatingCustomLink() {
-  const bucket = await customLinkIsUpdatingBucket.get();
-  return bucket.isUpdating;
+export async function isBackgroundUpdatingCustomLink() {
+  const bucket = await isBackgroundUpdatingBucket.get();
+  return bucket.customLink;
 }
 
 export async function fetchCustomLinkUrl(

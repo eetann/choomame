@@ -3,41 +3,40 @@ import {
   customLinksOnInstalled,
   customLinkListOnInstalled,
   updateCustomLinkListonAlarm,
-  setStopUpdatingCustomLink,
-  setStartUpdatingCustomLink,
-  isUpdatingCustomLink,
+  setStopBackgroundUpdateCustomLink,
+  setStartBackgroundUpdateCustomLink,
+  isBackgroundUpdatingCustomLink,
+  alarmBackgroundUpdateCustomLink,
 } from "../features/customLink/customLink";
 import { languagesOnInstalled } from "../features/languages/languages";
 import { timesOnInstalled } from "../features/times/times";
-
-const alarmCustomLinkListUpdate = "ChoomameCustomLinkListUpdate";
 
 chrome.runtime.onInstalled.addListener(async () => {
   await timesOnInstalled();
   await languagesOnInstalled();
   await appearanceOnInstalled();
 
-  await setStartUpdatingCustomLink();
+  await setStartBackgroundUpdateCustomLink();
   await customLinkListOnInstalled();
   await customLinksOnInstalled();
-  await setStopUpdatingCustomLink();
-  chrome.alarms.create(alarmCustomLinkListUpdate, {
+  await setStopBackgroundUpdateCustomLink();
+  chrome.alarms.create(alarmBackgroundUpdateCustomLink, {
     periodInMinutes: 1440,
   });
 });
 
 chrome.runtime.onStartup.addListener(async () => {
-  await setStopUpdatingCustomLink();
+  await setStopBackgroundUpdateCustomLink();
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === alarmCustomLinkListUpdate) {
-    const isUpdating = await isUpdatingCustomLink();
+  if (alarm.name === alarmBackgroundUpdateCustomLink) {
+    const isUpdating = await isBackgroundUpdatingCustomLink();
     if (isUpdating) {
       return;
     }
-    await setStartUpdatingCustomLink();
+    await setStartBackgroundUpdateCustomLink();
     await updateCustomLinkListonAlarm();
-    await setStopUpdatingCustomLink();
+    await setStopBackgroundUpdateCustomLink();
   }
 });
