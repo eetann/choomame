@@ -7,6 +7,12 @@ import CustomLinkListTable, {
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
+  customLinkIsUpdatingBucket,
+  isUpdatingCustomLink,
+  setStartUpdatingCustomLink,
+  setStopUpdatingCustomLink,
+} from "./customLink";
+import {
   fetchAllCustomLinkList,
   initCustomLinkAll,
   updateManyCustomLinkList,
@@ -34,8 +40,28 @@ const CustomLinkTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [isUpdatingList, setIsUpdatingList] = useState(false);
 
-  const setStartUpdatingList = () => setIsUpdatingList(true);
-  const setStopUpdatingList = () => setIsUpdatingList(false);
+  const setStartUpdatingList = () => {
+    setIsUpdatingList(true);
+  };
+  const setStopUpdatingList = () => {
+    setIsUpdatingList(false);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const isUpdating = await isUpdatingCustomLink();
+      if (isUpdating) {
+        setStartUpdatingList();
+      }
+    })();
+    customLinkIsUpdatingBucket.changeStream.subscribe((v) => {
+      if (v.isUpdating?.newValue) {
+        setStartUpdatingList();
+      } else {
+        setStopUpdatingList();
+      }
+    });
+  }, []);
 
   useEffect(() => {
     dispatch(fetchAllCustomLinkList());
@@ -63,8 +89,10 @@ const CustomLinkTab: React.FC = () => {
               colorScheme="teal"
               onClick={async () => {
                 setStartUpdatingList();
+                await setStartUpdatingCustomLink();
                 await dispatch(updateManyCustomLinkList());
                 await new Promise((s) => setTimeout(s, 3000));
+                await setStopUpdatingCustomLink();
                 setStopUpdatingList();
               }}
               isLoading={isUpdatingList}

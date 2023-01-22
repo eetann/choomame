@@ -17,6 +17,22 @@ export const customLinksBucket = getBucket<CustomLinksBucket>("customLinks");
 export const initialCustomLinkList: CustomLinkListBucket = {};
 export const initialCustomLinks: CustomLinksBucket = {};
 
+export const customLinkIsUpdatingBucket = getBucket<{ isUpdating: boolean }>(
+  "customLinkIsUpdating"
+);
+export async function setStartUpdatingCustomLink() {
+  await customLinkIsUpdatingBucket.set({ isUpdating: true });
+}
+
+export async function setStopUpdatingCustomLink() {
+  await customLinkIsUpdatingBucket.set({ isUpdating: false });
+}
+
+export async function isUpdatingCustomLink() {
+  const bucket = await customLinkIsUpdatingBucket.get();
+  return bucket.isUpdating;
+}
+
 export async function fetchCustomLinkUrl(
   url: string
 ): Promise<FetchCustomLinkUrl> {
