@@ -1,5 +1,43 @@
 import { test, expect } from "./fixtures.js";
+import { Page } from "@playwright/test";
 import { readFileSync } from "fs";
+
+async function testListUpdate(page: Page) {
+  await test.step("check @ option page", async () => {
+    // list
+    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
+      /eetann-E2E-before/
+    );
+    await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+      /eetann-E2E-after/
+    );
+    // customLink
+    // beforeOnly
+    await expect(page.locator("_react=CustomLinkTable")).not.toHaveText(
+      new RegExp("https://hub-eetann.vercel.app")
+    );
+    for (const includeText of [
+      "https://note.com/hideharu092", // afterOnly
+      "https://zenn.dev/eetann", //same
+      "ツイッター", // update
+    ]) {
+      await expect(page.locator("_react=CustomLinkTable")).toHaveText(
+        new RegExp(includeText)
+      );
+    }
+
+    // check whether `enable` is still false
+    await expect(
+      page.locator(
+        [
+          "_react=CustomLinkTable",
+          "tr:has-text('eetann|choomame|えーたん')",
+          "input[type=checkbox] ~ span",
+        ].join(" >> ")
+      )
+    ).not.toBeChecked();
+  });
+}
 
 test.beforeAll(async ({ context }) => {
   await context.route(
@@ -13,7 +51,7 @@ test.beforeAll(async ({ context }) => {
   );
 });
 
-test("CustomLink List", async ({ page, extensionId }) => {
+test("CustomLink List", async ({ page, extensionId, context }) => {
   await page.goto("https://www.google.com/search?q=typescript+record");
 
   await test.step("onInstalled", async () => {
@@ -112,43 +150,12 @@ test("CustomLink List", async ({ page, extensionId }) => {
       }
     );
     await page.locator("button:has-text('Manual Update')").click();
-  });
-
-  // TODO: チェック
-  await test.step("check @ option page", async () => {
-    // list
-    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann-E2E-before/
-    );
-    await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
-      /eetann-E2E-after/
-    );
-    // customLink
-    // beforeOnly
-    await expect(page.locator("_react=CustomLinkTable")).not.toHaveText(
-      new RegExp("https://hub-eetann.vercel.app")
-    );
-    for (const includeText of [
-      "https://note.com/hideharu092", // afterOnly
-      "https://zenn.dev/eetann", //same
-      "ツイッター", // update
-    ]) {
-      await expect(page.locator("_react=CustomLinkTable")).toHaveText(
-        new RegExp(includeText)
-      );
-    }
-
-    // check whether `enable` is still false
     await expect(
-      page.locator(
-        [
-          "_react=CustomLinkTable",
-          "tr:has-text('eetann|choomame|えーたん')",
-          "input[type=checkbox] ~ span",
-        ].join(" >> ")
-      )
-    ).not.toBeChecked();
+      page.locator("button:has-text('Manual Updating')")
+    ).toBeVisible();
   });
+
+  await testListUpdate(page);
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
@@ -186,5 +193,59 @@ test("CustomLink List", async ({ page, extensionId }) => {
         new RegExp(customLink)
       );
     }
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/index.html`);
+  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+
+  await test.step("Auto update", async () => {
+    // add
+    await page.getByTestId("open-popover-for-new-list").click();
+    await page
+      .locator("#customLinkListURL")
+      .fill(
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
+      );
+    await page
+      .locator(
+        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+      )
+      .click();
+    await page
+      .locator(
+        [
+          "_react=CustomLinkTable",
+          "tr:has-text('eetann|choomame|えーたん')",
+          "input[type=checkbox] ~ span",
+        ].join(" >> ")
+      )
+      .click();
+
+    // mock
+    await page.route(
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5",
+      async (route) => {
+        const mockRawData = readFileSync("./e2e/eetann-after-update.json5");
+        await route.fulfill({
+          body: mockRawData,
+        });
+      }
+    );
+
+    // background updating
+    let [background] = context.serviceWorkers();
+    if (!background) background = await context.waitForEvent("serviceworker");
+
+    background.evaluate(() => {
+      chrome.alarms.create("ChoomameCustomLinkUpdate", {
+        when: Date.now() + 100,
+      });
+    });
+
+    // check
+    await expect(
+      page.locator("button:has-text('Background Updating')")
+    ).toBeVisible();
+    await testListUpdate(page);
   });
 });

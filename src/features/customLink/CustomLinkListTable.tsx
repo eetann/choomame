@@ -20,21 +20,16 @@ declare module "@tanstack/table-core" {
   }
 }
 
-export type IsUpdatingListContextType = {
-  isUpdatingList: boolean;
-  setStartUpdatingList: React.Dispatch<React.SetStateAction<boolean>>;
-  setStopUpdatingList: React.Dispatch<React.SetStateAction<boolean>>;
+export type WhereUpdatingListContextType = {
+  whereUpdatingList: "" | "Background" | "Manual";
 };
 
-const defaultIsUpdatingListContext: IsUpdatingListContextType = {
-  isUpdatingList: false,
-  setStartUpdatingList: () => true,
-  setStopUpdatingList: () => false,
+const defaultWhereUpdatingListContext: WhereUpdatingListContextType = {
+  whereUpdatingList: "",
 };
 
-export const IsUpdatingListContext = createContext<IsUpdatingListContextType>(
-  defaultIsUpdatingListContext
-);
+export const WhereUpdatingListContext =
+  createContext<WhereUpdatingListContextType>(defaultWhereUpdatingListContext);
 
 const columnHelper = createColumnHelper<CustomLinkList>();
 
@@ -91,7 +86,7 @@ const columns: ColumnDef<CustomLinkList, any>[] = [
 const CustomLinkListTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const customLinkList = useSelector(selectCustomLinkList.selectAll);
-  const { isUpdatingList } = useContext(IsUpdatingListContext);
+  const { whereUpdatingList } = useContext(WhereUpdatingListContext);
 
   const tableProps: ReactTableProps<CustomLinkList> = {
     columns,
@@ -99,7 +94,7 @@ const CustomLinkListTable: React.FC = () => {
     meta: {
       removeCustomLinkList: (list_id: string) =>
         dispatch(removeOneCustomLinkList(list_id)),
-      isUpdatingList,
+      isUpdatingList: whereUpdatingList !== "",
     },
     pageSize: 10,
   };

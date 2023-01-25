@@ -3,7 +3,8 @@ import ResetButton from "../../common/ResetButton";
 import CustomLinkForm from "./CustomLinkForm";
 import CustomLinkListForm from "./CustomLinkListForm";
 import CustomLinkListTable, {
-  IsUpdatingListContext,
+  WhereUpdatingListContext,
+  WhereUpdatingListContextType,
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
@@ -36,23 +37,22 @@ import { useDispatch } from "react-redux";
 
 const CustomLinkTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isUpdatingList, setIsUpdatingList] = useState(false);
-
-  const setStartUpdatingList = () => setIsUpdatingList(true);
-  const setStopUpdatingList = () => setIsUpdatingList(false);
+  const [whereUpdatingList, setWhereUpdatingList] =
+    useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
 
   useEffect(() => {
     (async () => {
-      const isUpdating = await isBackgroundUpdatingCustomLink();
-      if (isUpdating) {
-        setStartUpdatingList();
+      const isBackgroundUpdating = await isBackgroundUpdatingCustomLink();
+      if (isBackgroundUpdating) {
+        setWhereUpdatingList("Background");
       }
     })();
-    isBackgroundUpdatingBucket.changeStream.subscribe((v) => {
+    isBackgroundUpdatingBucket.changeStream.subscribe(async (v) => {
       if (v.customLink?.newValue) {
-        setStartUpdatingList();
+        setWhereUpdatingList("Background");
       } else {
-        setStopUpdatingList();
+        await new Promise((s) => setTimeout(s, 3000));
+        setWhereUpdatingList("");
       }
     });
   }, []);
@@ -64,8 +64,10 @@ const CustomLinkTab: React.FC = () => {
 
   return (
     <Stack divider={<StackDivider />} spacing="10">
-      <IsUpdatingListContext.Provider
-        value={{ isUpdatingList, setStartUpdatingList, setStopUpdatingList }}
+      <WhereUpdatingListContext.Provider
+        value={{
+          whereUpdatingList,
+        }}
       >
         <Stack alignItems="start">
           <HStack>
@@ -82,13 +84,13 @@ const CustomLinkTab: React.FC = () => {
               leftIcon={<HiOutlineRefresh />}
               colorScheme="teal"
               onClick={async () => {
-                setStartUpdatingList();
+                setWhereUpdatingList("Manual");
                 await dispatch(updateManyCustomLinkList());
                 await new Promise((s) => setTimeout(s, 3000));
-                setStopUpdatingList();
+                setWhereUpdatingList("");
               }}
-              isLoading={isUpdatingList}
-              loadingText="Updating"
+              isLoading={whereUpdatingList !== ""}
+              loadingText={`${whereUpdatingList} Updating`}
             >
               Manual Update
             </Button>
@@ -98,7 +100,7 @@ const CustomLinkTab: React.FC = () => {
           </HStack>
           <CustomLinkListTable />
         </Stack>
-      </IsUpdatingListContext.Provider>
+      </WhereUpdatingListContext.Provider>
       <Stack>
         <HStack>
           <Icon as={HiOutlineLink} boxSize={5} />
