@@ -1,4 +1,4 @@
-import { Language } from "../features/languages/languages";
+import { Language } from "../features/languages/languagesSchema";
 import {
   generateParam,
   joinTbs,
@@ -6,7 +6,7 @@ import {
   parseTbs,
   SearchParam,
 } from "../features/param/param";
-import { Time } from "../features/times/times";
+import { Time } from "../features/times/timesSchema";
 import { getLink } from "./getLink";
 import { describe, expect, test } from "vitest";
 

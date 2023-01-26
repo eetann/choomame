@@ -5,7 +5,7 @@ export default defineManifest({
   name: "Choomame (Alpha)",
   description: "quick information at hand",
   version: "1.0.1",
-  permissions: ["unlimitedStorage", "storage"],
+  permissions: ["unlimitedStorage", "storage", "alarms"],
   background: { service_worker: "src/background/index.ts" },
   icons: {
     "16": "icons/icon-16x16.png",

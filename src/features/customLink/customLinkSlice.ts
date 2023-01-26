@@ -1,5 +1,9 @@
 import { RootState } from "../../app/store";
-import { customLinksBucket, customLinksOnInstalled } from "./customLink";
+import {
+  customLinksBucket,
+  customLinksOnInstalled,
+  updateCustomLinks,
+} from "./customLink";
 import {
   CustomLink,
   CustomLinksBucket,
@@ -82,8 +86,30 @@ export const addManyCustomLinks = createAsyncThunk(
 export const removeManyCustomLinks = createAsyncThunk(
   "customLink/removdeManyCustomLinks",
   async (customLinkIds: string[]) => {
-    customLinksBucket.remove(customLinkIds);
+    await customLinksBucket.remove(customLinkIds);
     return customLinkIds;
+  }
+);
+
+export const updateManyCustomLinks = createAsyncThunk(
+  "customLinks/updateManyCustomLinks",
+  async (
+    args: {
+      beforeCustomLinkBucket: CustomLinksBucket;
+      updateItems: CustomLink[];
+      list_id: string;
+    },
+    { dispatch }
+  ) => {
+    const deleteFunction = async (beforeOnlyIds: string[]) => {
+      await dispatch(removeManyCustomLinks(beforeOnlyIds));
+    };
+    return await updateCustomLinks(
+      args.beforeCustomLinkBucket,
+      args.updateItems,
+      args.list_id,
+      deleteFunction
+    );
   }
 );
 
@@ -153,6 +179,17 @@ export const customLinkSlice = createSlice({
       })
       .addCase(addManyCustomLinks.fulfilled, (state, action) => {
         customLinksAdapter.addMany(state, action.payload);
+        state.status = "idle";
+      })
+      // updateMany
+      .addCase(updateManyCustomLinks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateManyCustomLinks.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(updateManyCustomLinks.fulfilled, (state, action) => {
+        customLinksAdapter.upsertMany(state, action.payload);
         state.status = "idle";
       })
       // removeMany

@@ -4,6 +4,7 @@ import {
   customLinkListIdSchema,
   customLinkUrlSchema,
   initialCustomLinkUrls,
+  diffCustomLinks,
 } from "./customLinkSchema";
 import { describe, expect, test } from "vitest";
 
@@ -233,5 +234,36 @@ describe("customLinkUrl test", () => {
 
   test.each<string>(initialCustomLinkUrls)("[normal] %s", (url) => {
     expect(() => customLinkUrlSchema.parse(url)).not.toThrowError();
+  });
+});
+
+describe("diff customLinks", () => {
+  test("[normal]", () => {
+    const defaultCL = {
+      id: "abc",
+      name: "abc",
+      url: "https://www.google.com/search",
+      match: "javascript|js",
+      group: "abc",
+      enable: false,
+    };
+    const before = {
+      "target/same": { ...defaultCL, id: "target/same" },
+      "target/beforeOnly1": { ...defaultCL, id: "target/beforeOnly1" },
+    };
+    const after = {
+      "target/same": { ...defaultCL, id: "target/same" },
+      "target/afterOnly1": { ...defaultCL, id: "target/afterOnly1" },
+      "target/afterOnly2": { ...defaultCL, id: "target/afterOnly2" },
+    };
+    const expected = {
+      sameIds: new Set(["target/same"]),
+      beforeOnlyIds: ["target/beforeOnly1"],
+      afterOnlyBucket: {
+        "target/afterOnly1": { ...defaultCL, id: "target/afterOnly1" },
+        "target/afterOnly2": { ...defaultCL, id: "target/afterOnly2" },
+      },
+    };
+    expect(diffCustomLinks(before, after)).toEqual(expected);
   });
 });

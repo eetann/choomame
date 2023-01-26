@@ -4,21 +4,26 @@ import {
   customLinkListOnInstalled,
   customLinksBucket,
   fetchCustomLinkUrl,
+  updateCustomLinkList,
 } from "./customLink";
 import {
   CustomLinkList,
   CustomLinkListBucket,
+  CustomLinks,
+  CustomLinksBucket,
   customLinkUrlSchema,
 } from "./customLinkSchema";
 import {
   addManyCustomLinks,
   initCustomLinks,
   removeManyCustomLinks,
+  updateManyCustomLinks,
 } from "./customLinkSlice";
 import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
+  Update,
 } from "@reduxjs/toolkit";
 
 export const initCustomLinkList = createAsyncThunk<CustomLinkListBucket>(
@@ -93,6 +98,27 @@ export const removeOneCustomLinkList = createAsyncThunk(
   }
 );
 
+export const updateManyCustomLinkList = createAsyncThunk(
+  "customLinkList/updateManyCustomLinkList",
+  async (_, { dispatch }): Promise<Update<CustomLinkList>[]> => {
+    const updateCustomLinksFunction = async (
+      beforeCustomLinkBucket: CustomLinksBucket,
+      updateItems: CustomLinks,
+      list_id: string
+    ) => {
+      await dispatch(
+        updateManyCustomLinks({
+          beforeCustomLinkBucket,
+          updateItems,
+          list_id,
+        })
+      );
+      return [];
+    };
+    return await updateCustomLinkList(updateCustomLinksFunction);
+  }
+);
+
 const initialState = customLinkListAdapter.getInitialState({
   status: "idle",
   errorMessage: "",
@@ -157,6 +183,20 @@ export const customLinkListSlice = createSlice({
       })
       .addCase(addOneCustomLinkList.fulfilled, (state, action) => {
         customLinkListAdapter.addOne(state, action.payload);
+        state.status = "idle";
+        state.errorMessage = "";
+      })
+      // updateMany
+      .addCase(updateManyCustomLinkList.pending, (state) => {
+        state.status = "loading";
+        state.errorMessage = "";
+      })
+      .addCase(updateManyCustomLinkList.rejected, (state, action) => {
+        state.status = "failed";
+        state.errorMessage = action.error.message ?? "";
+      })
+      .addCase(updateManyCustomLinkList.fulfilled, (state, action) => {
+        customLinkListAdapter.updateMany(state, action.payload);
         state.status = "idle";
         state.errorMessage = "";
       })
