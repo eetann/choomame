@@ -74,9 +74,9 @@ const CustomLinkTab: React.FC = () => {
             <Icon as={HiOutlineListBullet} boxSize={5} />
             <Heading size="md">List</Heading>
             <Tooltip label="You can add a list of custom links. It is automatically and regularly updated.">
-              <span>
+              <Box as="span" lineHeight="1">
                 <Icon as={HiOutlineQuestionMarkCircle} boxSize={5} />
-              </span>
+              </Box>
             </Tooltip>
           </HStack>
           <HStack justifyContent="space-between" width="100%">
