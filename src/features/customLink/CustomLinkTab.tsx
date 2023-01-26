@@ -23,12 +23,18 @@ import {
   Heading,
   HStack,
   Icon,
+  Spacer,
   Stack,
   StackDivider,
   Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { HiOutlineLink, HiOutlineRefresh } from "react-icons/hi";
+import {
+  HiOutlineDownload,
+  HiOutlineLink,
+  HiOutlineRefresh,
+  HiOutlineUpload,
+} from "react-icons/hi";
 import {
   HiOutlineListBullet,
   HiOutlineQuestionMarkCircle,
@@ -106,7 +112,26 @@ const CustomLinkTab: React.FC = () => {
           <Icon as={HiOutlineLink} boxSize={5} />
           <Heading size="md">Links</Heading>
         </HStack>
-        <HStack justifyContent="end">
+        <HStack justifyContent="space-between">
+          <Button
+            leftIcon={<HiOutlineDownload />}
+            colorScheme="teal"
+            onClick={async () => {
+              console.log("hoge");
+            }}
+          >
+            Export
+          </Button>
+          <Button
+            leftIcon={<HiOutlineUpload />}
+            colorScheme="teal"
+            onClick={async () => {
+              console.log("hoge");
+            }}
+          >
+            Import
+          </Button>
+          <Spacer />
           <Box>
             <CustomLinkForm />
           </Box>
