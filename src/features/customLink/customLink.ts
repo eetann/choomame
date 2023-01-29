@@ -1,8 +1,8 @@
 import {
   CustomLinksBucket,
   CustomLinkListBucket,
-  FetchCustomLinkUrl,
-  fetchCustomLinkUrlSchema,
+  CustomLinkJson,
+  customLinkJsonSchema,
   initialCustomLinkUrls,
   CustomLinks,
   diffCustomLinks,
@@ -34,9 +34,7 @@ export async function isBackgroundUpdatingCustomLink() {
   return bucket.customLink;
 }
 
-export async function fetchCustomLinkUrl(
-  url: string
-): Promise<FetchCustomLinkUrl> {
+export async function fetchCustomLinkUrl(url: string): Promise<CustomLinkJson> {
   let response;
   try {
     response = await (await fetch(url, { cache: "no-store" })).text();
@@ -44,11 +42,11 @@ export async function fetchCustomLinkUrl(
     throw new Error(`fetch failed: ${url}`);
   }
   try {
-    response = JSON5.parse<FetchCustomLinkUrl>(response);
+    response = JSON5.parse<CustomLinkJson>(response);
   } catch (e) {
     throw new Error("The JSON5 in this URL is an invalid format.");
   }
-  const result = fetchCustomLinkUrlSchema.safeParse(response);
+  const result = customLinkJsonSchema.safeParse(response);
   if (!result.success) {
     throw new Error(result.error.issues[0].message);
   }
@@ -200,6 +198,42 @@ export async function updateCustomLinkListonAlarm() {
     return [];
   };
   await updateCustomLinkList(updateCustomLinksFunction);
+}
+
+async function getUserCustomLinks(): Promise<CustomLinks> {
+  const keys = await customLinksBucket.getKeys();
+  const userKeys = keys.filter((key) => key.startsWith("user/"));
+  const userCustomLinksBucket = await customLinksBucket.get(userKeys);
+  return Object.values(userCustomLinksBucket as CustomLinksBucket);
+}
+
+function customLinksToJson5(customLinks: CustomLinks): string {
+  const customLinkJson: CustomLinkJson = {
+    id: "user",
+    name: "user",
+    links: customLinks,
+  };
+  return JSON5.stringify(customLinkJson, { space: 2 });
+}
+
+export async function createUserCustomLinksJson5() {
+  // NOTE: showSaveFilePicker is experimental API.
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
+  const dialog = await window.showSaveFilePicker({
+    suggestedName: "choomame-custom-links.json5",
+    types: [{ description: "JSON5", accept: { "plain/text": [".json5"] } }],
+  });
+
+  const customLinks = await getUserCustomLinks();
+  const customLinkJson5String = customLinksToJson5(customLinks);
+  const blob = new Blob([customLinkJson5String], {
+    type: "plain/text",
+  });
+
+  const stream = await dialog.createWritable();
+  await stream.write(blob);
+  await stream.close();
+  console.log(dialog.name);
 }
 
 /**

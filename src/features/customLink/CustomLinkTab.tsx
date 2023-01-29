@@ -8,6 +8,7 @@ import CustomLinkListTable, {
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
+  createUserCustomLinksJson5,
   isBackgroundUpdatingBucket,
   isBackgroundUpdatingCustomLink,
 } from "./customLink";
@@ -117,7 +118,7 @@ const CustomLinkTab: React.FC = () => {
             leftIcon={<HiOutlineDownload />}
             colorScheme="teal"
             onClick={async () => {
-              console.log("hoge");
+              await createUserCustomLinksJson5();
             }}
           >
             Export
