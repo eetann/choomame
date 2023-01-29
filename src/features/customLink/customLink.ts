@@ -1,3 +1,4 @@
+import { useDownloader } from "../../common/useDownloader";
 import {
   CustomLinksBucket,
   CustomLinkListBucket,
@@ -216,24 +217,20 @@ function customLinksToJson5(customLinks: CustomLinks): string {
   return JSON5.stringify(customLinkJson, { space: 2 });
 }
 
-export async function createUserCustomLinksJson5() {
-  // NOTE: showSaveFilePicker is experimental API.
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
-  const dialog = await window.showSaveFilePicker({
-    suggestedName: "choomame-custom-links.json5",
-    types: [{ description: "JSON5", accept: { "plain/text": [".json5"] } }],
-  });
+export function useExportUserCustomLinks() {
+  const download = useDownloader();
+  const exportUserCustomLinks = async () => {
+    const filename = "choomame-custom-links.json5";
 
-  const customLinks = await getUserCustomLinks();
-  const customLinkJson5String = customLinksToJson5(customLinks);
-  const blob = new Blob([customLinkJson5String], {
-    type: "plain/text",
-  });
+    const customLinks = await getUserCustomLinks();
+    const customLinkJson5String = customLinksToJson5(customLinks);
+    const blob = new Blob([customLinkJson5String], {
+      type: "plain/text",
+    });
 
-  const stream = await dialog.createWritable();
-  await stream.write(blob);
-  await stream.close();
-  console.log(dialog.name);
+    download(blob, filename);
+  };
+  return exportUserCustomLinks;
 }
 
 /**

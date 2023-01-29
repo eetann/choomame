@@ -8,9 +8,9 @@ import CustomLinkListTable, {
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
-  createUserCustomLinksJson5,
   isBackgroundUpdatingBucket,
   isBackgroundUpdatingCustomLink,
+  useExportUserCustomLinks,
 } from "./customLink";
 import {
   fetchAllCustomLinkList,
@@ -46,6 +46,7 @@ const CustomLinkTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [whereUpdatingList, setWhereUpdatingList] =
     useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
+  const exportUserCustomLinks = useExportUserCustomLinks();
 
   useEffect(() => {
     (async () => {
@@ -88,7 +89,7 @@ const CustomLinkTab: React.FC = () => {
           </HStack>
           <HStack justifyContent="space-between" width="100%">
             <Button
-              leftIcon={<HiOutlineRefresh />}
+              leftIcon={<HiOutlineRefresh fontSize="24" />}
               colorScheme="teal"
               onClick={async () => {
                 setWhereUpdatingList("Manual");
@@ -115,16 +116,14 @@ const CustomLinkTab: React.FC = () => {
         </HStack>
         <HStack justifyContent="space-between">
           <Button
-            leftIcon={<HiOutlineDownload />}
+            leftIcon={<HiOutlineDownload fontSize="24" />}
             colorScheme="teal"
-            onClick={async () => {
-              await createUserCustomLinksJson5();
-            }}
+            onClick={() => exportUserCustomLinks()}
           >
             Export
           </Button>
           <Button
-            leftIcon={<HiOutlineUpload />}
+            leftIcon={<HiOutlineUpload fontSize="24" />}
             colorScheme="teal"
             onClick={async () => {
               console.log("hoge");
