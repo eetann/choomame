@@ -1,4 +1,7 @@
+import { customLinkJsonSchema } from "../src/features/customLink/customLinkSchema.js";
 import { test, expect } from "./fixtures.js";
+import fs from "fs";
+import JSON5 from "json5";
 
 test("CustomLinks", async ({ page, extensionId }) => {
   await page.goto("https://www.google.com/search?q=javascript+foreach");
@@ -111,6 +114,42 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+
+  await test.step("export customLink", async () => {
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page
+        .locator(
+          ["_react=CustomLinkTab", "button:has-text('Export')"].join(" >> ")
+        )
+        .click(),
+    ]);
+    const suggestedFileName = download.suggestedFilename();
+    const filePath = `test-results/${suggestedFileName}`;
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    await download.saveAs(filePath);
+    expect(fs.existsSync(filePath)).toBeTruthy();
+
+    const actualFile = fs.readFileSync(filePath);
+    const actualJson5 = JSON5.parse(actualFile.toString());
+    const result = customLinkJsonSchema.parse(actualJson5);
+    expect(result.id).toBe("user");
+    expect(result.name).toBe("user");
+    const [actualCustomLink] = result.links.filter(
+      (item) => item.name === "eetann GitHub"
+    );
+    expect(actualCustomLink.id).toMatch(/^user\/.*/);
+    expect(actualCustomLink.group).toBe("Test group");
+    expect(actualCustomLink.match).toBe(".*");
+    expect(actualCustomLink.url).toBe("https://github.com/eetann");
+    expect(actualCustomLink.enable).toBe(true);
+  });
 
   await test.step("remove customLink", async () => {
     await page
