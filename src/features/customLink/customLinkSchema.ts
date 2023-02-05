@@ -59,18 +59,18 @@ export type CustomLinkList = z.infer<typeof customLinkListSchema>;
 
 export type CustomLinkListBucket = Record<string, CustomLinkList>;
 
-export const fetchCustomLinkUrlSchema = z.object({
+export const customLinkJsonSchema = z.object({
   id: customLinkListIdSchema,
   name: messageStringMinMax("list's name", 1, 50),
   links: customLinksSchema,
 });
 
-export type FetchCustomLinkUrl = z.infer<typeof fetchCustomLinkUrlSchema>;
+export type CustomLinkJson = z.infer<typeof customLinkJsonSchema>;
 
 export let initialCustomLinkUrls = [
   "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
 ];
-if (import.meta.env.VITE_E2E) {
+if (import.meta.env && import.meta.env.VITE_E2E) {
   initialCustomLinkUrls = [
     "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/choomame-e2e.json5",
   ];

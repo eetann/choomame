@@ -8,27 +8,36 @@ import CustomLinkListTable, {
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
+  importUserCustomLink,
   isBackgroundUpdatingBucket,
   isBackgroundUpdatingCustomLink,
+  useExportUserCustomLinks,
 } from "./customLink";
 import {
   fetchAllCustomLinkList,
   initCustomLinkAll,
   updateManyCustomLinkList,
 } from "./customLinkListSlice";
-import { fetchAllCustomLinks } from "./customLinkSlice";
+import { CustomLinks } from "./customLinkSchema";
+import { addManyCustomLinks, fetchAllCustomLinks } from "./customLinkSlice";
 import {
   Box,
   Button,
   Heading,
   HStack,
   Icon,
+  Spacer,
   Stack,
   StackDivider,
   Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { HiOutlineLink, HiOutlineRefresh } from "react-icons/hi";
+import {
+  HiOutlineDownload,
+  HiOutlineLink,
+  HiOutlineRefresh,
+  HiOutlineUpload,
+} from "react-icons/hi";
 import {
   HiOutlineListBullet,
   HiOutlineQuestionMarkCircle,
@@ -39,6 +48,10 @@ const CustomLinkTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [whereUpdatingList, setWhereUpdatingList] =
     useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
+  const exportUserCustomLinks = useExportUserCustomLinks();
+  const addCustomLinks = async (items: CustomLinks, list_id: string) => {
+    await dispatch(addManyCustomLinks({ items, list_id }));
+  };
 
   useEffect(() => {
     (async () => {
@@ -74,14 +87,14 @@ const CustomLinkTab: React.FC = () => {
             <Icon as={HiOutlineListBullet} boxSize={5} />
             <Heading size="md">List</Heading>
             <Tooltip label="You can add a list of custom links. It is automatically and regularly updated.">
-              <span>
+              <Box as="span" lineHeight="1">
                 <Icon as={HiOutlineQuestionMarkCircle} boxSize={5} />
-              </span>
+              </Box>
             </Tooltip>
           </HStack>
           <HStack justifyContent="space-between" width="100%">
             <Button
-              leftIcon={<HiOutlineRefresh />}
+              leftIcon={<HiOutlineRefresh fontSize="24" />}
               colorScheme="teal"
               onClick={async () => {
                 setWhereUpdatingList("Manual");
@@ -106,7 +119,24 @@ const CustomLinkTab: React.FC = () => {
           <Icon as={HiOutlineLink} boxSize={5} />
           <Heading size="md">Links</Heading>
         </HStack>
-        <HStack justifyContent="end">
+        <HStack justifyContent="space-between">
+          <Button
+            leftIcon={<HiOutlineDownload fontSize="24" />}
+            colorScheme="teal"
+            onClick={() => exportUserCustomLinks()}
+          >
+            Export
+          </Button>
+          <Button
+            leftIcon={<HiOutlineUpload fontSize="24" />}
+            colorScheme="teal"
+            onClick={async () => {
+              await importUserCustomLink(addCustomLinks);
+            }}
+          >
+            Import
+          </Button>
+          <Spacer />
           <Box>
             <CustomLinkForm />
           </Box>
