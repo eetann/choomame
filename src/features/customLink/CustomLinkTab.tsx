@@ -8,6 +8,7 @@ import CustomLinkListTable, {
 } from "./CustomLinkListTable";
 import CustomLinkTable from "./CustomLinkTable";
 import {
+  importUserCustomLink,
   isBackgroundUpdatingBucket,
   isBackgroundUpdatingCustomLink,
   useExportUserCustomLinks,
@@ -17,7 +18,8 @@ import {
   initCustomLinkAll,
   updateManyCustomLinkList,
 } from "./customLinkListSlice";
-import { fetchAllCustomLinks } from "./customLinkSlice";
+import { CustomLinks } from "./customLinkSchema";
+import { addManyCustomLinks, fetchAllCustomLinks } from "./customLinkSlice";
 import {
   Box,
   Button,
@@ -47,6 +49,9 @@ const CustomLinkTab: React.FC = () => {
   const [whereUpdatingList, setWhereUpdatingList] =
     useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
   const exportUserCustomLinks = useExportUserCustomLinks();
+  const addCustomLinks = async (items: CustomLinks, list_id: string) => {
+    await dispatch(addManyCustomLinks({ items, list_id }));
+  };
 
   useEffect(() => {
     (async () => {
@@ -126,7 +131,7 @@ const CustomLinkTab: React.FC = () => {
             leftIcon={<HiOutlineUpload fontSize="24" />}
             colorScheme="teal"
             onClick={async () => {
-              console.log("hoge");
+              await importUserCustomLink(addCustomLinks);
             }}
           >
             Import

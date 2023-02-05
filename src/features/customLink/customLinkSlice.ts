@@ -6,6 +6,7 @@ import {
 } from "./customLink";
 import {
   CustomLink,
+  CustomLinks,
   CustomLinksBucket,
   CustomLinkWithoutId,
 } from "./customLinkSchema";
@@ -72,10 +73,12 @@ export const addOneCustomLink = createAsyncThunk(
 
 export const addManyCustomLinks = createAsyncThunk(
   "customLinks/addManyCustomLinks",
-  async (args: { items: CustomLink[]; list_id: string }) => {
+  async (args: { items: CustomLinks; list_id: string }) => {
     const customLinks = {} as CustomLinksBucket;
     for (const item of args.items) {
-      item.id = `${args.list_id}/${item.id}`;
+      if (!item.id.startsWith(args.list_id)) {
+        item.id = `${args.list_id}/${item.id}`;
+      }
       customLinks[item.id] = item;
     }
     customLinksBucket.set(customLinks);

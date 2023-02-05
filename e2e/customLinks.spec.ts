@@ -3,6 +3,8 @@ import { test, expect } from "./fixtures.js";
 import fs from "fs";
 import JSON5 from "json5";
 
+const filePath = `test-results/choomame-custom-links.json5`;
+
 test("CustomLinks", async ({ page, extensionId }) => {
   await page.goto("https://www.google.com/search?q=javascript+foreach");
 
@@ -124,8 +126,6 @@ test("CustomLinks", async ({ page, extensionId }) => {
         )
         .click(),
     ]);
-    const suggestedFileName = download.suggestedFilename();
-    const filePath = `test-results/${suggestedFileName}`;
     if (fs.existsSync(filePath)) {
       try {
         fs.unlinkSync(filePath);
@@ -234,6 +234,25 @@ test("CustomLinks", async ({ page, extensionId }) => {
     // check for toggle
     await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
       new RegExp("Homepage")
+    );
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/index.html`);
+  await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
+
+  await test.step("import customLink", async () => {
+    const [fileChooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page
+        .locator(
+          ["_react=CustomLinkTab", "button:has-text('Import')"].join(" >> ")
+        )
+        .click(),
+    ]);
+    await fileChooser.setFiles(filePath);
+
+    await expect(page.locator("_react=CustomLinkTable")).toHaveText(
+      /Test group/
     );
   });
 });
