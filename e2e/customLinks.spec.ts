@@ -1,4 +1,4 @@
-import { customLinkJsonSchema } from "../src/features/customLink/customLinkSchema.js";
+import { customLinkBackupSchema } from "../src/features/customLink/customLinkSchema.js";
 import { test, expect } from "./fixtures.js";
 import fs from "fs";
 import JSON5 from "json5";
@@ -138,7 +138,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
     const actualFile = fs.readFileSync(filePath);
     const actualJson5 = JSON5.parse(actualFile.toString());
-    const result = customLinkJsonSchema.parse(actualJson5);
+    const result = customLinkBackupSchema.parse(actualJson5);
     expect(result.id).toBe("user");
     expect(result.name).toBe("user");
     const [actualCustomLink] = result.links.filter(
@@ -149,6 +149,14 @@ test("CustomLinks", async ({ page, extensionId }) => {
     expect(actualCustomLink.match).toBe(".*");
     expect(actualCustomLink.url).toBe("https://github.com/eetann");
     expect(actualCustomLink.enable).toBe(true);
+    const [actualList1] = result.list.filter(
+      (list) =>
+        list.url ===
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/choomame-e2e.json5"
+    );
+    expect(actualList1.disableIds).toEqual([
+      "chroomame-e2e/typescript-homepage",
+    ]);
   });
 
   await test.step("remove customLink", async () => {

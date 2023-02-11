@@ -7,6 +7,8 @@ import {
   initialCustomLinkUrls,
   CustomLinks,
   diffCustomLinks,
+  CustomLinkBackupJson,
+  CustomLinkListBackup,
 } from "./customLinkSchema";
 import { getBucket } from "@extend-chrome/storage";
 import JSON5 from "json5";
@@ -213,11 +215,36 @@ async function getUserCustomLinks(): Promise<CustomLinks> {
   return Object.values(userCustomLinksBucket as CustomLinksBucket);
 }
 
-function customLinksToJson5(customLinks: CustomLinks): string {
-  const customLinkJson: CustomLinkJson = {
+function selectDisableIds(listId: string, customLinks: CustomLinksBucket) {
+  return Object.values(customLinks).flatMap((link) => {
+    if (link.id.startsWith(listId) && !link.enable) {
+      return link.id;
+    }
+    return [];
+  });
+}
+
+async function getCustomLinkListBackup(): Promise<CustomLinkListBackup> {
+  const listBucket = await customLinkListBucket.get();
+  const links = await customLinksBucket.get();
+  return await Promise.all(
+    Object.values(listBucket).map((list) => {
+      const listId = list.id;
+      const disableIds = selectDisableIds(listId, links);
+      return { url: list.url, disableIds };
+    })
+  );
+}
+
+function customLinksToJson5(
+  customLinks: CustomLinks,
+  customLinkList: CustomLinkListBackup
+): string {
+  const customLinkJson: CustomLinkBackupJson = {
     id: "user",
     name: "user",
     links: customLinks,
+    list: customLinkList,
   };
   return JSON5.stringify(customLinkJson, { space: 2 });
 }
@@ -228,7 +255,11 @@ export function useExportUserCustomLinks() {
     const filename = "choomame-custom-links.json5";
 
     const customLinks = await getUserCustomLinks();
-    const customLinkJson5String = customLinksToJson5(customLinks);
+    const customLinkListBackup = await getCustomLinkListBackup();
+    const customLinkJson5String = customLinksToJson5(
+      customLinks,
+      customLinkListBackup
+    );
     const blob = new Blob([customLinkJson5String], {
       type: "plain/text",
     });
