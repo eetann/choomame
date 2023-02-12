@@ -9,6 +9,7 @@ import {
   diffCustomLinks,
   CustomLinkBackupJson,
   CustomLinkListBackup,
+  customLinkBackupSchema,
 } from "./customLinkSchema";
 import { getBucket } from "@extend-chrome/storage";
 import JSON5 from "json5";
@@ -37,7 +38,7 @@ export async function isBackgroundUpdatingCustomLink() {
   return bucket.customLink;
 }
 
-function parseUserCustomLinks(customLinkJson5String: string): CustomLinkJson {
+function parseCustomLinks(customLinkJson5String: string): CustomLinkJson {
   let response;
   try {
     response = JSON5.parse<CustomLinkJson>(customLinkJson5String);
@@ -58,7 +59,7 @@ export async function fetchCustomLinkUrl(url: string): Promise<CustomLinkJson> {
   } catch (e) {
     throw new Error(`fetch failed: ${url}`);
   }
-  return parseUserCustomLinks(response);
+  return parseCustomLinks(response);
 }
 
 export async function customLinkListOnInstalled() {
@@ -269,8 +270,24 @@ export function useExportUserCustomLinks() {
   return exportUserCustomLinks;
 }
 
+function parseUserCustomLinks(
+  customLinkJson5String: string
+): CustomLinkBackupJson {
+  let response;
+  try {
+    response = JSON5.parse<CustomLinkBackupJson>(customLinkJson5String);
+  } catch (e) {
+    throw new Error("The JSON5 in this URL is an invalid format.");
+  }
+  const result = customLinkBackupSchema.safeParse(response);
+  if (!result.success) {
+    throw new Error(result.error.issues[0].message);
+  }
+  return result.data;
+}
+
 export async function importUserCustomLink(
-  addCustomLinks: (items: CustomLinks, list_id: string) => Promise<void>
+  addCustomLinks: (customLinkBackupJson: CustomLinkBackupJson) => Promise<void>
 ) {
   const inputFile = document.createElement("input");
   inputFile.type = "file";
@@ -287,7 +304,7 @@ export async function importUserCustomLink(
       reader.onload = async (event) => {
         const content = (event.target?.result as string) ?? "";
         const customLinkJson = parseUserCustomLinks(content);
-        await addCustomLinks(customLinkJson.links, customLinkJson.id);
+        await addCustomLinks(customLinkJson);
       };
     } catch (e) {
       return;

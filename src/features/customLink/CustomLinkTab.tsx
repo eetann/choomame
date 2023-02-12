@@ -16,9 +16,10 @@ import {
 import {
   fetchAllCustomLinkList,
   initCustomLinkAll,
+  restoreCustomLink,
   updateManyCustomLinkList,
 } from "./customLinkListSlice";
-import { CustomLinks } from "./customLinkSchema";
+import { CustomLinkBackupJson } from "./customLinkSchema";
 import { addManyCustomLinks, fetchAllCustomLinks } from "./customLinkSlice";
 import {
   Box,
@@ -49,8 +50,14 @@ const CustomLinkTab: React.FC = () => {
   const [whereUpdatingList, setWhereUpdatingList] =
     useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
   const exportUserCustomLinks = useExportUserCustomLinks();
-  const addCustomLinks = async (items: CustomLinks, list_id: string) => {
-    await dispatch(addManyCustomLinks({ items, list_id }));
+  const addCustomLinks = async (customLinkBackupJson: CustomLinkBackupJson) => {
+    await dispatch(
+      addManyCustomLinks({
+        items: customLinkBackupJson.links,
+        list_id: customLinkBackupJson.id,
+      })
+    );
+    await dispatch(restoreCustomLink(customLinkBackupJson));
   };
 
   useEffect(() => {
@@ -120,22 +127,6 @@ const CustomLinkTab: React.FC = () => {
           <Heading size="md">Links</Heading>
         </HStack>
         <HStack justifyContent="space-between">
-          <Button
-            leftIcon={<HiOutlineDownload fontSize="24" />}
-            colorScheme="teal"
-            onClick={() => exportUserCustomLinks()}
-          >
-            Export
-          </Button>
-          <Button
-            leftIcon={<HiOutlineUpload fontSize="24" />}
-            colorScheme="teal"
-            onClick={async () => {
-              await importUserCustomLink(addCustomLinks);
-            }}
-          >
-            Import
-          </Button>
           <Spacer />
           <Box>
             <CustomLinkForm />
@@ -143,7 +134,26 @@ const CustomLinkTab: React.FC = () => {
         </HStack>
         <CustomLinkTable />
       </Stack>
-      <ResetButton name="Custom Link" action={initCustomLinkAll} />
+      <HStack justifyContent="space-between">
+        <Button
+          leftIcon={<HiOutlineDownload fontSize="24" />}
+          colorScheme="teal"
+          onClick={() => exportUserCustomLinks()}
+        >
+          Export
+        </Button>
+        <Button
+          leftIcon={<HiOutlineUpload fontSize="24" />}
+          colorScheme="teal"
+          onClick={async () => {
+            await importUserCustomLink(addCustomLinks);
+          }}
+        >
+          Import
+        </Button>
+        <Spacer />
+        <ResetButton name="Custom Link" action={initCustomLinkAll} />
+      </HStack>
     </Stack>
   );
 };

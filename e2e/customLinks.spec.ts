@@ -259,8 +259,26 @@ test("CustomLinks", async ({ page, extensionId }) => {
     ]);
     await fileChooser.setFiles(filePath);
 
-    await expect(page.locator("_react=CustomLinkTable")).toHaveText(
-      /Test group/
-    );
+    await test.step("check @ option page", async () => {
+      // restore user item
+      await expect(page.locator("_react=CustomLinkTable")).toHaveText(
+        /Test group/
+      );
+      // restore list
+      await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+        /choomame-e2e.json5/
+      );
+
+      // disable
+      await expect(
+        page.locator(
+          [
+            "_react=CustomLinkTable",
+            "tr:has-text('Homepage')",
+            "input[type=checkbox] ~ span",
+          ].join(" >> ")
+        )
+      ).not.toBeChecked();
+    });
   });
 });

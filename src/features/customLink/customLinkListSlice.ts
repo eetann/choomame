@@ -7,6 +7,7 @@ import {
   updateCustomLinkList,
 } from "./customLink";
 import {
+  CustomLinkBackupJson,
   CustomLinkList,
   CustomLinkListBucket,
   CustomLinks,
@@ -15,6 +16,7 @@ import {
 } from "./customLinkSchema";
 import {
   addManyCustomLinks,
+  disableManyCustomLink,
   initCustomLinks,
   removeManyCustomLinks,
   updateManyCustomLinks,
@@ -116,6 +118,18 @@ export const updateManyCustomLinkList = createAsyncThunk(
       return [];
     };
     return await updateCustomLinkList(updateCustomLinksFunction);
+  }
+);
+
+export const restoreCustomLink = createAsyncThunk(
+  "customLinkList/restoreCustomLink",
+  async (customLinkBackupJson: CustomLinkBackupJson, { dispatch }) => {
+    for (const list of customLinkBackupJson.list) {
+      await dispatch(addOneCustomLinkList(list.url));
+      await dispatch(disableManyCustomLink(list.disableIds));
+    }
+    const bucket = await customLinkListBucket.get();
+    return bucket;
   }
 );
 
