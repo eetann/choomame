@@ -8,8 +8,10 @@ function messageStringMinMax(variable: string, min: number, max: number) {
     });
 }
 
+const customLinkItemIdSchema = messageStringMinMax("custom link id", 1, 50);
+
 export const customLinkSchema = z.object({
-  id: messageStringMinMax("custom link id", 1, 50),
+  id: customLinkItemIdSchema,
   name: messageStringMinMax("custom link name", 1, 50),
   url: z
     .string()
@@ -66,6 +68,24 @@ export const customLinkJsonSchema = z.object({
 });
 
 export type CustomLinkJson = z.infer<typeof customLinkJsonSchema>;
+
+const customLinkListBackupSchema = z.array(
+  z.object({
+    url: customLinkUrlSchema,
+    disableIds: z.array(customLinkItemIdSchema),
+  })
+);
+
+export type CustomLinkListBackup = z.infer<typeof customLinkListBackupSchema>;
+
+export const customLinkBackupSchema = z.object({
+  id: customLinkListIdSchema,
+  name: messageStringMinMax("list's name", 1, 50),
+  links: customLinksSchema,
+  list: customLinkListBackupSchema,
+});
+
+export type CustomLinkBackupJson = z.infer<typeof customLinkBackupSchema>;
 
 export let initialCustomLinkUrls = [
   "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",

@@ -60,6 +60,24 @@ export const toggleOneCustomLink = createAsyncThunk(
   }
 );
 
+export const disableManyCustomLink = createAsyncThunk(
+  "customLinks/disableManyCustomLink",
+  async (disableIds: string[]) => {
+    const bucket = await customLinksBucket.get();
+    return await Promise.all(
+      disableIds.flatMap((id) => {
+        const item = bucket[id];
+        if (!item) {
+          return [];
+        }
+        const customLink: CustomLink = { ...item, enable: false };
+        customLinksBucket.set({ [customLink.id]: customLink });
+        return { id: customLink.id, changes: customLink };
+      })
+    );
+  }
+);
+
 export const addOneCustomLink = createAsyncThunk(
   "customLinks/addOneCustomLink",
   async (item: CustomLinkWithoutId) => {
@@ -160,6 +178,17 @@ export const customLinkSlice = createSlice({
           id: action.payload.id,
           changes: action.payload,
         });
+        state.status = "idle";
+      })
+      // disable enable
+      .addCase(disableManyCustomLink.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(disableManyCustomLink.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(disableManyCustomLink.fulfilled, (state, action) => {
+        customLinksAdapter.updateMany(state, action.payload);
         state.status = "idle";
       })
       // addOne
