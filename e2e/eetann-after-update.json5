@@ -1,7 +1,7 @@
 {
   id: "eetann-e2e",
   name: "eetann-E2E-after",
-  links: [
+  items: [
     {
       id: "note",
       name: "note",

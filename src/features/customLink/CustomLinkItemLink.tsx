@@ -1,6 +1,6 @@
 import { Param } from "../param/param";
 import {
-  customLinksBucket,
+  customLinkItemBucket,
   toGoogleWithUrl,
   toMatchWithDelimiter,
 } from "./customLink";
@@ -12,15 +12,15 @@ type Props = {
   param: Param;
 };
 
-const CustomLinksLink: React.FC<Props> = ({ param }) => {
-  const [linksByGroup, setLinksByGroup] = useState<
+const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
+  const [itemsByGroup, setItemsByGroup] = useState<
     Record<string, JSX.Element[]>
   >({});
 
   useEffect(() => {
     (async () => {
-      const bucket = await customLinksBucket.get();
-      const links: Record<string, JSX.Element[]> = {};
+      const bucket = await customLinkItemBucket.get();
+      const groupItems: Record<string, JSX.Element[]> = {};
       Object.values(bucket).forEach((customLink) => {
         if (!customLink.enable) {
           return;
@@ -32,12 +32,12 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
         }
 
         const { group } = customLink;
-        links[group] = links[group] ?? [];
+        groupItems[group] = groupItems[group] ?? [];
 
         // replace %s to keyword
         const keyword = encodeURIComponent(param.q.replace(query, "").trim());
         if (/%s/.test(customLink.url)) {
-          links[group].push(
+          groupItems[group].push(
             <Link
               key={customLink.id}
               href={customLink.url.replace(/%s/, keyword)}
@@ -51,7 +51,7 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
           );
           return;
         }
-        links[group].push(
+        groupItems[group].push(
           <HStack key={customLink.id} spacing="3">
             <Link
               href={customLink.url}
@@ -76,13 +76,13 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
           </HStack>
         );
       });
-      setLinksByGroup(links);
+      setItemsByGroup(groupItems);
     })();
   }, [param.q]);
 
   return (
     <VStack
-      id="choomameCustomLinksLink"
+      id="choomameCustomItemLink"
       className="no-drag-area"
       cursor="auto"
       mb="2"
@@ -112,17 +112,17 @@ const CustomLinksLink: React.FC<Props> = ({ param }) => {
         },
       }}
     >
-      {Object.entries(linksByGroup).map(([group, links]) => (
+      {Object.entries(itemsByGroup).map(([group, items]) => (
         <Box key={group}>
           <Heading size="xs" mt="2" mb="1">
             {group}
           </Heading>
           <VStack alignItems="start" spacing="2">
-            {links}
+            {items}
           </VStack>
         </Box>
       ))}
     </VStack>
   );
 };
-export default CustomLinksLink;
+export default CustomLinkItemLink;

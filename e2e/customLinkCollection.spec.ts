@@ -2,13 +2,13 @@ import { test, expect } from "./fixtures.js";
 import { Page } from "@playwright/test";
 import { readFileSync } from "fs";
 
-async function testListUpdate(page: Page) {
+async function testCollectionUpdate(page: Page) {
   await test.step("check @ option page", async () => {
-    // list
-    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann-E2E-before/
-    );
-    await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+    // Collection
+    await expect(
+      page.locator("_react=CustomLinkCollectionTable")
+    ).not.toHaveText(/eetann-E2E-before/);
+    await expect(page.locator("_react=CustomLinkCollectionTable")).toHaveText(
       /eetann-E2E-after/
     );
     // customLink
@@ -41,7 +41,7 @@ async function testListUpdate(page: Page) {
 
 test.beforeAll(async ({ context }) => {
   await context.route(
-    "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5",
+    "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5",
     async (route) => {
       const mockRawData = readFileSync("./e2e/eetann-before-update.json5");
       await route.fulfill({
@@ -51,11 +51,12 @@ test.beforeAll(async ({ context }) => {
   );
 });
 
-test("CustomLink List", async ({ page, extensionId, context }) => {
+test("CustomLink Collection", async ({ page, extensionId, context }) => {
+  await page.waitForTimeout(3000);
   await page.goto("https://www.google.com/search?q=typescript+record");
 
   await test.step("onInstalled", async () => {
-    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).toHaveText(
       new RegExp("Homepage")
     );
   });
@@ -64,46 +65,52 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
 
   await test.step("error handling: zod schema", async () => {
-    await page.getByTestId("open-popover-for-new-list").click();
-    await page.locator("#customLinkListURL").fill("aaaa");
+    await page.getByTestId("open-popover-for-new-collection").click();
+    await page.locator("#customLinkCollectionURL").fill("aaaa");
     await page
       .locator(
-        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+        ["_react=CustomLinkCollectionForm", "button:has-text('Save')"].join(
+          " >> "
+        )
       )
       .click();
-    await expect(page.locator("#customLinkListURL ~ div")).toHaveText(
-      /list's URL is invalid/
+    await expect(page.locator("#customLinkCollectionURL ~ div")).toHaveText(
+      /Collection URL is invalid/
     );
   });
 
   await test.step("error handling: invalid JSON5 format", async () => {
     await page
-      .locator("#customLinkListURL")
+      .locator("#customLinkCollectionURL")
       .fill(
-        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5555"
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/developer.json5555"
       );
     await page
       .locator(
-        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+        ["_react=CustomLinkCollectionForm", "button:has-text('Save')"].join(
+          " >> "
+        )
       )
       .click();
-    await expect(page.locator("#customLinkListURL ~ div")).toHaveText(
+    await expect(page.locator("#customLinkCollectionURL ~ div")).toHaveText(
       /The JSON5 in this URL is an invalid format/
     );
   });
 
-  await test.step("add list", async () => {
+  await test.step("add Collection", async () => {
     await page
-      .locator("#customLinkListURL")
+      .locator("#customLinkCollectionURL")
       .fill(
-        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5"
       );
     await page
       .locator(
-        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+        ["_react=CustomLinkCollectionForm", "button:has-text('Save')"].join(
+          " >> "
+        )
       )
       .click();
-    await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+    await expect(page.locator("_react=CustomLinkCollectionTable")).toHaveText(
       /eetann-E2E-before/
     );
     for (const url of [
@@ -118,9 +125,9 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
 
   await test.step("check @ content script", async () => {
     await page.goto("https://www.google.com/search?q=eetann");
-    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(/eetann/);
+    await expect(page.locator("#choomameCustomItemLink")).toHaveText(/eetann/);
     for (const customLink of ["Portfolio", "GitHub"]) {
-      await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+      await expect(page.locator("#choomameCustomItemLink")).toHaveText(
         new RegExp(customLink)
       );
     }
@@ -129,7 +136,7 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
 
-  await test.step("update list", async () => {
+  await test.step("update Collection", async () => {
     // to check `enable` status
     await page
       .locator(
@@ -141,7 +148,7 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
       )
       .click();
     await page.route(
-      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5",
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5",
       async (route) => {
         const mockRawData = readFileSync("./e2e/eetann-after-update.json5");
         await route.fulfill({
@@ -155,24 +162,24 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
     ).toBeVisible();
   });
 
-  await testListUpdate(page);
+  await testCollectionUpdate(page);
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
 
-  await test.step("remove list", async () => {
+  await test.step("remove Collection", async () => {
     await page
       .locator(
         [
-          "_react=CustomLinkListTable",
+          "_react=CustomLinkCollectionTable",
           "tr:has-text('eetann.json5')",
-          "_react=[aria-label = 'Delete custom link list']",
+          "_react=[aria-label = 'Delete custom link collection']",
         ].join(" >> ")
       )
       .click();
-    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann.json5/
-    );
+    await expect(
+      page.locator("_react=CustomLinkCollectionTable")
+    ).not.toHaveText(/eetann.json5/);
     for (const url of [
       "https://hub-eetann.vercel.app",
       "https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn",
@@ -185,11 +192,11 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
 
   await test.step("check @ content script", async () => {
     await page.goto("https://www.google.com/search?q=eetann");
-    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).not.toHaveText(
       /eetann/
     );
     for (const customLink of ["Portfolio", "GitHub"]) {
-      await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+      await expect(page.locator("#choomameCustomItemLink")).not.toHaveText(
         new RegExp(customLink)
       );
     }
@@ -200,15 +207,17 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
 
   await test.step("Auto update", async () => {
     // add
-    await page.getByTestId("open-popover-for-new-list").click();
+    await page.getByTestId("open-popover-for-new-collection").click();
     await page
-      .locator("#customLinkListURL")
+      .locator("#customLinkCollectionURL")
       .fill(
-        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5"
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5"
       );
     await page
       .locator(
-        ["_react=CustomLinkListForm", "button:has-text('Save')"].join(" >> ")
+        ["_react=CustomLinkCollectionForm", "button:has-text('Save')"].join(
+          " >> "
+        )
       )
       .click();
     await page
@@ -223,7 +232,7 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
 
     // mock
     await page.route(
-      "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5",
+      "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5",
       async (route) => {
         const mockRawData = readFileSync("./e2e/eetann-after-update.json5");
         await route.fulfill({
@@ -246,6 +255,6 @@ test("CustomLink List", async ({ page, extensionId, context }) => {
     await expect(
       page.locator("button:has-text('Background Updating')")
     ).toBeVisible();
-    await testListUpdate(page);
+    await testCollectionUpdate(page);
   });
 });

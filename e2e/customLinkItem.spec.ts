@@ -1,17 +1,17 @@
-import { customLinkBackupSchema } from "../src/features/customLink/customLinkSchema.js";
+import { customLinkRestoreJsonSchema } from "../src/features/customLink/customLinkSchema.js";
 import { test, expect } from "./fixtures.js";
 import fs from "fs";
 import JSON5 from "json5";
 
-const filePath = `test-results/choomame-custom-links.json5`;
+const filePath = `test-results/choomame-custom-link.json5`;
 
-test("CustomLinks", async ({ page, extensionId }) => {
+test("CustomLink Item", async ({ page, extensionId }) => {
   await page.goto("https://www.google.com/search?q=javascript+foreach");
 
   await test.step("check URL", async () => {
     // check googleWithURL
     await expect(
-      page.locator(["#choomameCustomLinksLink", "a:has(svg)"].join(" >> "))
+      page.locator(["#choomameCustomItemLink", "a:has(svg)"].join(" >> "))
     ).toHaveAttribute(
       "href",
       "https://www.google.com/search?q=site:developer.mozilla.org/en-US/docs/Web/JavaScript foreach"
@@ -19,7 +19,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
     // check search in the site
     await expect(
       page.locator(
-        ["#choomameCustomLinksLink", "a:has-text('Search in Reference')"].join(
+        ["#choomameCustomItemLink", "a:has-text('Search in Reference')"].join(
           " >> "
         )
       )
@@ -33,19 +33,22 @@ test("CustomLinks", async ({ page, extensionId }) => {
   await page.locator(["_react=App", "text='Custom Link'"].join(" >> ")).click();
 
   await test.step("error handling: zod schema", async () => {
-    await page.getByTestId("open-popover-for-new-link").click();
+    await page.getByTestId("open-popover-for-new-item").click();
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Group name")
       .fill("a");
-    await page.locator("_react=CustomLinkForm").getByLabel("Match").fill("a");
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
+      .getByLabel("Match")
+      .fill("a");
+    await page
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Link name")
       .fill("a");
-    await page.locator("_react=CustomLinkForm").getByLabel("URL").fill("a");
+    await page.locator("_react=CustomLinkItemForm").getByLabel("URL").fill("a");
     await expect(
-      page.locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
+      page.locator(["_react=CustomLinkItemForm", "text='Save'"].join(" >> "))
     ).toBeDisabled();
     await expect(page.locator("div:has(> #urlInput) + div")).toHaveText(
       /URL is invalid./
@@ -54,35 +57,38 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
   await test.step("add new CustomLink", async () => {
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Group name")
       .fill("Test group");
-    await page.locator("_react=CustomLinkForm").getByLabel("Match").fill(".*");
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
+      .getByLabel("Match")
+      .fill(".*");
+    await page
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Link name")
       .fill("eetann GitHub");
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("URL")
       .fill("https://github.com/eetann");
     await page
-      .locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
+      .locator(["_react=CustomLinkItemForm", "text='Save'"].join(" >> "))
       .click();
   });
 
   await test.step("check @ form", async () => {
     await expect(
-      page.locator("_react=CustomLinkForm").getByLabel("Group name")
+      page.locator("_react=CustomLinkItemForm").getByLabel("Group name")
     ).toHaveValue("Test group");
     await expect(
-      page.locator("_react=CustomLinkForm").getByLabel("Match")
+      page.locator("_react=CustomLinkItemForm").getByLabel("Match")
     ).toHaveValue(".*");
     await expect(
-      page.locator("_react=CustomLinkForm").getByLabel("Link name")
+      page.locator("_react=CustomLinkItemForm").getByLabel("Link name")
     ).toHaveValue("");
     await expect(
-      page.locator("_react=CustomLinkForm").getByLabel("URL")
+      page.locator("_react=CustomLinkItemForm").getByLabel("URL")
     ).toHaveValue("");
   });
 
@@ -102,14 +108,14 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
   await test.step("check @ content script", async () => {
     // check add
-    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).toHaveText(
       /Test group/
     );
-    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).toHaveText(
       new RegExp("eetann GitHub")
     );
     // check toggle
-    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).not.toHaveText(
       new RegExp("Homepage")
     );
   });
@@ -138,10 +144,10 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
     const actualFile = fs.readFileSync(filePath);
     const actualJson5 = JSON5.parse(actualFile.toString());
-    const result = customLinkBackupSchema.parse(actualJson5);
+    const result = customLinkRestoreJsonSchema.parse(actualJson5);
     expect(result.id).toBe("user");
     expect(result.name).toBe("user");
-    const [actualCustomLink] = result.links.filter(
+    const [actualCustomLink] = result.items.filter(
       (item) => item.name === "eetann GitHub"
     );
     expect(actualCustomLink.id).toMatch(/^user\/.*/);
@@ -149,12 +155,12 @@ test("CustomLinks", async ({ page, extensionId }) => {
     expect(actualCustomLink.match).toBe(".*");
     expect(actualCustomLink.url).toBe("https://github.com/eetann");
     expect(actualCustomLink.enable).toBe(true);
-    const [actualList1] = result.list.filter(
-      (list) =>
-        list.url ===
-        "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/choomame-e2e.json5"
+    const [actualCollection1] = result.collection.filter(
+      (collection) =>
+        collection.url ===
+        "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/choomame-e2e.json5"
     );
-    expect(actualList1.disableIds).toEqual([
+    expect(actualCollection1.disableIds).toEqual([
       "chroomame-e2e/typescript-homepage",
     ]);
   });
@@ -176,7 +182,7 @@ test("CustomLinks", async ({ page, extensionId }) => {
 
   await test.step("check @ content script", async () => {
     await page.goto("https://www.google.com/search?q=typescript+record");
-    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).not.toHaveText(
       /Test group/
     );
   });
@@ -187,22 +193,25 @@ test("CustomLinks", async ({ page, extensionId }) => {
       .locator(["_react=App", "text='Custom Link'"].join(" >> "))
       .click();
 
-    await page.getByTestId("open-popover-for-new-link").click();
+    await page.getByTestId("open-popover-for-new-item").click();
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Group name")
       .fill("Test group");
-    await page.locator("_react=CustomLinkForm").getByLabel("Match").fill(".*");
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
+      .getByLabel("Match")
+      .fill(".*");
+    await page
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("Link name")
       .fill("eetann GitHub");
     await page
-      .locator("_react=CustomLinkForm")
+      .locator("_react=CustomLinkItemForm")
       .getByLabel("URL")
       .fill("https://github.com/eetann");
     await page
-      .locator(["_react=CustomLinkForm", "text='Save'"].join(" >> "))
+      .locator(["_react=CustomLinkItemForm", "text='Save'"].join(" >> "))
       .click();
   });
 
@@ -218,10 +227,10 @@ test("CustomLinks", async ({ page, extensionId }) => {
   });
 
   await test.step("check @ option page", async () => {
-    // list
-    await expect(page.locator("_react=CustomLinkListTable")).not.toHaveText(
-      /eetann.json5/
-    );
+    // Collection
+    await expect(
+      page.locator("_react=CustomLinkCollectionTable")
+    ).not.toHaveText(/eetann.json5/);
     // customLink
     for (const url of [
       "https://hub-eetann.vercel.app",
@@ -236,11 +245,11 @@ test("CustomLinks", async ({ page, extensionId }) => {
   await test.step("check @ content script", async () => {
     await page.goto("https://www.google.com/search?q=typescript+record");
     // check for add
-    await expect(page.locator("#choomameCustomLinksLink")).not.toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).not.toHaveText(
       /Test group/
     );
     // check for toggle
-    await expect(page.locator("#choomameCustomLinksLink")).toHaveText(
+    await expect(page.locator("#choomameCustomItemLink")).toHaveText(
       new RegExp("Homepage")
     );
   });
@@ -264,8 +273,8 @@ test("CustomLinks", async ({ page, extensionId }) => {
       await expect(page.locator("_react=CustomLinkTable")).toHaveText(
         /Test group/
       );
-      // restore list
-      await expect(page.locator("_react=CustomLinkListTable")).toHaveText(
+      // restore Collection
+      await expect(page.locator("_react=CustomLinkCollectionTable")).toHaveText(
         /choomame-e2e.json5/
       );
 

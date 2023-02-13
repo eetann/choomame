@@ -1,4 +1,4 @@
-import CustomLinksLink from "../features/customLink/CustomLinksLink";
+import CustomLinkItemLink from "../features/customLink/CustomLinkItemLink";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
@@ -46,7 +46,7 @@ const App: React.FC = () => {
               <TimesLink param={param} />
               <LanguagesLink param={param} />
             </VStack>
-            <CustomLinksLink param={param} />
+            <CustomLinkItemLink param={param} />
           </Flex>
         )}
       </RndView>

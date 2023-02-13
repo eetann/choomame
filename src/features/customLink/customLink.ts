@@ -1,25 +1,26 @@
 import { useDownloader } from "../../common/useDownloader";
 import {
-  CustomLinksBucket,
-  CustomLinkListBucket,
-  CustomLinkJson,
-  customLinkJsonSchema,
+  CustomLinkItemBucket,
+  CustomLinkCollectionBucket,
+  CustomLinkFetchJson,
+  customLinkFetchJsonSchema,
   initialCustomLinkUrls,
-  CustomLinks,
-  diffCustomLinks,
-  CustomLinkBackupJson,
-  CustomLinkListBackup,
-  customLinkBackupSchema,
+  CustomLinkItemList,
+  diffCustomLinkItemList,
+  CustomLinkRestoreJson,
+  CustomLinkCollectionRestore,
+  customLinkRestoreJsonSchema,
 } from "./customLinkSchema";
 import { getBucket } from "@extend-chrome/storage";
 import JSON5 from "json5";
 
-export const customLinkListBucket =
-  getBucket<CustomLinkListBucket>("customLinkList");
-export const customLinksBucket = getBucket<CustomLinksBucket>("customLinks");
+export const customLinkCollectionBucket = getBucket<CustomLinkCollectionBucket>(
+  "customLinkCollection"
+);
+export const customLinkItemBucket =
+  getBucket<CustomLinkItemBucket>("customLinkItem");
 
-export const initialCustomLinkList: CustomLinkListBucket = {};
-export const initialCustomLinks: CustomLinksBucket = {};
+export const initialCustomCollection: CustomLinkCollectionBucket = {};
 
 export const isBackgroundUpdatingBucket = getBucket<{ customLink: boolean }>(
   "customLinkIsUpdating"
@@ -38,33 +39,38 @@ export async function isBackgroundUpdatingCustomLink() {
   return bucket.customLink;
 }
 
-function parseCustomLinks(customLinkJson5String: string): CustomLinkJson {
+function parseCustomLinkFetchJson(
+  customLinkJson5String: string
+): CustomLinkFetchJson {
   let response;
   try {
-    response = JSON5.parse<CustomLinkJson>(customLinkJson5String);
+    response = JSON5.parse<CustomLinkFetchJson>(customLinkJson5String);
   } catch (e) {
     throw new Error("The JSON5 in this URL is an invalid format.");
   }
-  const result = customLinkJsonSchema.safeParse(response);
+  const result = customLinkFetchJsonSchema.safeParse(response);
   if (!result.success) {
     throw new Error(result.error.issues[0].message);
   }
   return result.data;
 }
 
-export async function fetchCustomLinkUrl(url: string): Promise<CustomLinkJson> {
+export async function fetchCustomLinkUrl(
+  url: string
+): Promise<CustomLinkFetchJson> {
   let response;
   try {
     response = await (await fetch(url, { cache: "no-store" })).text();
   } catch (e) {
     throw new Error(`fetch failed: ${url}`);
   }
-  return parseCustomLinks(response);
+  return parseCustomLinkFetchJson(response);
 }
 
-export async function customLinkListOnInstalled() {
-  const listBucket = await customLinkListBucket.get();
-  if (Object.keys(listBucket).length !== 0) {
+export async function customLinkCollectionOnInstalled() {
+  const keys = await customLinkCollectionBucket.getKeys();
+  // End if Collection already exists.
+  if (keys.length !== 0) {
     return;
   }
   for (const customLinkUrl of initialCustomLinkUrls) {
@@ -76,11 +82,11 @@ export async function customLinkListOnInstalled() {
       console.log(e);
       continue;
     }
-    const list_id = response.id;
+    const collectionId = response.id;
 
-    customLinkListBucket.set({
-      [list_id]: {
-        id: list_id,
+    customLinkCollectionBucket.set({
+      [collectionId]: {
+        id: collectionId,
         name: response.name,
         url: customLinkUrl,
       },
@@ -88,22 +94,23 @@ export async function customLinkListOnInstalled() {
   }
 }
 
-export async function customLinksOnInstalled() {
-  const listBucket = await customLinkListBucket.get();
-  if (Object.keys(listBucket).length === 0) {
+export async function customLinkItemOnInstalled() {
+  const collectionBucket = await customLinkCollectionBucket.get();
+  // End if Collection does not exist
+  if (Object.keys(collectionBucket).length === 0) {
     return;
   }
-  for (const list_id in listBucket) {
+  for (const collectionId in collectionBucket) {
     let response;
     try {
-      response = await fetchCustomLinkUrl(listBucket[list_id].url);
+      response = await fetchCustomLinkUrl(collectionBucket[collectionId].url);
     } catch (e) {
       console.log(e);
       continue;
     }
-    response.links.forEach((customLink) => {
-      customLink.id = `${list_id}/${customLink.id}`;
-      customLinksBucket.set({
+    response.items.forEach((customLink) => {
+      customLink.id = `${collectionId}/${customLink.id}`;
+      customLinkItemBucket.set({
         [customLink.id]: customLink,
       });
     });
@@ -111,38 +118,38 @@ export async function customLinksOnInstalled() {
 }
 
 export async function updateCustomLinks(
-  beforeCustomLinkBucket: CustomLinksBucket,
-  updateItems: CustomLinks,
-  list_id: string,
+  beforeCustomLinkItemBucket: CustomLinkItemBucket,
+  updateItems: CustomLinkItemList,
+  collectionId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deleteFunction: (beforeOnlyIds: string[]) => Promise<any>
-): Promise<CustomLinks> {
-  let updates: CustomLinks = [];
+): Promise<CustomLinkItemList> {
+  let updates: CustomLinkItemList = [];
 
   // diff
-  const afterCustomLinkBucket: CustomLinksBucket = {};
+  const afterCustomLinkItemBucket: CustomLinkItemBucket = {};
   updateItems.forEach((customLink) => {
-    const id = `${list_id}/${customLink.id}`;
-    afterCustomLinkBucket[id] = { ...customLink, id };
+    const id = `${collectionId}/${customLink.id}`;
+    afterCustomLinkItemBucket[id] = { ...customLink, id };
   });
 
-  const { sameIds, beforeOnlyIds, afterOnlyBucket } = diffCustomLinks(
-    beforeCustomLinkBucket,
-    afterCustomLinkBucket
+  const { sameIds, beforeOnlyIds, afterOnlyBucket } = diffCustomLinkItemList(
+    beforeCustomLinkItemBucket,
+    afterCustomLinkItemBucket
   );
 
   // update existing
   for (const item_id of sameIds) {
     const customLink = {
-      ...afterCustomLinkBucket[item_id],
-      enable: beforeCustomLinkBucket[item_id].enable,
+      ...afterCustomLinkItemBucket[item_id],
+      enable: beforeCustomLinkItemBucket[item_id].enable,
     };
-    await customLinksBucket.set({ [customLink.id]: customLink });
+    await customLinkItemBucket.set({ [customLink.id]: customLink });
     updates.push(customLink);
   }
 
   // add afterOnly
-  await customLinksBucket.set(afterOnlyBucket);
+  await customLinkItemBucket.set(afterOnlyBucket);
   updates = updates.concat(Object.values(afterOnlyBucket));
 
   // delete beforeOnly
@@ -151,101 +158,104 @@ export async function updateCustomLinks(
   return updates;
 }
 
-export async function updateCustomLinkList(
+export async function updateCustomLinkCollection(
   updateCustomLinksFunction: (
-    beforeCustomLinkBucket: CustomLinksBucket,
-    updateItems: CustomLinks,
-    list_id: string
+    beforeCustomLinkBucket: CustomLinkItemBucket,
+    updateItems: CustomLinkItemList,
+    collectionId: string
   ) => ReturnType<typeof updateCustomLinks>
 ) {
-  const bucket = await customLinkListBucket.get();
-  const customLinkBucket = await customLinksBucket.get();
+  const bucket = await customLinkCollectionBucket.get();
+  const customLinkBucket = await customLinkItemBucket.get();
   return await Promise.all(
-    Object.values(bucket).map(async (customLinkList) => {
-      const response = await fetchCustomLinkUrl(customLinkList.url);
-      const list_id = response.id;
-      const beforeCustomLinkBucket: CustomLinksBucket = {};
+    Object.values(bucket).map(async (customLinkCollection) => {
+      const response = await fetchCustomLinkUrl(customLinkCollection.url);
+      const collectionId = response.id;
+      const beforeCustomLinkBucket: CustomLinkItemBucket = {};
       Object.entries(customLinkBucket).forEach(([id, customLink]) => {
-        if (id.startsWith(list_id)) {
+        if (id.startsWith(collectionId)) {
           beforeCustomLinkBucket[id] = customLink;
         }
       });
       await updateCustomLinksFunction(
         beforeCustomLinkBucket,
-        response.links,
-        list_id
+        response.items,
+        collectionId
       );
-      const newList = {
-        id: list_id,
+      const newCollection = {
+        id: collectionId,
         name: response.name,
-        url: customLinkList.url,
+        url: customLinkCollection.url,
       };
-      customLinkListBucket.set({ [list_id]: newList });
+      customLinkCollectionBucket.set({ [collectionId]: newCollection });
       return {
-        id: list_id,
-        changes: newList,
+        id: collectionId,
+        changes: newCollection,
       };
     })
   );
 }
 
-export async function updateCustomLinkListonAlarm() {
+export async function updateCustomLinkCollectionOnAlarm() {
   const updateCustomLinksFunction = async (
-    beforeCustomLinkBucket: CustomLinksBucket,
-    updateItems: CustomLinks,
-    list_id: string
+    beforeCustomLinkBucket: CustomLinkItemBucket,
+    updateItems: CustomLinkItemList,
+    collectionId: string
   ) => {
     const deleteFunction = async (beforeOnlyIds: string[]) => {
-      await customLinksBucket.remove(beforeOnlyIds);
+      await customLinkItemBucket.remove(beforeOnlyIds);
     };
     await updateCustomLinks(
       beforeCustomLinkBucket,
       updateItems,
-      list_id,
+      collectionId,
       deleteFunction
     );
     return [];
   };
-  await updateCustomLinkList(updateCustomLinksFunction);
+  await updateCustomLinkCollection(updateCustomLinksFunction);
 }
 
-async function getUserCustomLinks(): Promise<CustomLinks> {
-  const keys = await customLinksBucket.getKeys();
+async function getUserCustomLinks(): Promise<CustomLinkItemList> {
+  const keys = await customLinkItemBucket.getKeys();
   const userKeys = keys.filter((key) => key.startsWith("user/"));
-  const userCustomLinksBucket = await customLinksBucket.get(userKeys);
-  return Object.values(userCustomLinksBucket as CustomLinksBucket);
+  const userCustomLinksBucket = await customLinkItemBucket.get(userKeys);
+  return Object.values(userCustomLinksBucket as CustomLinkItemBucket);
 }
 
-function selectDisableIds(listId: string, customLinks: CustomLinksBucket) {
+function selectDisableIds(
+  collectionId: string,
+  customLinks: CustomLinkItemBucket
+) {
   return Object.values(customLinks).flatMap((link) => {
-    if (link.id.startsWith(listId) && !link.enable) {
+    if (link.id.startsWith(collectionId) && !link.enable) {
       return link.id;
     }
     return [];
   });
 }
 
-async function getCustomLinkListBackup(): Promise<CustomLinkListBackup> {
-  const listBucket = await customLinkListBucket.get();
-  const links = await customLinksBucket.get();
+async function getCustomLinkCollectionBackup(): Promise<CustomLinkCollectionRestore> {
+  const collectionBucket = await customLinkCollectionBucket.get();
+  const itemBucket = await customLinkItemBucket.get();
   return await Promise.all(
-    Object.values(listBucket).map((list) => {
-      const listId = list.id;
-      const disableIds = selectDisableIds(listId, links);
-      return { url: list.url, disableIds };
+    Object.values(collectionBucket).map((collection) => {
+      const collectionId = collection.id;
+      const disableIds = selectDisableIds(collectionId, itemBucket);
+      return { url: collection.url, disableIds };
     })
   );
 }
 
 function customLinksToJson5(
-  customLinks: CustomLinks,
-  customLinkList: CustomLinkListBackup
+  customLinkItemList: CustomLinkItemList,
+  customLinkCollectionRestore: CustomLinkCollectionRestore
 ): string {
-  const customLinkJson: CustomLinkBackupJson = {
+  const customLinkJson: CustomLinkRestoreJson = {
     id: "user",
     name: "user",
-    links: customLinks,
-    list: customLinkList,
+    items: customLinkItemList,
+    collection: customLinkCollectionRestore,
   };
   return JSON5.stringify(customLinkJson, { space: 2 });
 }
@@ -253,13 +263,13 @@ function customLinksToJson5(
 export function useExportUserCustomLinks() {
   const download = useDownloader();
   const exportUserCustomLinks = async () => {
-    const filename = "choomame-custom-links.json5";
+    const filename = "choomame-custom-link.json5";
 
     const customLinks = await getUserCustomLinks();
-    const customLinkListBackup = await getCustomLinkListBackup();
+    const customLinkCollectionBackup = await getCustomLinkCollectionBackup();
     const customLinkJson5String = customLinksToJson5(
       customLinks,
-      customLinkListBackup
+      customLinkCollectionBackup
     );
     const blob = new Blob([customLinkJson5String], {
       type: "plain/text",
@@ -272,14 +282,14 @@ export function useExportUserCustomLinks() {
 
 function parseUserCustomLinks(
   customLinkJson5String: string
-): CustomLinkBackupJson {
+): CustomLinkRestoreJson {
   let response;
   try {
-    response = JSON5.parse<CustomLinkBackupJson>(customLinkJson5String);
+    response = JSON5.parse<CustomLinkRestoreJson>(customLinkJson5String);
   } catch (e) {
     throw new Error("The JSON5 in this URL is an invalid format.");
   }
-  const result = customLinkBackupSchema.safeParse(response);
+  const result = customLinkRestoreJsonSchema.safeParse(response);
   if (!result.success) {
     throw new Error(result.error.issues[0].message);
   }
@@ -287,7 +297,7 @@ function parseUserCustomLinks(
 }
 
 export async function importUserCustomLink(
-  addCustomLinks: (customLinkBackupJson: CustomLinkBackupJson) => Promise<void>
+  addCustomLinks: (customLinkBackupJson: CustomLinkRestoreJson) => Promise<void>
 ) {
   const inputFile = document.createElement("input");
   inputFile.type = "file";

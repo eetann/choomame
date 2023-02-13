@@ -1,10 +1,10 @@
 import type { AppDispatch } from "../../app/store";
 import InputWithLabelOnLeft from "../../common/InputWithLabelOnLeft";
+import { addOneCustomLinkItem } from "./customLinkItemSlice";
 import {
-  CustomLinkWithoutId,
-  customLinkWithoutIdSchema,
+  CustomLinkItemWithoutId,
+  customLinkItemWithoutIdSchema,
 } from "./customLinkSchema";
-import { addOneCustomLink } from "./customLinkSlice";
 import {
   Button,
   Popover,
@@ -22,17 +22,17 @@ import React, { useRef } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-const CustomLinkForm: React.FC = () => {
+const CustomLinkItemForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const methods = useForm<CustomLinkWithoutId>({
-    resolver: zodResolver(customLinkWithoutIdSchema),
+  const methods = useForm<CustomLinkItemWithoutId>({
+    resolver: zodResolver(customLinkItemWithoutIdSchema),
     mode: "all",
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialFocusRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit: SubmitHandler<CustomLinkWithoutId> = (data) => {
-    dispatch(addOneCustomLink(data));
+  const onSubmit: SubmitHandler<CustomLinkItemWithoutId> = (data) => {
+    dispatch(addOneCustomLinkItem(data));
 
     // keep the input string
     methods.setValue("group", data.group);
@@ -55,14 +55,14 @@ const CustomLinkForm: React.FC = () => {
         <Button
           colorScheme="teal"
           onClick={onOpen}
-          data-testid="open-popover-for-new-link"
+          data-testid="open-popover-for-new-item"
         >
           Add
         </Button>
       </PopoverTrigger>
       <PopoverContent width="xl">
         <PopoverArrow />
-        <PopoverHeader fontSize="sm">new Custom Link</PopoverHeader>
+        <PopoverHeader fontSize="sm">new Custom Link item</PopoverHeader>
         <PopoverCloseButton />
         <PopoverBody>
           <FormProvider {...methods}>
@@ -105,4 +105,4 @@ const CustomLinkForm: React.FC = () => {
     </Popover>
   );
 };
-export default CustomLinkForm;
+export default CustomLinkItemForm;

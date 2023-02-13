@@ -1,12 +1,12 @@
 import type { AppDispatch } from "../../app/store";
 import ResetButton from "../../common/ResetButton";
-import CustomLinkForm from "./CustomLinkForm";
-import CustomLinkListForm from "./CustomLinkListForm";
-import CustomLinkListTable, {
-  WhereUpdatingListContext,
-  WhereUpdatingListContextType,
-} from "./CustomLinkListTable";
-import CustomLinkTable from "./CustomLinkTable";
+import CustomLinkCollectionForm from "./CustomLinkCollectionForm";
+import CustomLinkCollectionTable, {
+  WhereUpdatingCollectionContext,
+  WhereUpdatingCollectionContextType,
+} from "./CustomLinkCollectionTable";
+import CustomLinkItemForm from "./CustomLinkItemForm";
+import CustomLinkItemTable from "./CustomLinkItemTable";
 import {
   importUserCustomLink,
   isBackgroundUpdatingBucket,
@@ -14,13 +14,16 @@ import {
   useExportUserCustomLinks,
 } from "./customLink";
 import {
-  fetchAllCustomLinkList,
+  fetchAllCustomLinkCollection,
   initCustomLinkAll,
   restoreCustomLink,
-  updateManyCustomLinkList,
-} from "./customLinkListSlice";
-import { CustomLinkBackupJson } from "./customLinkSchema";
-import { addManyCustomLinks, fetchAllCustomLinks } from "./customLinkSlice";
+  updateManyCustomLinkCollection,
+} from "./customLinkCollectionSlice";
+import {
+  addManyCustomLinkItem,
+  fetchAllCustomLinkItem,
+} from "./customLinkItemSlice";
+import { CustomLinkRestoreJson } from "./customLinkSchema";
 import {
   Box,
   Button,
@@ -47,14 +50,16 @@ import { useDispatch } from "react-redux";
 
 const CustomLinkTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [whereUpdatingList, setWhereUpdatingList] =
-    useState<WhereUpdatingListContextType["whereUpdatingList"]>("");
+  const [whereUpdatingCollection, setWhereUpdatingCollection] =
+    useState<WhereUpdatingCollectionContextType["whereUpdatingCollection"]>("");
   const exportUserCustomLinks = useExportUserCustomLinks();
-  const addCustomLinks = async (customLinkBackupJson: CustomLinkBackupJson) => {
+  const addCustomLinks = async (
+    customLinkBackupJson: CustomLinkRestoreJson
+  ) => {
     await dispatch(
-      addManyCustomLinks({
-        items: customLinkBackupJson.links,
-        list_id: customLinkBackupJson.id,
+      addManyCustomLinkItem({
+        items: customLinkBackupJson.items,
+        collectionId: customLinkBackupJson.id,
       })
     );
     await dispatch(restoreCustomLink(customLinkBackupJson));
@@ -64,36 +69,36 @@ const CustomLinkTab: React.FC = () => {
     (async () => {
       const isBackgroundUpdating = await isBackgroundUpdatingCustomLink();
       if (isBackgroundUpdating) {
-        setWhereUpdatingList("Background");
+        setWhereUpdatingCollection("Background");
       }
     })();
     isBackgroundUpdatingBucket.changeStream.subscribe(async (v) => {
       if (v.customLink?.newValue) {
-        setWhereUpdatingList("Background");
+        setWhereUpdatingCollection("Background");
       } else {
         await new Promise((s) => setTimeout(s, 3000));
-        setWhereUpdatingList("");
+        setWhereUpdatingCollection("");
       }
     });
   }, []);
 
   useEffect(() => {
-    dispatch(fetchAllCustomLinkList());
-    dispatch(fetchAllCustomLinks());
+    dispatch(fetchAllCustomLinkCollection());
+    dispatch(fetchAllCustomLinkItem());
   }, [dispatch]);
 
   return (
     <Stack divider={<StackDivider />} spacing="10">
-      <WhereUpdatingListContext.Provider
+      <WhereUpdatingCollectionContext.Provider
         value={{
-          whereUpdatingList,
+          whereUpdatingCollection: whereUpdatingCollection,
         }}
       >
         <Stack alignItems="start">
           <HStack>
             <Icon as={HiOutlineListBullet} boxSize={5} />
-            <Heading size="md">List</Heading>
-            <Tooltip label="You can add a list of custom links. It is automatically and regularly updated.">
+            <Heading size="md">Collection</Heading>
+            <Tooltip label="You can add a collection of custom links. It is automatically and regularly updated.">
               <Box as="span" lineHeight="1">
                 <Icon as={HiOutlineQuestionMarkCircle} boxSize={5} />
               </Box>
@@ -104,35 +109,35 @@ const CustomLinkTab: React.FC = () => {
               leftIcon={<HiOutlineRefresh fontSize="24" />}
               colorScheme="teal"
               onClick={async () => {
-                setWhereUpdatingList("Manual");
-                await dispatch(updateManyCustomLinkList());
+                setWhereUpdatingCollection("Manual");
+                await dispatch(updateManyCustomLinkCollection());
                 await new Promise((s) => setTimeout(s, 3000));
-                setWhereUpdatingList("");
+                setWhereUpdatingCollection("");
               }}
-              isLoading={whereUpdatingList !== ""}
-              loadingText={`${whereUpdatingList} Updating`}
+              isLoading={whereUpdatingCollection !== ""}
+              loadingText={`${whereUpdatingCollection} Updating`}
             >
               Manual Update
             </Button>
             <Box>
-              <CustomLinkListForm />
+              <CustomLinkCollectionForm />
             </Box>
           </HStack>
-          <CustomLinkListTable />
+          <CustomLinkCollectionTable />
         </Stack>
-      </WhereUpdatingListContext.Provider>
+      </WhereUpdatingCollectionContext.Provider>
       <Stack>
         <HStack>
           <Icon as={HiOutlineLink} boxSize={5} />
-          <Heading size="md">Links</Heading>
+          <Heading size="md">Items</Heading>
         </HStack>
         <HStack justifyContent="space-between">
           <Spacer />
           <Box>
-            <CustomLinkForm />
+            <CustomLinkItemForm />
           </Box>
         </HStack>
-        <CustomLinkTable />
+        <CustomLinkItemTable />
       </Stack>
       <HStack justifyContent="space-between">
         <Button
