@@ -1,5 +1,5 @@
 import type { AppDispatch, RootState } from "../../app/store";
-import { addOneCustomLinkList } from "./customLinkListSlice";
+import { addOneCustomLinkCollection } from "./customLinkCollectionSlice";
 import {
   FormControl,
   FormHelperText,
@@ -19,17 +19,17 @@ import {
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const CustomLinkListForm: React.FC = () => {
+const CustomLinkCollectionForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const customLinkListErrorMessage = useSelector(
-    (state: RootState) => state.customLinkList.errorMessage
+  const customLinkCollectionErrorMessage = useSelector(
+    (state: RootState) => state.customLinkCollection.errorMessage
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [listUrl, setListUrl] = useState("");
+  const [collectionUrl, setCollectionUrl] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialFocusRef = useRef<HTMLInputElement>(null);
 
-  const isError = customLinkListErrorMessage !== "";
+  const isError = customLinkCollectionErrorMessage !== "";
 
   return (
     <Popover
@@ -43,38 +43,42 @@ const CustomLinkListForm: React.FC = () => {
         <Button
           colorScheme="teal"
           onClick={onOpen}
-          data-testid="open-popover-for-new-list"
+          data-testid="open-popover-for-new-collection"
         >
           Add
         </Button>
       </PopoverTrigger>
       <PopoverContent width="xl">
         <PopoverArrow />
-        <PopoverHeader fontSize="sm">new List</PopoverHeader>
+        <PopoverHeader fontSize="sm">new Collection</PopoverHeader>
         <PopoverCloseButton />
         <PopoverBody>
           <VStack alignItems="start">
             <FormControl isInvalid={isError}>
               <FormHelperText>
                 Write URL. Example:
-                https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/eetann.json5
+                https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/eetann.json5
               </FormHelperText>
               <Input
-                id="customLinkListURL"
+                id="customLinkCollectionURL"
                 type="url"
-                value={listUrl}
-                onChange={(e) => setListUrl(e.target.value)}
+                value={collectionUrl}
+                onChange={(e) => setCollectionUrl(e.target.value)}
                 ref={initialFocusRef}
               />
-              <FormErrorMessage>{customLinkListErrorMessage}</FormErrorMessage>
+              <FormErrorMessage>
+                {customLinkCollectionErrorMessage}
+              </FormErrorMessage>
             </FormControl>
             <Button
               isLoading={isLoading}
               onClick={async () => {
                 setIsLoading(true);
                 try {
-                  await dispatch(addOneCustomLinkList(listUrl)).unwrap();
-                  setListUrl("");
+                  await dispatch(
+                    addOneCustomLinkCollection(collectionUrl)
+                  ).unwrap();
+                  setCollectionUrl("");
                 } catch (e) {
                   // error
                 }
@@ -90,4 +94,4 @@ const CustomLinkListForm: React.FC = () => {
     </Popover>
   );
 };
-export default CustomLinkListForm;
+export default CustomLinkCollectionForm;

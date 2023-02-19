@@ -1,12 +1,12 @@
 import type { AppDispatch, RootState } from "../../app/store";
 import ReactTable, { ReactTableProps } from "../../common/ReactTable";
-import { selectCustomLinkList } from "./customLinkListSlice";
-import { CustomLink } from "./customLinkSchema";
+import { selectCustomLinkCollection } from "./customLinkCollectionSlice";
 import {
-  removeManyCustomLinks,
-  selectCustomLinks,
-  toggleOneCustomLink,
-} from "./customLinkSlice";
+  removeManyCustomLinkItem,
+  selectCustomLinkItem,
+  toggleOneCustomLinkItem,
+} from "./customLinkItemSlice";
+import { CustomLinkItem } from "./customLinkSchema";
 import { IconButton, Link, Switch } from "@chakra-ui/react";
 import { AnyAction } from "@reduxjs/toolkit";
 import { ColumnDef, createColumnHelper, RowData } from "@tanstack/react-table";
@@ -18,15 +18,15 @@ declare module "@tanstack/table-core" {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface TableMeta<TData extends RowData> {
     removeCustomLink?: (id: string) => Promise<AnyAction>;
-    toggleCustomLink?: (customLink: CustomLink) => Promise<AnyAction>;
-    getListName?: (list_id: string) => string;
+    toggleCustomLink?: (customLink: CustomLinkItem) => Promise<AnyAction>;
+    getCollectionName?: (collectionId: string) => string;
   }
 }
 
-const columnHelper = createColumnHelper<CustomLink>();
+const columnHelper = createColumnHelper<CustomLinkItem>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const columns: ColumnDef<CustomLink, any>[] = [
+const columns: ColumnDef<CustomLinkItem, any>[] = [
   columnHelper.accessor("group", {
     cell: (info) => info.getValue(),
     header: "Group name",
@@ -75,11 +75,11 @@ const columns: ColumnDef<CustomLink, any>[] = [
     },
   }),
   columnHelper.accessor((row) => `${row.id}`, {
-    id: "listName",
+    id: "collectionName",
     cell: ({ getValue, table }) => {
       const id = getValue();
-      const list_id = id.substring(0, id.indexOf("/"));
-      return table.options.meta?.getListName?.(list_id);
+      const collectionId = id.substring(0, id.indexOf("/"));
+      return table.options.meta?.getCollectionName?.(collectionId);
     },
     meta: {
       thProps: {
@@ -122,20 +122,22 @@ const columns: ColumnDef<CustomLink, any>[] = [
 
 const CustomLinkTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const customLinks = useSelector(selectCustomLinks.selectAll);
-  const CustomLinkListName = (list_id: string) =>
+  const customLinks = useSelector(selectCustomLinkItem.selectAll);
+  const CustomLinkCollectionName = (collectionId: string) =>
     useSelector((state: RootState) =>
-      selectCustomLinkList.selectById(state, list_id)
+      selectCustomLinkCollection.selectById(state, collectionId)
     )?.name ?? "user";
 
-  const tableProps: ReactTableProps<CustomLink> = {
+  const tableProps: ReactTableProps<CustomLinkItem> = {
     columns,
     data: customLinks,
     meta: {
-      removeCustomLink: (id: string) => dispatch(removeManyCustomLinks([id])),
-      toggleCustomLink: (customLink: CustomLink) =>
-        dispatch(toggleOneCustomLink(customLink)),
-      getListName: (list_id: string) => CustomLinkListName(list_id),
+      removeCustomLink: (id: string) =>
+        dispatch(removeManyCustomLinkItem([id])),
+      toggleCustomLink: (customLink: CustomLinkItem) =>
+        dispatch(toggleOneCustomLinkItem(customLink)),
+      getCollectionName: (collectionId: string) =>
+        CustomLinkCollectionName(collectionId),
     },
     pageSize: 50,
   };

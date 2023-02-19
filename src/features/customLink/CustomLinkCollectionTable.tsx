@@ -1,10 +1,10 @@
 import type { AppDispatch } from "../../app/store";
 import ReactTable, { ReactTableProps } from "../../common/ReactTable";
 import {
-  removeOneCustomLinkList,
-  selectCustomLinkList,
-} from "./customLinkListSlice";
-import { CustomLinkList } from "./customLinkSchema";
+  removeOneCustomLinkCollection,
+  selectCustomLinkCollection,
+} from "./customLinkCollectionSlice";
+import { CustomLinkCollection } from "./customLinkSchema";
 import { IconButton, Link } from "@chakra-ui/react";
 import { AnyAction } from "@reduxjs/toolkit";
 import { ColumnDef, createColumnHelper, RowData } from "@tanstack/react-table";
@@ -15,26 +15,29 @@ import { useDispatch, useSelector } from "react-redux";
 declare module "@tanstack/table-core" {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface TableMeta<TData extends RowData> {
-    removeCustomLinkList?: (list_id: string) => Promise<AnyAction>;
-    isUpdatingList?: boolean;
+    removeCustomLinkCollection?: (collectionId: string) => Promise<AnyAction>;
+    isUpdatingCollection?: boolean;
   }
 }
 
-export type WhereUpdatingListContextType = {
-  whereUpdatingList: "" | "Background" | "Manual";
+export type WhereUpdatingCollectionContextType = {
+  whereUpdatingCollection: "" | "Background" | "Manual";
 };
 
-const defaultWhereUpdatingListContext: WhereUpdatingListContextType = {
-  whereUpdatingList: "",
-};
+const defaultWhereUpdatingCollectionContext: WhereUpdatingCollectionContextType =
+  {
+    whereUpdatingCollection: "",
+  };
 
-export const WhereUpdatingListContext =
-  createContext<WhereUpdatingListContextType>(defaultWhereUpdatingListContext);
+export const WhereUpdatingCollectionContext =
+  createContext<WhereUpdatingCollectionContextType>(
+    defaultWhereUpdatingCollectionContext
+  );
 
-const columnHelper = createColumnHelper<CustomLinkList>();
+const columnHelper = createColumnHelper<CustomLinkCollection>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const columns: ColumnDef<CustomLinkList, any>[] = [
+const columns: ColumnDef<CustomLinkCollection, any>[] = [
   columnHelper.accessor("name", {
     cell: (info) => info.getValue(),
     header: "Name",
@@ -68,10 +71,12 @@ const columns: ColumnDef<CustomLinkList, any>[] = [
     cell: ({ getValue, table }) => (
       <IconButton
         fontSize="20"
-        aria-label="Delete custom link list"
+        aria-label="Delete custom link collection"
         icon={<HiOutlineTrash />}
-        onClick={() => table.options.meta?.removeCustomLinkList?.(getValue())}
-        isLoading={table.options.meta?.isUpdatingList ?? false}
+        onClick={() =>
+          table.options.meta?.removeCustomLinkCollection?.(getValue())
+        }
+        isLoading={table.options.meta?.isUpdatingCollection ?? false}
       />
     ),
     meta: {
@@ -83,22 +88,26 @@ const columns: ColumnDef<CustomLinkList, any>[] = [
   }),
 ];
 
-const CustomLinkListTable: React.FC = () => {
+const CustomLinkCollectionTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const customLinkList = useSelector(selectCustomLinkList.selectAll);
-  const { whereUpdatingList } = useContext(WhereUpdatingListContext);
+  const customLinkCollection = useSelector(
+    selectCustomLinkCollection.selectAll
+  );
+  const { whereUpdatingCollection } = useContext(
+    WhereUpdatingCollectionContext
+  );
 
-  const tableProps: ReactTableProps<CustomLinkList> = {
+  const tableProps: ReactTableProps<CustomLinkCollection> = {
     columns,
-    data: customLinkList,
+    data: customLinkCollection,
     meta: {
-      removeCustomLinkList: (list_id: string) =>
-        dispatch(removeOneCustomLinkList(list_id)),
-      isUpdatingList: whereUpdatingList !== "",
+      removeCustomLinkCollection: (collectionId: string) =>
+        dispatch(removeOneCustomLinkCollection(collectionId)),
+      isUpdatingCollection: whereUpdatingCollection !== "",
     },
     pageSize: 10,
   };
 
   return <ReactTable {...tableProps} />;
 };
-export default CustomLinkListTable;
+export default CustomLinkCollectionTable;

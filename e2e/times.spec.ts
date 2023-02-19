@@ -1,4 +1,5 @@
 import { test, expect } from "./fixtures.js";
+import { locator } from "./helper.js";
 
 test("Times", async ({ page, extensionId }) => {
   await page.goto("https://www.google.com/search?q=typescript+record");
@@ -17,32 +18,25 @@ test("Times", async ({ page, extensionId }) => {
   });
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Time'"].join(" >> ")).click();
+  await locator(page, ["_react=App", "text='Time'"]).click();
 
   await test.step("add new Time", async () => {
-    await page
-      .locator(["_react=TimesForm", "#timeNumber"].join(" >> "))
-      .fill("3");
-    await page
-      .locator(["_react=TimesForm", "select"].join(" >> "))
-      .selectOption({ label: "day" });
-    await page
-      .locator(
-        ["_react=TimesForm", "_react=[aria-label = 'Add time']"].join(" >> ")
-      )
-      .click();
+    await locator(page, ["_react=TimesForm", "#timeNumber"]).fill("3");
+    await locator(page, ["_react=TimesForm", "select"]).selectOption({
+      label: "day",
+    });
+    await locator(page, [
+      "_react=TimesForm",
+      "_react=[aria-label = 'Add time']",
+    ]).click();
   });
 
   await test.step("remove Time", async () => {
-    await page
-      .locator(
-        [
-          "_react=TimesTable",
-          "tr:has-text('6 month')",
-          "_react=[aria-label = 'Delete time']",
-        ].join(" >> ")
-      )
-      .click();
+    await locator(page, [
+      "_react=TimesTable",
+      "tr:has-text('6 month')",
+      "_react=[aria-label = 'Delete time']",
+    ]).click();
   });
 
   await page.goto("https://www.google.com/search?q=hoge");
@@ -62,14 +56,13 @@ test("Times", async ({ page, extensionId }) => {
   });
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Time'"].join(" >> ")).click();
+  await locator(page, ["_react=App", "text='Time'"]).click();
 
   await test.step("reset Time", async () => {
-    await page
-      .locator(
-        ["_react=ResetButton[name = 'Time']", "text='Reset'"].join(" >> ")
-      )
-      .click();
+    await locator(page, [
+      "_react=ResetButton[name = 'Time']",
+      "text='Reset'",
+    ]).click();
     await page.locator("text='Yes, reset.'").click();
   });
 

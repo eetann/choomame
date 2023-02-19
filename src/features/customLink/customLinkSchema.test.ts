@@ -1,17 +1,17 @@
 import {
-  CustomLink,
-  customLinkSchema,
-  customLinkListIdSchema,
+  CustomLinkItem,
+  customLinkItemSchema,
+  customLinkCollectionIdSchema,
   customLinkUrlSchema,
   initialCustomLinkUrls,
-  diffCustomLinks,
+  diffCustomLinkItemList,
 } from "./customLinkSchema";
 import { describe, expect, test } from "vitest";
 
 describe("customLinkSchema test", () => {
   type TestCase = {
     title: string;
-    customLink: CustomLink;
+    customLink: CustomLinkItem;
     expected?: string;
   };
   const defaultCustomLink = {
@@ -77,7 +77,7 @@ describe("customLinkSchema test", () => {
       }),
     },
   ])("[normal] %s", ({ customLink }) => {
-    expect(customLinkSchema.parse(customLink)).toEqual(customLink);
+    expect(customLinkItemSchema.parse(customLink)).toEqual(customLink);
   });
 
   test.each<TestCase>([
@@ -154,44 +154,45 @@ describe("customLinkSchema test", () => {
       expected: "custom link group name must be between 1 and 50 characters.",
     },
   ])("[exception] %s", ({ customLink, expected }) => {
-    expect(() => customLinkSchema.parse(customLink)).toThrowError(expected);
+    expect(() => customLinkItemSchema.parse(customLink)).toThrowError(expected);
   });
 });
 
-describe("customLinkListIdSchema test", () => {
+describe("customLinkCollectionId test", () => {
   type TestCase = {
     title: string;
-    customLinkListId: string;
+    collectionId: string;
     expected?: string;
   };
   test.each<TestCase>([
     {
-      title: "`customLinkListId` is 1 character",
-      customLinkListId: "a",
+      title: "`customLinkCollectionId` is 1 character",
+      collectionId: "a",
     },
     {
-      title: "`customLinkListId` is 50 characters",
-      customLinkListId: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      title: "`customLinkCollectionId` is 50 characters",
+      collectionId: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     },
-  ])("[normal] %s", ({ customLinkListId }) => {
+  ])("[normal] %s", ({ collectionId }) => {
     expect(() =>
-      customLinkListIdSchema.parse(customLinkListId)
+      customLinkCollectionIdSchema.parse(collectionId)
     ).not.toThrowError();
   });
 
   test.each<TestCase>([
     {
-      title: "`customLinkListId` is empty",
-      customLinkListId: "",
-      expected: "list_id must be between 1 and 50 characters.",
+      title: "`customLinkCollectionId` is empty",
+      collectionId: "",
+      expected: "Collection id must be between 1 and 50 characters.",
     },
     {
-      title: "`customLinkListId` is more than 50 characters(51 characters)",
-      customLinkListId: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      expected: "list_id must be between 1 and 50 characters.",
+      title:
+        "`customLinkCollectionId` is more than 50 characters(51 characters)",
+      collectionId: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      expected: "Collection id must be between 1 and 50 characters.",
     },
-  ])("[exception] %s", ({ customLinkListId, expected }) => {
-    expect(() => customLinkListIdSchema.parse(customLinkListId)).toThrowError(
+  ])("[exception] %s", ({ collectionId, expected }) => {
+    expect(() => customLinkCollectionIdSchema.parse(collectionId)).toThrowError(
       expected
     );
   });
@@ -206,7 +207,7 @@ describe("customLinkUrl test", () => {
 
   test.each<TestCase>([
     {
-      title: "list's URL is 150 character",
+      title: "Collection URL is 150 character",
       customLinkUrl:
         "https://www.google.com/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     },
@@ -216,15 +217,15 @@ describe("customLinkUrl test", () => {
 
   test.each<TestCase>([
     {
-      title: "list's id is more than 150 characters(151 characters)",
+      title: "Collection URL is more than 150 characters(151 characters)",
       customLinkUrl:
         "https://www.google.com/search?q=baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      expected: "list's URL is less than or equal to letter 150",
+      expected: "Collection URL is less than or equal to letter 150",
     },
     {
-      title: "list's URL is invalid.",
+      title: "Collection URL is invalid.",
       customLinkUrl: "Kerry",
-      expected: "list's URL is invalid.",
+      expected: "Collection URL is invalid.",
     },
   ])("[normal] %s", ({ customLinkUrl, expected }) => {
     expect(() => customLinkUrlSchema.parse(customLinkUrl)).toThrowError(
@@ -264,6 +265,6 @@ describe("diff customLinks", () => {
         "target/afterOnly2": { ...defaultCL, id: "target/afterOnly2" },
       },
     };
-    expect(diffCustomLinks(before, after)).toEqual(expected);
+    expect(diffCustomLinkItemList(before, after)).toEqual(expected);
   });
 });

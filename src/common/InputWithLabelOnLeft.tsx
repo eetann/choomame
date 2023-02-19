@@ -1,4 +1,4 @@
-import { CustomLinkWithoutId } from "../features/customLink/customLinkSchema";
+import { CustomLinkItemWithoutId } from "../features/customLink/customLinkSchema";
 import {
   FormControl,
   FormHelperText,
@@ -14,7 +14,7 @@ import React, { Ref } from "react";
 import { useFormContext } from "react-hook-form";
 
 interface Props extends InputProps {
-  name: keyof CustomLinkWithoutId;
+  name: keyof CustomLinkItemWithoutId;
   label: string;
   helperText: string;
   ref?: Ref<HTMLInputElement>;
@@ -26,7 +26,7 @@ const InputWithLabelOnLeft = React.forwardRef(function useBase(
   const {
     register,
     formState: { errors },
-  } = useFormContext<CustomLinkWithoutId>();
+  } = useFormContext<CustomLinkItemWithoutId>();
   const inputValue = register(name);
   const inputRef = useMergeRefs(inputValue.ref, ref);
   return (

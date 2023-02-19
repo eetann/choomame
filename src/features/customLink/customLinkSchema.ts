@@ -10,7 +10,7 @@ function messageStringMinMax(variable: string, min: number, max: number) {
 
 const customLinkItemIdSchema = messageStringMinMax("custom link id", 1, 50);
 
-export const customLinkSchema = z.object({
+export const customLinkItemSchema = z.object({
   id: customLinkItemIdSchema,
   name: messageStringMinMax("custom link name", 1, 50),
   url: z
@@ -34,84 +34,94 @@ export const customLinkSchema = z.object({
   enable: z.boolean().default(true),
 });
 
-export type CustomLink = z.infer<typeof customLinkSchema>;
-export const customLinkWithoutIdSchema = customLinkSchema.omit({ id: true });
-export type CustomLinkWithoutId = z.infer<typeof customLinkWithoutIdSchema>;
+export type CustomLinkItem = z.infer<typeof customLinkItemSchema>;
+export const customLinkItemWithoutIdSchema = customLinkItemSchema.omit({
+  id: true,
+});
+export type CustomLinkItemWithoutId = z.infer<
+  typeof customLinkItemWithoutIdSchema
+>;
 
-export const customLinksSchema = z.array(customLinkSchema);
+export const customLinkItemListSchema = z.array(customLinkItemSchema);
 
-export type CustomLinks = z.infer<typeof customLinksSchema>;
+export type CustomLinkItemList = z.infer<typeof customLinkItemListSchema>;
 
-export type CustomLinksBucket = Record<string, CustomLink>;
+export type CustomLinkItemBucket = Record<string, CustomLinkItem>;
 
-export const customLinkListIdSchema = messageStringMinMax("list_id", 1, 50);
+export const customLinkCollectionIdSchema = messageStringMinMax(
+  "Collection id",
+  1,
+  50
+);
 
 export const customLinkUrlSchema = z
   .string()
-  .url({ message: "list's URL is invalid." })
-  .max(150, { message: "list's URL is less than or equal to letter 150" });
+  .url({ message: "Collection URL is invalid." })
+  .max(150, { message: "Collection URL is less than or equal to letter 150" });
 
-export const customLinkListSchema = z.object({
-  id: customLinkListIdSchema,
-  name: messageStringMinMax("list's name", 1, 50),
+export const customLinkCollectionSchema = z.object({
+  id: customLinkCollectionIdSchema,
+  name: messageStringMinMax("Collection name", 1, 50),
   url: customLinkUrlSchema,
 });
 
-export type CustomLinkList = z.infer<typeof customLinkListSchema>;
+export type CustomLinkCollection = z.infer<typeof customLinkCollectionSchema>;
 
-export type CustomLinkListBucket = Record<string, CustomLinkList>;
+export type CustomLinkCollectionBucket = Record<string, CustomLinkCollection>;
 
-export const customLinkJsonSchema = z.object({
-  id: customLinkListIdSchema,
-  name: messageStringMinMax("list's name", 1, 50),
-  links: customLinksSchema,
+export const customLinkFetchJsonSchema = z.object({
+  id: customLinkCollectionIdSchema,
+  name: messageStringMinMax("Collection name", 1, 50),
+  items: customLinkItemListSchema,
 });
 
-export type CustomLinkJson = z.infer<typeof customLinkJsonSchema>;
+export type CustomLinkFetchJson = z.infer<typeof customLinkFetchJsonSchema>;
 
-const customLinkListBackupSchema = z.array(
+const customLinkCollectionRestoreSchema = z.array(
   z.object({
     url: customLinkUrlSchema,
     disableIds: z.array(customLinkItemIdSchema),
   })
 );
 
-export type CustomLinkListBackup = z.infer<typeof customLinkListBackupSchema>;
+export type CustomLinkCollectionRestore = z.infer<
+  typeof customLinkCollectionRestoreSchema
+>;
 
-export const customLinkBackupSchema = z.object({
-  id: customLinkListIdSchema,
-  name: messageStringMinMax("list's name", 1, 50),
-  links: customLinksSchema,
-  list: customLinkListBackupSchema,
+export const customLinkRestoreJsonSchema = z.object({
+  id: customLinkCollectionIdSchema,
+  name: messageStringMinMax("collection name", 1, 50),
+  items: customLinkItemListSchema,
+  collection: customLinkCollectionRestoreSchema,
 });
 
-export type CustomLinkBackupJson = z.infer<typeof customLinkBackupSchema>;
+export type CustomLinkRestoreJson = z.infer<typeof customLinkRestoreJsonSchema>;
 
 export let initialCustomLinkUrls = [
-  "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/developer.json5",
+  "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/developer.json5",
 ];
 if (import.meta.env && import.meta.env.VITE_E2E) {
   initialCustomLinkUrls = [
-    "https://raw.githubusercontent.com/eetann/choomame-custom-link-list/main/src/choomame-e2e.json5",
+    "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/choomame-e2e.json5",
   ];
 }
 
-export type DiffCustomLinks = {
+export type DiffCustomLinkItemList = {
   sameIds: Set<string>;
   beforeOnlyIds: string[];
-  afterOnlyBucket: CustomLinksBucket;
+  afterOnlyBucket: CustomLinkItemBucket;
 };
 
-export function diffCustomLinks(
-  before: CustomLinksBucket,
-  after: CustomLinksBucket
-): DiffCustomLinks {
+export function diffCustomLinkItemList(
+  before: CustomLinkItemBucket,
+  after: CustomLinkItemBucket
+): DiffCustomLinkItemList {
   const afterIdSet = new Set(Object.keys(after));
   const beforeIds = Object.keys(before);
   const sameIds = new Set(
     beforeIds.filter((beforeId) => afterIdSet.has(beforeId))
   );
-  const afterOnlyBucket: CustomLinksBucket = {};
+  const afterOnlyBucket: CustomLinkItemBucket = {};
   afterIdSet.forEach((id) => {
     if (!sameIds.has(id)) {
       afterOnlyBucket[id] = after[id];

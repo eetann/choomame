@@ -1,4 +1,5 @@
 import { test, expect } from "./fixtures.js";
+import { locator } from "./helper.js";
 
 test("Languages", async ({ page, extensionId }) => {
   await test.step("onInstalled", async () => {
@@ -12,31 +13,24 @@ test("Languages", async ({ page, extensionId }) => {
   });
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Language'"].join(" >> ")).click();
+  await locator(page, ["_react=App", "text='Language'"]).click();
 
   await test.step("add new Language", async () => {
-    await page
-      .locator(["_react=LanguagesForm", "select"].join(" >> "))
-      .selectOption({ label: "French" });
-    await page
-      .locator(
-        ["_react=LanguagesForm", "_react=[aria-label = 'Add language']"].join(
-          " >> "
-        )
-      )
-      .click();
+    await locator(page, ["_react=LanguagesForm", "select"]).selectOption({
+      label: "French",
+    });
+    await locator(page, [
+      "_react=LanguagesForm",
+      "_react=[aria-label = 'Add language']",
+    ]).click();
   });
 
   await test.step("remove Language", async () => {
-    await page
-      .locator(
-        [
-          "_react=LanguagesTable",
-          "tr:has-text('Japanese')",
-          "_react=[aria-label = 'Delete language']",
-        ].join(" >> ")
-      )
-      .click();
+    await locator(page, [
+      "_react=LanguagesTable",
+      "tr:has-text('Japanese')",
+      "_react=[aria-label = 'Delete language']",
+    ]).click();
   });
 
   await page.goto("https://www.google.com/search?q=hoge");
@@ -50,14 +44,13 @@ test("Languages", async ({ page, extensionId }) => {
   });
 
   await page.goto(`chrome-extension://${extensionId}/index.html`);
-  await page.locator(["_react=App", "text='Language'"].join(" >> ")).click();
+  await locator(page, ["_react=App", "text='Language'"]).click();
 
   await test.step("reset Languages", async () => {
-    await page
-      .locator(
-        ["_react=ResetButton[name = 'Language']", "text='Reset'"].join(" >> ")
-      )
-      .click();
+    await locator(page, [
+      "_react=ResetButton[name = 'Language']",
+      "text='Reset'",
+    ]).click();
     await page.locator("text='Yes, reset.'").click();
   });
 

@@ -1,8 +1,8 @@
 import { appearanceOnInstalled } from "../features/appearance/appearance";
 import {
-  customLinksOnInstalled,
-  customLinkListOnInstalled,
-  updateCustomLinkListonAlarm,
+  customLinkItemOnInstalled,
+  customLinkCollectionOnInstalled,
+  updateCustomLinkCollectionOnAlarm,
   setStopBackgroundUpdateCustomLink,
   setStartBackgroundUpdateCustomLink,
   isBackgroundUpdatingCustomLink,
@@ -17,8 +17,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   await appearanceOnInstalled();
 
   await setStartBackgroundUpdateCustomLink();
-  await customLinkListOnInstalled();
-  await customLinksOnInstalled();
+  await customLinkCollectionOnInstalled();
+  await customLinkItemOnInstalled();
   await setStopBackgroundUpdateCustomLink();
   chrome.alarms.create(alarmBackgroundUpdateCustomLink, {
     periodInMinutes: 1440,
@@ -36,7 +36,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
       return;
     }
     await setStartBackgroundUpdateCustomLink();
-    await updateCustomLinkListonAlarm();
+    await updateCustomLinkCollectionOnAlarm();
     await setStopBackgroundUpdateCustomLink();
   }
 });

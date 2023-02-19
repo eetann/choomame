@@ -1,7 +1,7 @@
 {
   id: "eetann-e2e",
   name: "eetann-E2E-before",
-  links: [
+  items: [
     {
       id: "portfolio",
       name: "Portfolio",
