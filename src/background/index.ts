@@ -40,3 +40,13 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     await setStopBackgroundUpdateCustomLink();
   }
 });
+
+chrome.commands.onCommand.addListener((command) => {
+  switch (command) {
+    case "openPopupForVivaldi":
+      chrome.tabs.create({
+        url: "popup.html",
+      });
+      break;
+  }
+});
