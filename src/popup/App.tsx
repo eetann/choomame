@@ -7,26 +7,53 @@ import {
   InputGroup,
   InputLeftElement,
   Text,
+  HStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { HiOutlineCog6Tooth, HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import {
+  HiOutlineArrowTopRightOnSquare,
+  HiOutlineCog6Tooth,
+  HiOutlineMagnifyingGlass,
+} from "react-icons/hi2";
 
 const App: React.FC = () => {
   const [paramQuery, setParamQuery] = useState<string>("");
 
   return (
     <VStack m="2" width="96" alignItems="stretch">
-      <IconButton
-        alignSelf="end"
-        onClick={() => {
-          chrome.runtime.openOptionsPage();
-        }}
-        variant="ghost"
-        colorScheme="teal"
-        aria-label="Open Settings"
-        fontSize="20px"
-        icon={<HiOutlineCog6Tooth />}
-      />
+      <HStack justifyContent="flex-end">
+        <Tooltip label="Open this as a tab instead of popup">
+          <span>
+            <IconButton
+              onClick={() => {
+                chrome.tabs.create({
+                  url: "popup.html",
+                });
+              }}
+              variant="ghost"
+              colorScheme="teal"
+              aria-label="Open tab instead of popup"
+              fontSize="20px"
+              icon={<HiOutlineArrowTopRightOnSquare />}
+            />
+          </span>
+        </Tooltip>
+        <Tooltip label="Open settings">
+          <span>
+            <IconButton
+              onClick={() => {
+                chrome.runtime.openOptionsPage();
+              }}
+              variant="ghost"
+              colorScheme="teal"
+              aria-label="Open Settings"
+              fontSize="20px"
+              icon={<HiOutlineCog6Tooth />}
+            />
+          </span>
+        </Tooltip>
+      </HStack>
       <InputGroup>
         <InputLeftElement pointerEvents="none">
           <Icon as={HiOutlineMagnifyingGlass} />
