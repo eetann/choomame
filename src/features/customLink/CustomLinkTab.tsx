@@ -66,12 +66,6 @@ const CustomLinkTab: React.FC = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      const isBackgroundUpdating = await isBackgroundUpdatingCustomLink();
-      if (isBackgroundUpdating) {
-        setWhereUpdatingCollection("Background");
-      }
-    })();
     isBackgroundUpdatingBucket.changeStream.subscribe(async (v) => {
       if (v.customLink?.newValue) {
         setWhereUpdatingCollection("Background");
@@ -80,6 +74,12 @@ const CustomLinkTab: React.FC = () => {
         setWhereUpdatingCollection("");
       }
     });
+    (async () => {
+      const isBackgroundUpdating = await isBackgroundUpdatingCustomLink();
+      if (isBackgroundUpdating) {
+        setWhereUpdatingCollection("Background");
+      }
+    })();
   }, []);
 
   useEffect(() => {
