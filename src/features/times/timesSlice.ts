@@ -7,7 +7,6 @@ import {
   Time,
   TimesBucket,
   TimesUnit,
-  timeUnitOrder,
 } from "./timesSchema";
 import {
   createAsyncThunk,
