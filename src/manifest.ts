@@ -14,6 +14,23 @@ export default defineManifest({
     "128": "icons/icon-128x128.png",
   },
   options_page: "index.html",
+  action: {
+    default_popup: "popup.html",
+  },
+  commands: {
+    _execute_action: {
+      suggested_key: {
+        default: "Ctrl+Q",
+      },
+    },
+    openPopupForVivaldi: {
+      suggested_key: {
+        default: "Alt+Q",
+      },
+      description: "open tab instead of popup for Vivaldi",
+      global: true,
+    },
+  },
   content_scripts: [
     {
       js: ["src/content/index.tsx"],

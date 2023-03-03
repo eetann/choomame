@@ -1,7 +1,7 @@
 import { getLink } from "../../common/getLink";
 import { Param } from "../param/param";
-import { getTimes } from "./times";
-import { getTimeText, TimesBucket } from "./timesSchema";
+import { getTimes, sortTimes } from "./times";
+import { getTimeText, Time } from "./timesSchema";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -10,13 +10,13 @@ type Props = {
 };
 
 const TimesLink: React.FC<Props> = ({ param }) => {
-  const [times, setTimes] = useState<TimesBucket>({});
+  const [times, setTimes] = useState<Time[]>([]);
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     (async () => {
       const ts = await getTimes();
-      setTimes(ts);
+      setTimes(Object.values(ts).sort((a, b) => sortTimes(a, b)));
     })();
   }, []);
 
@@ -51,7 +51,7 @@ const TimesLink: React.FC<Props> = ({ param }) => {
       }}
     >
       <ButtonGroup size="sm" isAttached>
-        {Object.values(times).map((time) => {
+        {times.map((time) => {
           let selected = false;
           if (time.timeId === selectedId) {
             selected = true;

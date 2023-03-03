@@ -46,7 +46,7 @@ const App: React.FC = () => {
               <TimesLink param={param} />
               <LanguagesLink param={param} />
             </VStack>
-            <CustomLinkItemLink param={param} />
+            <CustomLinkItemLink paramQuery={param.q} isInPopup={false} />
           </Flex>
         )}
       </RndView>

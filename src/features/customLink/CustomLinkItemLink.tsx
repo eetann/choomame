@@ -1,25 +1,49 @@
-import { Param } from "../param/param";
 import {
   customLinkItemBucket,
   toGoogleWithUrl,
   toMatchWithDelimiter,
 } from "./customLink";
+import { CustomLinkItemBucket } from "./customLinkSchema";
 import { VStack, Heading, Link, Box, HStack, Tooltip } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, MouseEvent } from "react";
 import { HiOutlineFilter } from "react-icons/hi";
 
 type Props = {
-  param: Param;
+  paramQuery: string;
+  isInPopup: boolean;
 };
 
-const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
+const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
   const [itemsByGroup, setItemsByGroup] = useState<
     Record<string, JSX.Element[]>
   >({});
+  const [bucket, setBucket] = useState<CustomLinkItemBucket>({});
+
+  const handleClick = useCallback(
+    (event: MouseEvent) => {
+      if (!isInPopup) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      if (!(event.target instanceof HTMLAnchorElement)) {
+        return;
+      }
+      chrome.tabs.create({ url: event.target.href });
+    },
+    [isInPopup]
+  );
 
   useEffect(() => {
     (async () => {
       const bucket = await customLinkItemBucket.get();
+      setBucket(bucket);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       const groupItems: Record<string, JSX.Element[]> = {};
       Object.values(bucket).forEach((customLink) => {
         if (!customLink.enable) {
@@ -27,7 +51,7 @@ const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
         }
 
         const query = toMatchWithDelimiter(customLink.match);
-        if (!query.test(param.q)) {
+        if (!query.test(paramQuery)) {
           return;
         }
 
@@ -35,10 +59,14 @@ const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
         groupItems[group] = groupItems[group] ?? [];
 
         // replace %s to keyword
-        const keyword = encodeURIComponent(param.q.replace(query, "").trim());
+        const keyword = encodeURIComponent(
+          paramQuery.replace(query, "").trim()
+        );
         if (/%s/.test(customLink.url)) {
           groupItems[group].push(
             <Link
+              onClick={handleClick}
+              tabIndex={3}
               key={customLink.id}
               href={customLink.url.replace(/%s/, keyword)}
               color="teal"
@@ -54,6 +82,8 @@ const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
         groupItems[group].push(
           <HStack key={customLink.id} spacing="3">
             <Link
+              onClick={handleClick}
+              tabIndex={3}
               href={customLink.url}
               color="teal"
               _visited={{
@@ -64,6 +94,8 @@ const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
             </Link>
             <Tooltip label="Google the site only">
               <Link
+                onClick={handleClick}
+                tabIndex={3}
                 href={toGoogleWithUrl(customLink.url, keyword)}
                 color="teal"
                 _visited={{
@@ -78,7 +110,7 @@ const CustomLinkItemLink: React.FC<Props> = ({ param }) => {
       });
       setItemsByGroup(groupItems);
     })();
-  }, [param.q]);
+  }, [bucket, handleClick, paramQuery]);
 
   return (
     <VStack
