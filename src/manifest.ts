@@ -56,5 +56,21 @@ export default defineManifest({
       js: ["src/content/index.tsx"],
       matches: ["https://www.google.co.in/search*"],
     },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.com.ua/search*"],
+    },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.co.kr/search*"],
+    },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.com.mx/search*"],
+    },
+    {
+      js: ["src/content/index.tsx"],
+      matches: ["https://www.google.com.nr/search*"],
+    },
   ],
 });
