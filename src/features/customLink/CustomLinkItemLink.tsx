@@ -68,7 +68,11 @@ const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
               onClick={handleClick}
               tabIndex={3}
               key={customLink.id}
-              href={customLink.url.replace(/%s/, keyword)}
+              href={
+                customLink.match === ".*"
+                  ? customLink.url.replace(/%s/, paramQuery)
+                  : customLink.url.replace(/%s/, keyword)
+              }
               color="teal"
               _visited={{
                 color: "purple",
