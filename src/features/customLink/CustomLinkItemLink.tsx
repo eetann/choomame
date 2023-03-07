@@ -4,7 +4,15 @@ import {
   toMatchWithDelimiter,
 } from "./customLink";
 import { CustomLinkItemBucket } from "./customLinkSchema";
-import { VStack, Heading, Link, Box, HStack, Tooltip } from "@chakra-ui/react";
+import {
+  VStack,
+  Heading,
+  Link,
+  Box,
+  HStack,
+  Tooltip,
+  Icon,
+} from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState, MouseEvent } from "react";
 import { HiOutlineFilter } from "react-icons/hi";
 
@@ -96,18 +104,21 @@ const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
             >
               {customLink.name}
             </Link>
-            <Tooltip label="Google the site only">
-              <Link
-                onClick={handleClick}
-                tabIndex={3}
-                href={toGoogleWithUrl(customLink.url, keyword)}
-                color="teal"
-                _visited={{
-                  color: "purple",
-                }}
-              >
-                <HiOutlineFilter />
-              </Link>
+            <Tooltip label="Google the site only(Experimental)">
+              <Box>
+                <Icon as={HiOutlineFilter} boxSize="4" />
+                <Link
+                  onClick={handleClick}
+                  tabIndex={3}
+                  href={toGoogleWithUrl(customLink.url, keyword)}
+                  color="teal"
+                  _visited={{
+                    color: "purple",
+                  }}
+                >
+                  only
+                </Link>
+              </Box>
             </Tooltip>
           </HStack>
         );

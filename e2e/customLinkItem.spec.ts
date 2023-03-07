@@ -3,12 +3,14 @@ import { test, expect } from "./fixtures.js";
 import { locator } from "./helper.js";
 
 test("CustomLink Item", async ({ page, extensionId }) => {
+  await page.waitForTimeout(1000);
+
   await page.goto("https://www.google.com/search?q=javascript+foreach");
 
   await test.step("check `URL conversion` @ content", async () => {
     // check googleWithURL
     await expect(
-      locator(page, ["#choomameCustomItemLink", "a:has(svg)"])
+      locator(page, ["#choomameCustomItemLink", "svg ~ a"])
     ).toHaveAttribute(
       "href",
       "https://www.google.com/search?q=site:developer.mozilla.org/en-US/docs/Web/JavaScript foreach"
