@@ -60,7 +60,7 @@ const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
 
         // replace %s to keyword
         const keyword = encodeURIComponent(
-          paramQuery.replace(query, "").trim()
+          paramQuery.replace(query, " ").trim()
         );
         if (/%s/.test(customLink.url)) {
           groupItems[group].push(
