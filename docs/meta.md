@@ -20,11 +20,15 @@ Choomame is an improved versioin of my previous extension "Amazing Searcher".
 
 # unlimitedStorage が必要な理由
 
-To allow users to customize the time and language links displayed on the Google search results screen.
+To allow users to customize links displayed on the Google search results screen and Extension popup.
 
 # storage が必要な理由
 
-To allow users to customize the time and language links displayed on the Google search results screen.
+To allow users to customize links displayed on the Google search results screen and Extension popup.
+
+# alarms が必要な理由
+
+To regularly update user-controlled links displayed on the Google search results screen and Extension popup.
 
 # ホスト権限が必要な理由
 
