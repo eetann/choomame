@@ -99,6 +99,8 @@ export type CustomLinkRestoreJson = z.infer<typeof customLinkRestoreJsonSchema>;
 
 export let initialCustomLinkUrls = [
   "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/developer.json5",
+  "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/aws.json5",
+  "https://raw.githubusercontent.com/eetann/choomame-custom-link-collection/main/src/google-cloud.json5",
 ];
 if (import.meta.env && import.meta.env.VITE_E2E) {
   initialCustomLinkUrls = [

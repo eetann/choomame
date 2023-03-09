@@ -13,6 +13,8 @@ import {
   Image,
   HStack,
   VStack,
+  Link,
+  Spacer,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -20,14 +22,26 @@ import {
   HiOutlineClock,
   HiOutlineTranslate,
 } from "react-icons/hi";
+import { HiStar } from "react-icons/hi2";
 
 const App: React.FC = () => {
   return (
     <VStack className="App" m="4" align="start" spacing="8">
-      <HStack>
+      <HStack width="full">
         <Image boxSize="36px" src="/icons/icon-32x32.png" />
         <Text fontSize="lg" my="2">
           Choomame
+        </Text>
+        <Spacer />
+        <Text fontSize="md" color="teal">
+          <Link
+            href="https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn/reviews"
+            isExternal
+          >
+            <Icon as={HiStar} mr="1" />
+            You can leave a review here if you like!
+            <Icon as={HiStar} mr="1" />
+          </Link>
         </Text>
       </HStack>
       <AppearanceArea />

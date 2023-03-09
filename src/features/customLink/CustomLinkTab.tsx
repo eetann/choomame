@@ -24,15 +24,18 @@ import {
   fetchAllCustomLinkItem,
 } from "./customLinkItemSlice";
 import { CustomLinkRestoreJson } from "./customLinkSchema";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Heading,
   HStack,
   Icon,
+  Link,
   Spacer,
   Stack,
   StackDivider,
+  Text,
   Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -95,6 +98,15 @@ const CustomLinkTab: React.FC = () => {
         }}
       >
         <Stack alignItems="start">
+          <Link
+            fontSize="md"
+            color="teal.500"
+            mb="4"
+            href="https://github.com/eetann/choomame-custom-link-collection#readme"
+            isExternal
+          >
+            What is Custom Link? <ExternalLinkIcon mx="2px" />
+          </Link>
           <HStack>
             <Icon as={HiOutlineListBullet} boxSize={5} />
             <Heading size="md">Collection</Heading>
@@ -127,6 +139,9 @@ const CustomLinkTab: React.FC = () => {
         </Stack>
       </WhereUpdatingCollectionContext.Provider>
       <Stack>
+        <Text fontSize="md" mb={2}>
+          Please operate links at your own risk.
+        </Text>
         <HStack>
           <Icon as={HiOutlineLink} boxSize={5} />
           <Heading size="md">Items</Heading>
