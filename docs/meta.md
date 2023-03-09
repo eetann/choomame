@@ -8,6 +8,7 @@ Choomame shows the following link to Popup and the Google search results.
   - example: English, Japanese, Spanish ...
 - `Custom Link`: easy access to frequently viewed pages, site searches, official documents
   - Check https://github.com/eetann/choomame-custom-link-collection#readme for details.
+  - Please operate links at your own risk.
 
 These can be freely customized on the option page.
 
