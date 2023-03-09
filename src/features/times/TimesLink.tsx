@@ -1,28 +1,22 @@
 import { getLink } from "../../common/getLink";
 import { Param } from "../param/param";
-import { getTimes, TimesBucket, TimesUnit } from "./times";
+import { getTimes, sortTimes } from "./times";
+import { getTimeText, Time } from "./timesSchema";
 import { Box, ButtonGroup, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-
-function get_name(unit: TimesUnit, number: number): string {
-  if (unit === "Any") {
-    return "Any";
-  }
-  return number + " " + unit;
-}
 
 type Props = {
   param: Param;
 };
 
 const TimesLink: React.FC<Props> = ({ param }) => {
-  const [times, setTimes] = useState<TimesBucket>({});
+  const [times, setTimes] = useState<Time[]>([]);
   const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     (async () => {
       const ts = await getTimes();
-      setTimes(ts);
+      setTimes(Object.values(ts).sort((a, b) => sortTimes(a, b)));
     })();
   }, []);
 
@@ -57,7 +51,7 @@ const TimesLink: React.FC<Props> = ({ param }) => {
       }}
     >
       <ButtonGroup size="sm" isAttached>
-        {Object.values(times).map((time) => {
+        {times.map((time) => {
           let selected = false;
           if (time.timeId === selectedId) {
             selected = true;
@@ -84,7 +78,7 @@ const TimesLink: React.FC<Props> = ({ param }) => {
                 backgroundColor: "blackAlpha.50",
               }}
             >
-              {get_name(time.unit, time.number)}
+              {getTimeText(time.unit, time.number)}
             </Button>
           );
         })}

@@ -1,14 +1,13 @@
 import type { RootState } from "../../app/store";
+import { sortTimes, timesBucket } from "./times";
 import {
   convertTimesToBucket,
   getTimeId,
   initialTimesStorage,
   Time,
-  timesBucket,
   TimesBucket,
   TimesUnit,
-  timeUnitOrder,
-} from "./times";
+} from "./timesSchema";
 import {
   createAsyncThunk,
   createEntityAdapter,
@@ -54,21 +53,7 @@ export const removeOneTime = createAsyncThunk(
 const timesAdapter = createEntityAdapter<Time>({
   selectId: (time) => time.timeId,
   sortComparer: (a, b) => {
-    const aUnit = timeUnitOrder[a.unit];
-    const bUnit = timeUnitOrder[b.unit];
-    if (aUnit < bUnit) {
-      // a, b
-      return -1;
-    } else if (aUnit > bUnit) {
-      // b, a
-      return 1;
-    }
-    if (a.number > b.number) {
-      // a, b
-      return -1;
-    }
-    // b, a
-    return 1;
+    return sortTimes(a, b);
   },
 });
 

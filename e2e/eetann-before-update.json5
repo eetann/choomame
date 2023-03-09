@@ -1,0 +1,41 @@
+{
+  id: "eetann-e2e",
+  name: "eetann-E2E-before",
+  items: [
+    {
+      id: "portfolio",
+      name: "Portfolio",
+      url: "https://hub-eetann.vercel.app",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "github",
+      name: "GitHub",
+      url: "https://github.com/eetann",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "twitter",
+      name: "Twitter",
+      url: "https://twitter.com/eetann092",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "zenn",
+      name: "Zenn",
+      url: "https://zenn.dev/eetann",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "choomame",
+      name: "Choomame",
+      url: "https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn",
+      match: "eetann|choomame|えーたん",
+      group: "eetann",
+    },
+  ],
+}

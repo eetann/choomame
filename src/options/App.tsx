@@ -1,4 +1,5 @@
 import AppearanceArea from "../features/appearance/AppearanceArea";
+import CustomLinkTab from "../features/customLink/CustomLinkTab";
 import LanguagesTab from "../features/languages/LanguagesTab";
 import TimesTab from "../features/times/TimesTab";
 import {
@@ -12,21 +13,35 @@ import {
   Image,
   HStack,
   VStack,
+  Link,
+  Spacer,
 } from "@chakra-ui/react";
 import React from "react";
 import {
-  HiOutlineBan,
+  HiOutlineLink,
   HiOutlineClock,
   HiOutlineTranslate,
 } from "react-icons/hi";
+import { HiStar } from "react-icons/hi2";
 
 const App: React.FC = () => {
   return (
     <VStack className="App" m="4" align="start" spacing="8">
-      <HStack>
+      <HStack width="full">
         <Image boxSize="36px" src="/icons/icon-32x32.png" />
         <Text fontSize="lg" my="2">
           Choomame
+        </Text>
+        <Spacer />
+        <Text fontSize="md" color="teal">
+          <Link
+            href="https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn/reviews"
+            isExternal
+          >
+            <Icon as={HiStar} mr="1" />
+            You can leave a review here if you like!
+            <Icon as={HiStar} mr="1" />
+          </Link>
         </Text>
       </HStack>
       <AppearanceArea />
@@ -40,10 +55,9 @@ const App: React.FC = () => {
             <Icon as={HiOutlineTranslate} mr="1" />
             Language
           </Tab>
-
-          <Tab isDisabled>
-            <Icon as={HiOutlineBan} mr="1" />
-            Recipe
+          <Tab>
+            <Icon as={HiOutlineLink} mr="1" />
+            Custom Link
           </Tab>
         </TabList>
         <TabPanels>
@@ -54,7 +68,7 @@ const App: React.FC = () => {
             <LanguagesTab />
           </TabPanel>
           <TabPanel>
-            <p>recipe</p>
+            <CustomLinkTab />
           </TabPanel>
         </TabPanels>
       </Tabs>

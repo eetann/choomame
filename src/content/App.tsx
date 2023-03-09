@@ -1,10 +1,11 @@
+import CustomLinkItemLink from "../features/customLink/CustomLinkItemLink";
 import LanguagesLink from "../features/languages/LanguagesLink";
 import { getParam, initialParam, Param } from "../features/param/param";
 import TimesLink from "../features/times/TimesLink";
 import RndView from "./RndView";
 import ToolBar from "./ToolBar";
 import { MinimumContext } from "./ToolBar";
-import { Center } from "@chakra-ui/react";
+import { Box, Flex, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
@@ -26,15 +27,27 @@ const App: React.FC = () => {
     <MinimumContext.Provider value={{ minimum, setMinimum }}>
       <RndView isBottomRight={isBottomRight}>
         {minimum ? (
-          <Center>
+          <Box m="2">
             <ToolBar />
-          </Center>
+          </Box>
         ) : (
-          <>
-            <TimesLink param={param} />
-            <LanguagesLink param={param} />
+          <Flex direction="column" gap="2" m="2" height="calc(100% - 6px)">
             <ToolBar />
-          </>
+            <VStack
+              className="no-drag-area"
+              cursor="auto"
+              p="2"
+              boxShadow="base"
+              rounded="md"
+              backgroundColor="whiteAlpha.700"
+              backdropBlur="2xl"
+              alignItems="start"
+            >
+              <TimesLink param={param} />
+              <LanguagesLink param={param} />
+            </VStack>
+            <CustomLinkItemLink paramQuery={param.q} isInPopup={false} />
+          </Flex>
         )}
       </RndView>
     </MinimumContext.Provider>

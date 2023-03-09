@@ -1,0 +1,34 @@
+{
+  id: "eetann-e2e",
+  name: "eetann-E2E-after",
+  items: [
+    {
+      id: "note",
+      name: "note",
+      url: "https://note.com/hideharu092",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "twitter",
+      name: "ツイッター",
+      url: "https://twitter.com/eetann092",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "zenn",
+      name: "Zenn",
+      url: "https://zenn.dev/eetann",
+      match: "eetann|えーたん",
+      group: "eetann",
+    },
+    {
+      id: "choomame",
+      name: "Choomame",
+      url: "https://chrome.google.com/webstore/detail/lecnbgonlcmmpkpnngbofggjiccbnokn",
+      match: "eetann|choomame|えーたん",
+      group: "eetann",
+    },
+  ],
+}
