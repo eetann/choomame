@@ -106,7 +106,7 @@ const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
             </Link>
             <Tooltip label="Google the site only(Experimental)">
               <Box>
-                <Icon as={HiOutlineFilter} boxSize="4" />
+                <Icon color="teal" as={HiOutlineFilter} boxSize="4" />
                 <Link
                   onClick={handleClick}
                   tabIndex={3}
@@ -161,7 +161,7 @@ const CustomLinkItemLink: React.FC<Props> = ({ paramQuery, isInPopup }) => {
     >
       {Object.entries(itemsByGroup).map(([group, items]) => (
         <Box key={group}>
-          <Heading size="xs" mt="2" mb="1">
+          <Heading size="xs" mt="2" mb="1" color="teal">
             {group}
           </Heading>
           <VStack alignItems="start" spacing="2">
